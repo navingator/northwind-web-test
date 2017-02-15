@@ -10,3 +10,5 @@ jspm_packages
 # Typescript compiled JS
 /public/src/**/*.js
 *.js.map
+!public/src/systemjs.config.extras.js
+!public/src/systemjs.config.js

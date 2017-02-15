@@ -1,5 +1,6 @@
 // modules =================================================
 var express = require('express');
+var path = require('path');
 var pg = require('pg');
 
 var app = express();
@@ -8,7 +9,9 @@ var app = express();
 
 var port = process.env.PORT || 4000; // set our port
 
-app.use(express.static(__dirname + '/public')); // set the static files location, example: /public/img will be /img for users
+app.use(express.static(path.join(__dirname, '/public'))); // set the static files location, example: /public/img will be /img for users
+app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
+
 
 // routes ==================================================
 require('./app/routes')(app); // pass our application into our routes

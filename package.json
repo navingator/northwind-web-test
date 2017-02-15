@@ -3,7 +3,10 @@
   "version" : "0.0.0",
   "private" : true,
   "scripts" : {
-    "start" : "nodemon server.js"
+    "build": "ntsc -p public/src/",
+    "build:watch": "ntsc -p public/src/ -w",
+    "serve": "nodemon server.js",
+    "start" : "concurrently \"npm run build:watch\" \"npm run serve\""
   },
   "dependencies" : {
     "@angular/common": "~2.4.0",
@@ -25,9 +28,11 @@
   },
   "devDependencies" : {
     "concurrently": "~3.3.0",
+    "lite-server": "~2.2.2",
     "nodemon": "~1.11.0",
-    "light-server": "~2.2.2",
     "ntypescript": "~1.201609302242.1",
+    "path": "~0.12.7",
+
     "@types/node": "~7.0.5"
   }
 }
