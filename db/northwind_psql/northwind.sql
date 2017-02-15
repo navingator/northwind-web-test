@@ -31,6 +31,7 @@ SET default_with_oids = false;
 --- drop tables
 ---
 
+DROP TABLE IF EXISTS users; -- Custom Table
 
 DROP TABLE IF EXISTS customercustomerdemo;
 DROP TABLE IF EXISTS customerdemographics;
@@ -48,7 +49,24 @@ DROP TABLE IF EXISTS region;
 DROP TABLE IF EXISTS employees;
 
 --
--- Name: categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE users (
+  userid int NOT NULL,
+  username character varying(15) NOT NULL,
+  email text NOT NULL,
+  password text NOT NULL,
+  dateupdated timestamp NOT NULL,
+  security text,
+  lastlogin timestamp
+);
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_users PRIMARY KEY (userid);
+
+--
+-- Name: categories; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE categories (
@@ -60,7 +78,7 @@ CREATE TABLE categories (
 
 
 --
--- Name: customercustomerdemo; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: customercustomerdemo; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE customercustomerdemo (
@@ -70,7 +88,7 @@ CREATE TABLE customercustomerdemo (
 
 
 --
--- Name: customerdemographics; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: customerdemographics; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE customerdemographics (
@@ -80,7 +98,7 @@ CREATE TABLE customerdemographics (
 
 
 --
--- Name: customers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: customers; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE customers (
@@ -99,7 +117,7 @@ CREATE TABLE customers (
 
 
 --
--- Name: employees; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: employees; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE employees (
@@ -125,7 +143,7 @@ CREATE TABLE employees (
 
 
 --
--- Name: employeeterritories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: employeeterritories; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE employeeterritories (
@@ -137,7 +155,7 @@ CREATE TABLE employeeterritories (
 
 
 --
--- Name: order_details; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: order_details; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE order_details (
@@ -150,7 +168,7 @@ CREATE TABLE order_details (
 
 
 --
--- Name: orders; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: orders; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE orders (
@@ -172,7 +190,7 @@ CREATE TABLE orders (
 
 
 --
--- Name: products; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: products; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE products (
@@ -190,7 +208,7 @@ CREATE TABLE products (
 
 
 --
--- Name: region; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: region; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE region (
@@ -200,7 +218,7 @@ CREATE TABLE region (
 
 
 --
--- Name: shippers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: shippers; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE shippers (
@@ -212,7 +230,7 @@ CREATE TABLE shippers (
 
 
 --
--- Name: suppliers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: suppliers; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE suppliers (
@@ -232,7 +250,7 @@ CREATE TABLE suppliers (
 
 
 --
--- Name: territories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: territories; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE territories (
@@ -243,7 +261,7 @@ CREATE TABLE territories (
 
 
 --
--- Name: usstates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: usstates; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE usstates (
@@ -3702,7 +3720,7 @@ INSERT INTO usstates VALUES (51, 'Wyoming', 'WY', 'west');
 
 
 --
--- Name: pk_categories; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_categories; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY categories
@@ -3710,7 +3728,7 @@ ALTER TABLE ONLY categories
 
 
 --
--- Name: pk_customercustomerdemo; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_customercustomerdemo; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY customercustomerdemo
@@ -3718,7 +3736,7 @@ ALTER TABLE ONLY customercustomerdemo
 
 
 --
--- Name: pk_customerdemographics; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_customerdemographics; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY customerdemographics
@@ -3726,7 +3744,7 @@ ALTER TABLE ONLY customerdemographics
 
 
 --
--- Name: pk_customers; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_customers; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY customers
@@ -3734,7 +3752,7 @@ ALTER TABLE ONLY customers
 
 
 --
--- Name: pk_employees; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_employees; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY employees
@@ -3742,7 +3760,7 @@ ALTER TABLE ONLY employees
 
 
 --
--- Name: pk_employeeterritories; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_employeeterritories; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY employeeterritories
@@ -3750,7 +3768,7 @@ ALTER TABLE ONLY employeeterritories
 
 
 --
--- Name: pk_order_details; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_order_details; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY order_details
@@ -3758,7 +3776,7 @@ ALTER TABLE ONLY order_details
 
 
 --
--- Name: pk_orders; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_orders; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY orders
@@ -3766,7 +3784,7 @@ ALTER TABLE ONLY orders
 
 
 --
--- Name: pk_products; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_products; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY products
@@ -3774,7 +3792,7 @@ ALTER TABLE ONLY products
 
 
 --
--- Name: pk_region; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_region; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY region
@@ -3782,7 +3800,7 @@ ALTER TABLE ONLY region
 
 
 --
--- Name: pk_shippers; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_shippers; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY shippers
@@ -3790,7 +3808,7 @@ ALTER TABLE ONLY shippers
 
 
 --
--- Name: pk_suppliers; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_suppliers; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY suppliers
@@ -3798,7 +3816,7 @@ ALTER TABLE ONLY suppliers
 
 
 --
--- Name: pk_territories; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: pk_territories; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY territories
@@ -3908,8 +3926,7 @@ ALTER TABLE ONLY customercustomerdemo
 ALTER TABLE ONLY employees
     ADD CONSTRAINT fk_employees_employees FOREIGN KEY (reportsto) REFERENCES employees;
 
-    
+
 --
 -- PostgreSQL database dump complete
 --
-
