@@ -26,7 +26,7 @@
   "devDependencies" : {
     "concurrently": "~3.3.0",
     "nodemon": "~1.11.0",
-    "light-server": "~1.1.10",
+    "light-server": "~2.2.2",
     "ntypescript": "~1.201609302242.1",
     "@types/node": "~7.0.5"
   }
