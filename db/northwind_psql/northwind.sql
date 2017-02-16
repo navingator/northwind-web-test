@@ -31,8 +31,6 @@ SET default_with_oids = false;
 --- drop tables
 ---
 
-DROP TABLE IF EXISTS users; -- Custom Table
-
 DROP TABLE IF EXISTS customercustomerdemo;
 DROP TABLE IF EXISTS customerdemographics;
 DROP TABLE IF EXISTS employeeterritories;
@@ -47,23 +45,6 @@ DROP TABLE IF EXISTS usstates;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS region;
 DROP TABLE IF EXISTS employees;
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace:
---
-
-CREATE TABLE users (
-  userid int NOT NULL,
-  username character varying(15) NOT NULL,
-  email text NOT NULL,
-  password text NOT NULL,
-  dateupdated timestamp NOT NULL,
-  security text,
-  lastlogin timestamp
-);
-
-ALTER TABLE ONLY users
-    ADD CONSTRAINT pk_users PRIMARY KEY (userid);
 
 --
 -- Name: categories; Type: TABLE; Schema: public; Owner: -; Tablespace:
