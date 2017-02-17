@@ -8,19 +8,19 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Northwind</a>
+      <a class="navbar-brand" href="/">Northwind</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="collapsable-navbar">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Sign Up</a></li>
-        <li><a href="#">Sign In</a></li>
+        <li routerLinkActive="active"><a routerLink="/signup">Sign Up</a></li>
+        <li routerLinkActive="active"><a routerLink="/signin">Sign In</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
-
-  <div class="container">
-    <router-outlet></router-outlet>
-  </div>
 </nav>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

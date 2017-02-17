@@ -2,6 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   moduleId: module.id,
-  templateUrl: './login.component.html',
+  templateUrl: './signup.component.html',
 })
-export class LoginComponent { }
+export class SignupComponent { }
