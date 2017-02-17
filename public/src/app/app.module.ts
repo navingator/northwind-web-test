@@ -1,9 +1,12 @@
 /** Angular Modules **/
-import { NgModule }      from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-/** Custom Modules **/
+/** Routing Module **/
 import { AppRoutingModule } from './app-routing.module';
+
+/** Feature Modules **/
+import { UserModule } from './user/user.module';
 
 /** Components **/
 import { AppComponent } from './app.component';
@@ -11,7 +14,9 @@ import { AppComponent } from './app.component';
 @NgModule({
   imports: [
     BrowserModule,
-    AppRoutingModule
+    UserModule,
+
+    AppRoutingModule // Must be last
   ],
   declarations: [ AppComponent ],
   bootstrap: [ AppComponent ]
