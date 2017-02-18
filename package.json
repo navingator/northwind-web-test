@@ -3,8 +3,8 @@
   "version" : "0.0.0",
   "private" : true,
   "scripts" : {
-    "build": "ntsc -p public/src/",
-    "build:watch": "ntsc -p public/src/ -w",
+    "build": "tsc -p ./public/src/",
+    "build:watch": "tsc -p ./public/src/ -w",
     "serve": "nodemon server.js",
     "start" : "concurrently \"npm run build:watch\" \"npm run serve\""
   },
@@ -32,7 +32,7 @@
     "concurrently": "~3.3.0",
     "lite-server": "~2.2.2",
     "nodemon": "~1.11.0",
-    "ntypescript": "~1.201609302242.1",
+    "typescript": "~2.1.6",
     "path": "~0.12.7",
 
     "@types/node": "~7.0.5"
