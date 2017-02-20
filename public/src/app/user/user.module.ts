@@ -1,6 +1,7 @@
 /** Angular Modules **/
 import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
+import { FormsModule }   from '@angular/forms';
 
 /** Routing Module **/
 import { UserRoutingModule } from './user-routing.module';
@@ -12,6 +13,7 @@ import { SignupComponent } from './signup/signup.component';
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     UserRoutingModule
   ],
   declarations: [

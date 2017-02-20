@@ -1,0 +1,35 @@
+/** Forms **/
+.form-group .tooltip {
+  display: none;
+}
+.has-danger .tooltip {
+  display: block;
+  background-color: red;
+  color: white;
+}
+
+
+/** Tooltips **/
+.has-tooltip {
+  position: relative;
+}
+
+.tooltip {
+  visibility: hidden;
+  font-size: 0.9em;
+  opacity: 1;
+  text-align: center;
+  width: 200px;
+  border-radius: 20px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-left: -100px;
+  background-color: green;
+}
+
+.has-tooltip:hover .tooltip {
+  visibility: visible;
+}
