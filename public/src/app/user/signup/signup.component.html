@@ -1,20 +1,88 @@
 <section class="row">
   <h1 class="col-12 text-center">Sign Up</h1>
   <div class="offset-1 col-10 offset-lg-3 col-lg-6">
-    <form novalidate>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username">
+    <form (ngSubmit)="onSubmit()" #signUnForm="ngForm" novalidate>
+      <div class="row">
+        <div class="form-group col-12 col-md-6"
+          [ngClass]="{
+            'has-danger':(firstname.invalid && firstname.touched),
+            'has-success':(firstname.valid)
+          }">
+          <label class="form-control-label" for="firstname">First Name</label>
+          <div class="has-tooltip">
+            <input type="text" id="firstname"
+              class="form-control form-control-success form-control-danger"
+              required
+              [(ngModel)]="newUser.firstName" name="firstname"
+              #firstname="ngModel">
+            <div class="tooltip">Required</div>
+          </div>
+        </div>
+        <div class="form-group col-12 col-md-6"
+          [ngClass]="{
+            'has-danger':(lastname.invalid && lastname.touched),
+            'has-success':(lastname.valid)
+          }">
+          <label class="form-control-label" for="lastname">Last Name</label>
+          <div class="has-tooltip">
+            <input type="text" id="lastname"
+              class="form-control form-control-success form-control-danger"
+              required
+              [(ngModel)]="newUser.lastName" name="lastname"
+              #lastname="ngModel">
+            <div class="tooltip">Required</div>
+          </div>
+        </div>
+        <div class="form-group col-12"
+          [ngClass]="{
+            'has-danger':(username.invalid && username.touched),
+            'has-success':(username.valid)
+          }">
+          <label class="form-control-label" for="username">Username</label>
+          <div class="has-tooltip">
+            <input type="text" id="username"
+              class="form-control form-control-success form-control-danger"
+              required
+              [(ngModel)]="newUser.username" name="username"
+              #username="ngModel">
+              <!-- TODO add database validation -->
+            <div class="tooltip">Required</div>
+          </div>
+        </div>
+        <div class="form-group col-12"
+          [ngClass]="{
+            'has-danger':(password.invalid && password.touched),
+            'has-success':(password.valid)
+          }">
+          <label class="form-control-label" for="password">Password</label>
+          <div class="has-tooltip">
+            <input type="password" id="password"
+              class="form-control form-control-success form-control-danger"
+              required
+              [(ngModel)]="newUser.password" name="password"
+              #password="ngModel">
+            <div class="tooltip">Required</div>
+          </div>
+        </div>
+        <div class="form-group col-12"
+          [ngClass]="{
+            'has-danger':(confirmpassword.invalid && confirmpassword.touched),
+            'has-success':(confirmpassword.valid)
+          }">
+          <label class="form-control-label" for="confirmpassword">Confirm Password</label>
+          <div class="has-tooltip">
+            <input type="text" id="confirmpassword"
+              class="form-control form-control-success form-control-danger"
+              required
+              [(ngModel)]="newUser.confirmPassword" name="confirmpassword"
+              #confirmpassword="ngModel">
+            <div class="tooltip">Passwords must match</div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary text-center">Sign Up!</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password">
-      </div>
-      <div class="form-group">
-        <label for="passwordConfirm">Confirm Password</label>
-        <input type="password" class="form-control" id="passwordConfirm">
-      </div>
-      <button type="submit" class="btn btn-primary text-center">Sign Up!</button>
     </form>
   </div>
 </section>
