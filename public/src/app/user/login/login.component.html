@@ -22,7 +22,7 @@
           [(ngModel)]="user.password" name="password"
           #password="ngModel">
       </div>
-      <button type="submit" class="btn btn-primary text-center" [disabled]="signInForm.invalid">Sign in!</button>
+      <button type="submit" class="btn btn-primary text-center" [disabled]="signInForm.invalid || submitted">Sign in!</button>
     </form>
   </div>
 </section>

@@ -16,8 +16,10 @@ export class LoginComponent {
   constructor(private userAuthService: UserAuthService) {}
 
   user = new User();
+  submitted = false;
 
   onSubmit() {
+    this.submitted = true;
     this.userAuthService.authenticate(username, password);
   }
 }
