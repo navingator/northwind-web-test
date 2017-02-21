@@ -20,6 +20,6 @@ export class LoginComponent {
 
   onSubmit() {
     this.submitted = true;
-    this.userAuthService.authenticate(username, password);
+    this.userAuthService.authenticate(this.user.username, this.user.password);
   }
 }
