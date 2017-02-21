@@ -1,7 +1,7 @@
 <section class="row">
   <h1 class="col-12 text-center">Sign in</h1>
   <div class="offset-1 col-10 offset-lg-3 col-lg-6">
-    <form (ngSubmit)="onSubmit()" #signInForm="ngForm" novalidate>
+    <form (ngSubmit)="onSubmit($event)" #signInForm="ngForm" novalidate>
       <div class="form-group"
         [ngClass]="{
           'has-danger':(username.invalid && username.touched),
@@ -22,7 +22,7 @@
           [(ngModel)]="user.password" name="password"
           #password="ngModel">
       </div>
-      <button type="submit" class="btn btn-primary text-center">Sign in!</button>
+      <button type="submit" class="btn btn-primary text-center" [disabled]="signInForm.invalid">Sign in!</button>
     </form>
   </div>
 </section>
