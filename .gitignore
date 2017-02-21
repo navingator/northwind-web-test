@@ -12,3 +12,6 @@ jspm_packages
 *.js.map
 !public/src/systemjs.config.extras.js
 !public/src/systemjs.config.js
+
+# Local Ports
+ports.json
