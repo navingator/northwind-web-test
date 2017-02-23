@@ -5,7 +5,7 @@
       <div class="row">
         <div class="form-group col-12 col-md-6"
           [ngClass]="{
-            'has-danger':(signupForm.get('firstName').invalid && signupForm.get('firstName').touched),
+            'has-danger':(signupForm.get('firstName').invalid && signupForm.get('firstName').dirty),
             'has-success':(signupForm.get('firstName').valid)
           }">
           <label class="form-control-label" for="firstname">First Name</label>
@@ -17,7 +17,7 @@
         </div>
         <div class="form-group col-12 col-md-6"
           [ngClass]="{
-            'has-danger':(signupForm.get('lastName').invalid && signupForm.get('lastName').touched),
+            'has-danger':(signupForm.get('lastName').invalid && signupForm.get('lastName').dirty),
             'has-success':(signupForm.get('lastName').valid)
           }">
           <label class="form-control-label" for="lastname">Last Name</label>
@@ -29,7 +29,7 @@
         </div>
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(signupForm.get('username').invalid && signupForm.get('username').touched),
+            'has-danger':(signupForm.get('username').invalid && signupForm.get('username').dirty),
             'has-success':(signupForm.get('username').valid)
           }">
           <label class="form-control-label" for="username">Username</label>
@@ -41,19 +41,20 @@
         </div>
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(signupForm.get('password').invalid && signupForm.get('password').touched),
+            'has-danger':(signupForm.get('password').invalid && signupForm.get('password').dirty),
             'has-success':(signupForm.get('password').valid)
           }">
           <label class="form-control-label" for="password">Password</label>
           <div class="has-tooltip">
             <input type="password" formControlName="password"
-              class="form-control form-control-success form-control-danger">
+              class="form-control form-control-success form-control-danger"
+              (keyup)="revalidateConfirm()">
             <div class="tooltip">Required</div>
           </div>
         </div>
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(signupForm.get('passwordConfirm').invalid && signupForm.get('passwordConfirm').touched),
+            'has-danger':(signupForm.get('passwordConfirm').invalid && signupForm.get('passwordConfirm').dirty),
             'has-success':(signupForm.get('passwordConfirm').valid)
           }">
           <label class="form-control-label" for="passwordconfirm">Confirm Password</label>
@@ -65,6 +66,9 @@
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Sign Up!</button>
+        </div>
+        <div class="col-12 text-center submit-error" *ngIf="submitError && signupForm.invalid">
+          <div>Please correct issues and try again.</div>
         </div>
       </div>
     </form>

@@ -12,6 +12,7 @@ export class SignupComponent {
   signupForm: FormGroup;
 
   submitted = false;
+  submitError = false;
 
   constructor(
       private fb: FormBuilder,
@@ -26,17 +27,21 @@ export class SignupComponent {
       lastName: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required],
-      passwordConfirm: ['', Validators.required]
+      passwordConfirm: ['', [
+        Validators.required,
+        this.equalsValidatorFactory('password', 'passwordMismatch')
+      ]]
     })
   }
 
   onSubmit() {
     if (this.signupForm.invalid) {
-      this.markAllTouched(this.signupForm);
-      console.log("made it!");
+      this.markAllDirty(this.signupForm);
+      this.submitError = true;
       return;
     }
     this.submitted = true;
+    this.submitError = false;
     this.userAuthService.createUser(
       this.signupForm.get('lastName').value,
       this.signupForm.get('firstName').value,
@@ -45,16 +50,46 @@ export class SignupComponent {
     )
   }
 
-  private markAllTouched(control: AbstractControl) {
+  private markAllDirty(control: AbstractControl) {
     if(control.hasOwnProperty('controls')) {
-      control.markAsTouched(true) // mark group
+      control.markAsDirty(true) // mark group
       let ctrl = <any>control;
       for (let inner in ctrl.controls) {
-        this.markAllTouched(ctrl.controls[inner] as AbstractControl);
+        this.markAllDirty(ctrl.controls[inner] as AbstractControl);
       }
     }
     else {
-      (<FormControl>(control)).markAsTouched(true);
+      (<FormControl>(control)).markAsDirty(true);
     }
+  }
+
+  /**
+   * Returns a validator that compares the value to a sibling FormControl
+   *  Parameters:
+   *    ctrlKey: Key that will be used to retrieve the FormControl to compare to
+   *    error: Error Key to add when invalid
+   *  Returns: Validator function
+   **/
+  private equalsValidatorFactory(ctrlKey: string, error: string) {
+    return (fc: FormControl): {[key: string]: any} => {
+      // If the parent doesn't exist yet, return null (no errors)
+      if (!fc.parent) {
+        return null;
+      }
+
+      let val = fc.value;
+      let compVal = fc.parent.controls[ctrlKey].value;
+
+      if (val === compVal) {
+        return null;
+      } else {
+        return { [error] : true };
+      }
+    }
+  }
+
+  /** Called by keyup on password - validates that password still matches **/
+  revalidateConfirm() {
+    this.signupForm.get('passwordConfirm').updateValueAndValidity();
   }
 }
