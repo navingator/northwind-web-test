@@ -1,7 +1,8 @@
 /** Angular Modules **/
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule }   from '@angular/forms';
+import { NgModule }            from '@angular/core';
+import { CommonModule }        from '@angular/common';
+import { FormsModule }         from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms'
 
 /** Routing Module **/
 import { UserRoutingModule } from './user-routing.module';
@@ -17,6 +18,7 @@ import { UserAuthService } from './user-auth.service'
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     UserRoutingModule
   ],
   declarations: [

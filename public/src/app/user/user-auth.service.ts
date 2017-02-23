@@ -5,11 +5,11 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class UserAuthService {
-  createUser(lastName:string, firstName:string, username:string, password:string): void {
+  createUser(lastName:string, firstName:string, username:string, password:string) {
     console.log("User: ", firstName + " " + lastName);
   }
 
-  authenticate(username:string, password:string): void {
+  authenticate(username:string, password:string) {
     console.log("Authenticated ", username);
   }
 }

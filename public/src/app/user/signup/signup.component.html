@@ -1,86 +1,70 @@
 <section class="row">
   <h1 class="col-12 text-center">Sign Up</h1>
   <div class="offset-1 col-10 offset-lg-3 col-lg-6">
-    <form (ngSubmit)="onSubmit()" #signUnForm="ngForm" novalidate>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="row">
         <div class="form-group col-12 col-md-6"
           [ngClass]="{
-            'has-danger':(firstname.invalid && firstname.touched),
-            'has-success':(firstname.valid)
+            'has-danger':(signupForm.get('firstName').invalid && signupForm.get('firstName').touched),
+            'has-success':(signupForm.get('firstName').valid)
           }">
           <label class="form-control-label" for="firstname">First Name</label>
           <div class="has-tooltip">
-            <input type="text" id="firstname"
-              class="form-control form-control-success form-control-danger"
-              required
-              [(ngModel)]="newUser.firstName" name="firstname"
-              #firstname="ngModel">
+            <input type="text" formControlName="firstName"
+              class="form-control form-control-success form-control-danger">
             <div class="tooltip">Required</div>
           </div>
         </div>
         <div class="form-group col-12 col-md-6"
           [ngClass]="{
-            'has-danger':(lastname.invalid && lastname.touched),
-            'has-success':(lastname.valid)
+            'has-danger':(signupForm.get('lastName').invalid && signupForm.get('lastName').touched),
+            'has-success':(signupForm.get('lastName').valid)
           }">
           <label class="form-control-label" for="lastname">Last Name</label>
           <div class="has-tooltip">
-            <input type="text" id="lastname"
-              class="form-control form-control-success form-control-danger"
-              required
-              [(ngModel)]="newUser.lastName" name="lastname"
-              #lastname="ngModel">
+            <input type="text" formControlName="lastName"
+              class="form-control form-control-success form-control-danger">
             <div class="tooltip">Required</div>
           </div>
         </div>
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(username.invalid && username.touched),
-            'has-success':(username.valid)
+            'has-danger':(signupForm.get('username').invalid && signupForm.get('username').touched),
+            'has-success':(signupForm.get('username').valid)
           }">
           <label class="form-control-label" for="username">Username</label>
           <div class="has-tooltip">
-            <input type="text" id="username"
-              class="form-control form-control-success form-control-danger"
-              required
-              [(ngModel)]="newUser.username" name="username"
-              #username="ngModel">
-              <!-- TODO add database validation -->
-            <div class="tooltip">Required</div>
+            <input type="text" formControlName="username"
+              class="form-control form-control-success form-control-danger">
+            <div class="tooltip">Username already taken</div>
           </div>
         </div>
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(password.invalid && password.touched),
-            'has-success':(password.valid)
+            'has-danger':(signupForm.get('password').invalid && signupForm.get('password').touched),
+            'has-success':(signupForm.get('password').valid)
           }">
           <label class="form-control-label" for="password">Password</label>
           <div class="has-tooltip">
-            <input type="password" id="password"
-              class="form-control form-control-success form-control-danger"
-              required
-              [(ngModel)]="newUser.password" name="password"
-              #password="ngModel">
+            <input type="password" formControlName="password"
+              class="form-control form-control-success form-control-danger">
             <div class="tooltip">Required</div>
           </div>
         </div>
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(confirmpassword.invalid && confirmpassword.touched),
-            'has-success':(confirmpassword.valid)
+            'has-danger':(signupForm.get('passwordConfirm').invalid && signupForm.get('passwordConfirm').touched),
+            'has-success':(signupForm.get('passwordConfirm').valid)
           }">
-          <label class="form-control-label" for="confirmpassword">Confirm Password</label>
+          <label class="form-control-label" for="passwordconfirm">Confirm Password</label>
           <div class="has-tooltip">
-            <input type="password" id="confirmpassword"
-              class="form-control form-control-success form-control-danger"
-              required
-              [(ngModel)]="newUser.confirmPassword" name="confirmpassword"
-              #confirmpassword="ngModel">
+            <input type="password" formControlName="passwordConfirm"
+              class="form-control form-control-success form-control-danger">
             <div class="tooltip">Passwords must match</div>
           </div>
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary text-center">Sign Up!</button>
+          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Sign Up!</button>
         </div>
       </div>
     </form>
