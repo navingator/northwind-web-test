@@ -1,26 +1,34 @@
 <section class="row">
   <h1 class="col-12 text-center">Sign in</h1>
   <div class="offset-1 col-10 offset-lg-3 col-lg-6">
-    <form (ngSubmit)="onSubmit($event)" #signInForm="ngForm" novalidate>
+    <form (ngSubmit)="onSubmit()" #signInForm="ngForm" novalidate>
       <div class="form-group"
         [ngClass]="{
-          'has-danger':(username.invalid && username.touched),
+          'has-danger':(username.invalid && username.dirty),
           'has-success':(username.valid)
         }">
         <label class="form-control-label" for="username">Username</label>
         <div class="has-tooltip">
-          <input type="text" class="form-control form-control-success form-control-danger" id="username"
+          <input type="text" class="form-control form-control-success form-control-danger"
             required
             [(ngModel)]="user.username" name="username"
             #username="ngModel">
           <div class="tooltip">Required</div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group"
+        [ngClass]="{
+          'has-danger':(password.invalid && password.dirty),
+          'has-success':(password.valid)
+        }">
         <label class="form-control-label" for="password">Password</label>
-        <input type="password" class="form-control" id="password"
-          [(ngModel)]="user.password" name="password"
-          #password="ngModel">
+        <div class="has-tooltip">
+          <input type="password" class="form-control form-control-success form-control-danger"
+            required
+            [(ngModel)]="user.password" name="password"
+            #password="ngModel">
+          <div class="tooltip">Required</div>
+        </div>
       </div>
       <button type="submit" class="btn btn-primary text-center" [disabled]="signInForm.invalid || submitted">Sign in!</button>
     </form>
