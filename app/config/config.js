@@ -1,9 +1,11 @@
+'use strict';
+
 var browserSync = require('browser-sync');
 
 exports.port = process.env.PORT || 3002;
 
 module.exports.startBrowserSync = function () {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     browserSync({
       proxy: 'localhost:' + exports.port,
       port: process.env.BROWSER_SYNC_PORT || 3000,
@@ -14,4 +16,4 @@ module.exports.startBrowserSync = function () {
       open: false
     });
   }
-}
+};

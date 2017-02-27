@@ -10,7 +10,10 @@ module.exports = function () {
   app.use('/node_modules', express.static(path.resolve('./node_modules')));
 
   // routes ==================================================
-  require('../routes/core.routes')(app); // core routes - import last!
+  var coreRouter = require(path.resolve('./app/routes/core.routes'));
+  var api = require(path.resolve('./app/routes/api.routes'));
+  app.use('/api', api);
+  coreRouter(app); // core routes
 
   return app;
-}
+};
