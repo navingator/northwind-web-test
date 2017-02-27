@@ -4,7 +4,7 @@ var browserSync = require('browser-sync');
 
 exports.port = process.env.PORT || 3002;
 
-module.exports.startBrowserSync = function () {
+exports.startBrowserSync = function () {
   if (process.env.NODE_ENV === 'development') {
     browserSync({
       proxy: 'localhost:' + exports.port,

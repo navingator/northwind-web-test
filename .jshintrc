@@ -3,11 +3,9 @@
   "curly": true,
   "eqeqeq": true,
   "freeze": true,
-  "indent": 2,
   "latedef": true,
   "node": true,
-  "trailing": true,
-  "globalstrict": true,
+  "strict": "global",
   "unused": "vars",
   "undef": true,
   "quotmark": "single"
