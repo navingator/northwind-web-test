@@ -24,6 +24,7 @@
 
     "bcryptjs": "~2.4.3",
     "bootstrap": "~4.0.0-alpha.6",
+    "dotenv": "~4.0.0",
     "express": "~4.14.1",
     "jquery": "~3.1.1",
     "pg": "~6.1.2"
