@@ -4,12 +4,11 @@ var browserSync = require('browser-sync')
 var path = require('path');
 var pg = require('pg');
 
-var ports = require('./ports.json');
-
 var app = express();
 
 // configuration ===========================================
-var port = process.env.PORT || ports.server; // set our port
+require('dotenv').config()
+var port = process.env.PORT || 3002; // set our port
 
 app.use(express.static(path.join(__dirname, '/public'))); // set the static files location, example: /public/img will be /img for users
 app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
@@ -25,10 +24,10 @@ console.log('Listening on port ' + port); 			// shoutout to the user
 function browserSyncListen() {
   browserSync({
     proxy: 'localhost:' + port,
-    port: ports.browserSync,
+    port: process.env.BROWSER_SYNC_PORT || 3000,
     files: ['public/**/*.{js,css,html}'],
     ui: {
-      port: ports.browserSyncUI
+      port: parseInt(process.env.BROWSER_SYNC_UI_PORT || 3001)
     },
     open: false
   });

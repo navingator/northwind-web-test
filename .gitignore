@@ -15,3 +15,6 @@ jspm_packages
 
 # Local Ports
 ports.json
+
+# dotenv required file
+.env
