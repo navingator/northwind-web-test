@@ -1,5 +1,0 @@
-{
-  "server"        : 4002,
-  "browserSync"   : 4000,
-  "browserSyncUI" : 4001
-}
