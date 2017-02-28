@@ -4,6 +4,8 @@ var browserSync = require('browser-sync');
 
 exports.port = process.env.PORT || 3002;
 
+exports.dbConnectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/northwind_dev';
+
 exports.startBrowserSync = function () {
   if (process.env.NODE_ENV === 'development') {
     browserSync({

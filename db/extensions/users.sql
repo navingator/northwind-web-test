@@ -22,13 +22,12 @@ DROP TABLE IF EXISTS users;
 --
 
 CREATE TABLE users (
-  userid int NOT NULL,
+  id serial PRIMARY KEY,
   username character varying(15) NOT NULL,
+  first_name text NOT NULL,
+  last_name text NOT NULL,
   password text NOT NULL,
-  dateupdated timestamp NOT NULL,
+  date_updated timestamp NOT NULL default CURRENT_TIMESTAMP,
   security text,
-  lastlogin timestamp
+  last_login timestamp
 );
-
-ALTER TABLE ONLY users
-    ADD CONSTRAINT pk_users PRIMARY KEY (userid);
