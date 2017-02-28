@@ -4,8 +4,6 @@ var browserSync = require('browser-sync');
 
 exports.port = process.env.PORT || 3002;
 
-exports.dbConnectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/northwind_dev';
-
 exports.startBrowserSync = function () {
   if (process.env.NODE_ENV === 'development') {
     browserSync({
@@ -19,3 +17,15 @@ exports.startBrowserSync = function () {
     });
   }
 };
+
+var promise = require('bluebird');
+
+var options = {
+  // Initialization Options
+  promiseLib: promise
+};
+var pgp = require('pg-promise')(options);
+var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/northwind_dev';
+var db = pgp(connectionString);
+exports.db = db;
+exports.pgp = pgp;
