@@ -4,17 +4,25 @@ var path = require('path');
 var db = require(path.resolve('./app/config/db.config'));
 var bcrypt = require('bcrypt');
 
+/**
+ * Hashes password using bcrypt
+ */
 var hashpassword = function(password) {
   var saltRounds = 10;
   return bcrypt.hash(password, saltRounds);
 };
 
+/**
+ * Creates a user, storing it in the database.
+ * Returns a promise
+ */
 exports.create = function(req, res) {
-  return hashpassword(req.body.password)
+  var newUser = req.body;
+  return hashpassword(newUser.password)
     .then(function (hash) {
-      req.body.password = hash;
+      newUser.passwordHash = hash;
       return db.none('insert into users(username, last_name, first_name, password)' +
-        ' values(${username}, ${last_name}, ${first_name}, ${password})', req.body);
+        ' values(${username}, ${last_name}, ${first_name}, ${passwordHash})', newUser);
     })
     .then(function () {
       res.status(200).send('user created'); //TODO log in user
