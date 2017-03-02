@@ -19,9 +19,6 @@ module.exports = function () {
   app.use(express.static(path.resolve('./public'))); // set the static files location, example: /public/img will be /img for users
   app.use('/node_modules', express.static(path.resolve('./node_modules')));
 
-  // Bootstrap the Postgres connection
-  console.log(process.env.DATABASE_URL);
-
   // routes ==================================================
   var coreRouter = require(path.resolve('./app/routes/core.routes'));
   var api = require(path.resolve('./app/routes/api.routes'));
