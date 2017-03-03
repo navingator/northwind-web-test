@@ -23,9 +23,9 @@ function User(firstName, lastName, username, password) {
  * @param  {Object} dbUser User result from database
  * @return {User}          User object
  */
-// User.convertFromDbUser = function (dbUser) {
-//   return new User(dbUser.first_name, dbUser.last_name, dbUser.username, dbUser.password); // jshint ignore:line
-// };
+User.convertFromDbUser = function (dbUser) {
+  return new User(dbUser.first_name, dbUser.last_name, dbUser.username, dbUser.password); // jshint ignore:line
+};
 
 /**
  * Public static method that returns a promise that fullfills with a bcrypt-hashed password
@@ -57,12 +57,35 @@ User.createUser = function (user) {
  * @param  {string}  username username of the user
  * @return {promise}          Promise that resolves to a single user
  */
-// User.getUserByUsername = function (username) {
-//   return db.one('SELECT * FROM users WHERE username=${username}',
-//     {username: username})
-//     .then(function(data) {
-//       return User.createUserFromDbUser(data);
-//     });
-// };
+User.getUserByUsername = function (username) {
+  return db.one('SELECT * FROM users WHERE username=${username}',
+    {username: username})
+    .then(function(data) {
+      return User.convertFromDbUser(data);
+    });
+};
+
+/**
+ * Returns a user object. Throws an error if more than 1 user or no users are found.
+ * @param  {number}  id id of the user
+ * @return {promise}    Promise that resolves to a single user
+ */
+User.getUserById = function (id) {
+  return db.one('SELECT * FROM users WHERE id=${id}',
+    {id: id})
+    .then(function(data) {
+      return User.convertFromDbUser(data);
+    });
+};
+
+/**
+ * Uses bcrypt to authenticate users credentials
+ * @param  {string}  password cleartext password
+ * @return {promise}          promise object that resolves to a boolean indicating
+ *                            whether the password is correct
+ */
+User.prototype.authenticate = function (password) {
+  return bcrypt.compare(password, this.password);
+};
 
 module.exports = User;
