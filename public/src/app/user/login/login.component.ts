@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 
-import { UserAuthService } from '../user-auth.service'
+import { UserAuthService } from '../user-auth.service';
 
-class User {
-  username: string;
-  password: string;
-}
+import { User } from '../user.class';
 
 @Component({
   moduleId: module.id,
@@ -20,6 +17,6 @@ export class LoginComponent {
 
   onSubmit() {
     this.submitted = true;
-    this.userAuthService.authenticate(this.user.username, this.user.password);
+    this.userAuthService.authenticate(this.user);
   }
 }

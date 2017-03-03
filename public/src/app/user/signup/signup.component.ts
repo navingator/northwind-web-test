@@ -4,12 +4,15 @@ import { FormBuilder, FormGroup, Validators,
 
 import { UserAuthService } from '../user-auth.service';
 
+import { User } from '../user.class'
+
 @Component({
   moduleId: module.id,
   templateUrl: './signup.component.html',
 })
 export class SignupComponent {
   signupForm: FormGroup;
+  user = new User();
 
   submitted = false;
   submitError = false;
@@ -35,6 +38,7 @@ export class SignupComponent {
   }
 
   onSubmit() {
+    //* if the form is invalid, mark all invalid feilds
     if (this.signupForm.invalid) {
       this.markAllDirty(this.signupForm);
       this.submitError = true;
@@ -42,12 +46,13 @@ export class SignupComponent {
     }
     this.submitted = true;
     this.submitError = false;
-    this.userAuthService.createUser(
-      this.signupForm.get('lastName').value,
-      this.signupForm.get('firstName').value,
-      this.signupForm.get('username').value,
-      this.signupForm.get('password').value
-    )
+    //* else populate the user
+    this.user.lastName = this.signupForm.get('lastName').value;
+    this.user.firstName = this.signupForm.get('firstName').value;
+    this.user.username = this.signupForm.get('username').value;
+    this.user.password = this.signupForm.get('password').value;
+    //and send it to the userAuthService
+    this.userAuthService.createUser(this.user)
   }
 
   private markAllDirty(control: AbstractControl) {

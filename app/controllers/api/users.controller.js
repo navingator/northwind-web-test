@@ -18,11 +18,14 @@ var hashpassword = function(password) {
  */
 exports.create = function(req, res) {
   var newUser = req.body;
+  console.log(req);
+  console.log(req.body);
+  console.log(req.data);
   return hashpassword(newUser.password)
     .then(function (hash) {
       newUser.passwordHash = hash;
       return db.none('insert into users(username, last_name, first_name, password)' +
-        ' values(${username}, ${last_name}, ${first_name}, ${passwordHash})', newUser);
+        ' values(${username}, ${lastName}, ${firstName}, ${passwordHash})', newUser);
     })
     .then(function () {
       res.status(200).send('user created'); //TODO log in user
