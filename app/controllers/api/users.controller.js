@@ -18,3 +18,7 @@ exports.create = function(req, res) {
       res.status(400).send(err);
     });
 };
+
+exports.signin = function(req, res) {
+  res.status(200).send('user authenticated'); //TODO log in user
+};
