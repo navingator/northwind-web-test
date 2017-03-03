@@ -1,8 +1,9 @@
 'use strict';
 // configuration ===========================================
 require('dotenv').config();
-var app = require('./app/config/express.config')(); // express configuration
 var config = require('./app/config/config'); // general configuration
+var app = require('./app/config/express.config')(); // express configuration
+require('./app/config/passport.config')(); // passport configuration
 
 // start app ===============================================
 var port = config.port; // set our port

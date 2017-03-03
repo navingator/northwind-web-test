@@ -1,5 +1,6 @@
 'use strict';
 
+var passport = require('passport');
 var path = require('path');
 var User = require(path.resolve('./app/models/user.model.js'));
 
@@ -17,4 +18,14 @@ exports.create = function(req, res) {
       console.log(err); //TODO better logging method
       res.status(400).send(err);
     });
+};
+
+exports.signin = function(req, res, next) {
+  passport.authenticate('local', function (err, user, info) {
+    if (err) {
+      res.status(400).send(info);
+    } else {
+      res.status(200).send(info);
+    }
+  })(req, res, next);
 };
