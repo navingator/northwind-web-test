@@ -10,6 +10,12 @@ var User = require(path.resolve('./app/models/user.model.js'));
 
 module.exports = function() {
 	// Use local strategy
+	/**
+	 * done function callback on LocalStrategy expects 3 inputs
+	 * 	err - error ojbect
+	 * 	user - user object (on sucess)
+	 * 	info - info to attach with the object
+	 */
 	passport.use(new LocalStrategy(function(username, password, done) {
 		var authUser; // to be used within promises
 		User.getUserByUsername(username)

@@ -11,11 +11,12 @@ var db = require(path.resolve('./app/config/db.config'));
  * @param {string} username  username for the user
  * @param {string} password  user's (hashed) password
  */
-function User(firstName, lastName, username, password) {
-  this.firstName = firstName;
-  this.lastName = lastName;
-  this.username = username;
-  this.password = password;
+function User(user) {
+  this.id = user.id;
+  this.firstName = user.firstName;
+  this.lastName = user.lastName;
+  this.username = user.username;
+  this.password = user.password;
 }
 
 /**
@@ -24,7 +25,12 @@ function User(firstName, lastName, username, password) {
  * @return {User}          User object
  */
 User.convertFromDbUser = function (dbUser) {
-  return new User(dbUser.first_name, dbUser.last_name, dbUser.username, dbUser.password); // jshint ignore:line
+  return new User({
+    id: dbUser.id,
+    firstName: dbUser.first_name, // jshint ignore:line
+    lastName: dbUser.last_name, // jshint ignore:line
+    username: dbUser.username,
+    password: dbUser.password});
 };
 
 /**
@@ -76,6 +82,16 @@ User.getUserById = function (id) {
     .then(function(data) {
       return User.convertFromDbUser(data);
     });
+};
+
+/**
+ * Deletes a user given the user's ID.
+ * @param  {number}  id id of the user to Deletes
+ * @return {promise}    promise that resolvse to result object from the query;
+ */
+User.delete = function(id) {
+  return db.result('DELETE FROM users WHERE id=${id}',
+    {id: id});
 };
 
 /**

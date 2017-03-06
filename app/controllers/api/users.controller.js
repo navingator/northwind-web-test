@@ -9,7 +9,12 @@ var User = require(path.resolve('./app/models/user.model.js'));
  * Returns a promise
  */
 exports.create = function(req, res) {
-  var user = new User(req.body.firstName, req.body.lastName, req.body.username, req.body.password);
+  var user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    username: req.body.username,
+    password: req.body.password
+  });
   return User.createUser(user)
     .then(function () {
       res.status(200).send('user created'); //TODO log in user

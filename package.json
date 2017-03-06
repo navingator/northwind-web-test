@@ -5,6 +5,7 @@
   "scripts" : {
     "build": "tsc -p ./public/src/",
     "build:watch": "tsc -p ./public/src/ -w",
+    "test": "mocha --timeout 5000",
     "serve": "nodemon server.js",
     "start" : "concurrently \"npm run build:watch\" \"npm run serve\""
   },
@@ -21,26 +22,31 @@
     "core-js": "^2.4.1",
     "rxjs": "5.0.1",
     "zone.js": "^0.7.4",
+    "bootstrap": "~4.0.0-alpha.6",
+    "jquery": "~3.1.1",
 
     "bcrypt": "~1.0.2",
     "bluebird": "~3.4.7",
-    "bootstrap": "~4.0.0-alpha.6",
     "body-parser": "~1.16.1",
     "dotenv": "~4.0.0",
     "express": "~4.14.1",
-    "jquery": "~3.1.1",
     "method-override": "~2.3.7",
     "passport": "0.3.2",
-    "passport-local": "1.0.0",
+    "path": "~0.12.7",
+    "passport-local": "~1.0.0",
     "pg-promise": "~5.6.2"
   },
   "devDependencies" : {
-    "concurrently": "~3.3.0",
-    "browser-sync": "~2.18.8",
-    "nodemon": "~1.11.0",
+    "@types/node": "~7.0.5",
+    "jasmine": "~2.5.3",
     "typescript": "~2.1.6",
-    "path": "~0.12.7",
 
-    "@types/node": "~7.0.5"
+    "browser-sync": "~2.18.8",
+    "chai": "~3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "chai-http": "^3.0.0",
+    "concurrently": "~3.3.0",
+    "mocha": "~3.2.0",
+    "nodemon": "~1.11.0"
   }
 }
