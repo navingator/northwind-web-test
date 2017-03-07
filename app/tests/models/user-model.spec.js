@@ -11,7 +11,7 @@ chai.use(chaiAP);
 require(path.resolve('./server'));
 let User = require(path.resolve('./app/models/user.model.js'));
 
-var user1, user2; // users for testing TODO change to let
+let user1, user2; // users for testing
 /**
  * Unit tests
  */
@@ -19,14 +19,14 @@ describe('User Model Unit Tests', function() {
   before(function(done) {
     user1 = new User({
       firstName: 'Unit',
-      lastName: 'Testing',
-      username: 'unittesting',
+      lastName: 'zzTesting',
+      username: 'zzunittesting',
       password: 'password1'
     });
     user2 = new User({
       firstName: 'Second',
-      lastName: 'Testing',
-      username: 'unittesting',
+      lastName: 'zzTesting',
+      username: 'zzunittesting',
       password: 'password2'
     });
     done();
