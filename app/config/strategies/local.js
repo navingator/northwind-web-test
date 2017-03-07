@@ -28,7 +28,7 @@ module.exports = function() {
 					return done(null, authUser);
 				} else {
 					return done(null, false, {
-						message: 'Password invalid'
+						message: 'Invalid password'
 					});
 				}
 			})

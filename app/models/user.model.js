@@ -52,9 +52,11 @@ User.hashPassword = function(password) {
 User.createUser = function (user) {
   return User.hashPassword(user.password)
     .then(function(hash) {
-      user.passwordHash = hash;
-      return db.none('INSERT INTO users(username, last_name, first_name, password)' +
-        ' VALUES(${username}, ${lastName}, ${firstName}, ${passwordHash})', user);
+      let dbUser = new User(user);
+      dbUser.password = hash;
+      return db.one('INSERT INTO users(username, last_name, first_name, password)' +
+        ' VALUES(${username}, ${lastName}, ${firstName}, ${password})' +
+        'returning id', dbUser);
     });
 };
 

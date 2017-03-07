@@ -1,14 +1,22 @@
 'use strict';
 
-var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
+let express = require('express');
+let path = require('path');
+let bodyParser = require('body-parser');
+let methodOverride = require('method-override');
+let morgan = require('morgan');
+let passport = require('passport');
+let session = require('express-session');
+
+let api = require(path.resolve('./app/routes/api.routes'));
+let coreRouter = require(path.resolve('./app/routes/core.routes'));
 
 module.exports = function () {
   // Initialize the express application
-  var app = express();
+  let app = express();
 
+  // Logging and Parsing
+  app.use(morgan('dev'));
   // Request body parsing middleware should be above methodOverride
 	app.use(bodyParser.urlencoded({
 		extended: true
@@ -16,14 +24,23 @@ module.exports = function () {
 	app.use(bodyParser.json());
   app.use(methodOverride());
 
-  app.use(express.static(path.resolve('./public'))); // set the static files location, example: /public/img will be /img for users
+  // Authentication
+  app.use(session({
+    name: 'northwind.connect.sid',
+    secret: process.env.SESSION_SECRET,
+    resave: false, //https://github.com/expressjs/session#resave typically false, unless we implement touch method
+    saveUnitialized: false // https://github.com/expressjs/session#saveuninitialized
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  // Static files
+  app.use(express.static(path.resolve('./public'))); // set the static files location, example: /public/img will be /img for client
   app.use('/node_modules', express.static(path.resolve('./node_modules')));
 
-  // routes ==================================================
-  var coreRouter = require(path.resolve('./app/routes/core.routes'));
-  var api = require(path.resolve('./app/routes/api.routes'));
+  // Routes
   app.use('/api', api);
-  coreRouter(app); // core routes
+  coreRouter(app); // frontend routes - must be last, as it is a wildcard route
 
   return app;
 };
