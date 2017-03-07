@@ -11,87 +11,105 @@ chai.use(chaiAP);
 require(path.resolve('./server'));
 let User = require(path.resolve('./app/models/user.model.js'));
 
-let user1, user2; // users for testing
+let user; // user template
 /**
  * Unit tests
  */
-describe('User Model Unit Tests', function() {
-  before(function(done) {
-    user1 = new User({
+describe('User Model Unit Tests', () => {
+  beforeEach(done => {
+    user = new User({
       firstName: 'Unit',
       lastName: 'zzTesting',
       username: 'zzunittesting',
       password: 'password1'
     });
-    user2 = new User({
-      firstName: 'Second',
-      lastName: 'zzTesting',
-      username: 'zzunittesting',
-      password: 'password2'
-    });
     done();
   });
 
-  describe('Create Users', function() {
-    it('should be able to create a user', function() {
-      return expect(User.createUser(user1)).to.be.fulfilled;
+  describe('Tests without a pre-existing user', () => {
+    afterEach(done => {
+      User.getUserByUsername(user.username).then(dbUser => {
+        User.delete(dbUser.id).then(() => done());
+      })
+        .catch(err => done(err));
     });
-    it('should fail to create a new user with the same username', function() {
-      return expect(User.createUser(user2)).to.be.rejected;
-    });
-    it('should fail to create a user without a username', function() {
-      let user = new User(user1);
-      delete user.username;
-      return expect(User.createUser(user)).to.be.rejected;
-    });
-    it('should fail to create a user without a password', function() {
-      let user = new User(user1);
-      user.username='unittestingexception'; // new username so we don't get the previous error
-      delete user.password;
-      return expect(User.createUser(user)).to.be.rejected;
+
+    it('should successfully create a new user', () => {
+      return expect(User.createUser(user)).to.be.fulfilled;
     });
   });
 
-  describe('Get Users', function() {
-    it('should get created user successfully by username', function(done) {
-      User.getUserByUsername(user1.username).then(function(user) {
-        // Verify fields
-        expect(user.firstName).to.deep.equal(user1.firstName);
-        expect(user.lastName).to.deep.equal(user1.lastName);
-        expect(user.username).to.deep.equal(user1.username);
+  describe('Tests with a pre-existing user', () => {
+    beforeEach(done => {
+      User.createUser(user).then(data => {
+        user.id = data.id;
         done();
-      })
-        .catch(err => done(err));
+      });
     });
-    it('should get created user successfully by id', function(done) {
-      let id;
-      User.getUserByUsername(user1.username).then(function(user) {
-        id = user.id;
-        // verify with username
-        User.getUserById(id).then(function(user) {
-          expect(user.username).to.deep.equal(user1.username);
-          done();
-        });
-      })
-        .catch(err => done(err));
-    });
-    it('should authenticate with itself', function(done) {
-      User.getUserByUsername(user1.username).then(function(user) {
-        user.authenticate(user1.password).then(function(auth) {
-          expect(auth).to.deep.equal(true);
-          done();
-        });
-      })
-        .catch(err => done(err));
-    });
-  });
 
-  // Delete the created user so that testing can be repeated
-  after(function(done) {
-    User.getUserByUsername(user1.username).then(function(user) {
-      User.delete(user.id);
-      done();
-    })
-      .catch(err => done(err));
+    // Delete the created user so that testing can be repeated
+    afterEach(done => {
+      User.delete(user.id).then(() => done())
+        .catch(err => done(err));
+    });
+
+    describe('Create Users', () => {
+      it('should fail to create a new user with the same username', () => {
+        let badUser = new User(user);
+        badUser.firstName = 'Second';
+        badUser.lastName = 'zzTesting';
+        badUser.password = 'password2';
+        return expect(User.createUser(badUser)).to.be.rejected;
+      });
+      it('should fail to create a user without a username', () => {
+        let badUser = new User(user);
+        delete badUser.username;
+        return expect(User.createUser(badUser)).to.be.rejected;
+      });
+      it('should fail to create a user without a password', () => {
+        let badUser = new User(user);
+        delete badUser.password;
+        return expect(User.createUser(badUser)).to.be.rejected;
+      });
+    });
+
+    describe('Get Users', function() {
+      it('should get created user successfully by username', done => {
+        User.getUserByUsername(user.username).then(user => {
+          // Verify fields
+          expect(user.firstName).to.deep.equal(user.firstName);
+          expect(user.lastName).to.deep.equal(user.lastName);
+          expect(user.username).to.deep.equal(user.username);
+          done();
+        })
+          .catch(err => done(err));
+      });
+      it('should get created user successfully by id', done => {
+        User.getUserById(user.id).then(user => {
+          // verify with username
+          expect(user.username).to.deep.equal(user.username);
+          done();
+        })
+          .catch(err => done(err));
+      });
+      it('should authenticate with itself', done => {
+        User.getUserByUsername(user.username).then(dbUser => {
+          dbUser.authenticate(user.password).then(auth => {
+            expect(auth).to.deep.equal(true);
+            done();
+          });
+        })
+          .catch(err => done(err));
+      });
+      it('should fail to authenticate with a bad password', done => {
+        User.getUserByUsername(user.username).then(dbUser => {
+          dbUser.authenticate('badpassword').then(auth => {
+            expect(auth).to.deep.equal(false);
+            done();
+          });
+        })
+          .catch(err => done(err));
+      });
+    });
   });
 });
