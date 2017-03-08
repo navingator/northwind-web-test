@@ -1,6 +1,7 @@
 #!/bin/bash
 # Adapted from https://github.com/pthom/northwind_psql
 
+# Gets the base directory for this file and it's operations
 DIR="$(dirname $(readlink -f $0))"
 
 NORTHWIND_DIR="$DIR/northwind_psql/northwind.sql"
