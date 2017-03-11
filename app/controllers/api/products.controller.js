@@ -8,13 +8,11 @@ let Product = require(path.resolve('./app/models/product.model.js'));
  * the caller
  */
 exports.create = function(req, res) {
-  let product = Product.get(req.body);
-  Product.create(product).then(data => {
-    product.id = data.id; // set ID from database
+  let product = new Product(req.body);
+  product.create().then(() => {
     res.json(product);
   })
     .catch(err => {
-      console.log(err); //TODO better logging method
       res.status(400).send(err);
     });
 };

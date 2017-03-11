@@ -1,5 +1,4 @@
 'use strict';
-/*jshint expr: true*/
 process.env.NODE_ENV='test'; // TODO do this globally for tests
 
 let path = require('path');
@@ -11,23 +10,29 @@ chai.use(chaiAP);
 require(path.resolve('./server'));
 let Product = require(path.resolve('./app/models/product.model.js'));
 
-let product = Product.get({
-  name: 'zzUnitTestProduct',
-  categoryId: 1, // TODO create a category to guarantee one exists
-  quantityPerUnit: 2,
-  unitPrice: 12.50,
-  unitsInStock: 4,
-  unitsOnOrder: 5,
-  discontinued: false
-});
+let product;
 /**
  * Unit Tests
  */
 describe('Product Model Unit Tests', () => {
+  beforeEach(done => {
+    product = new Product({
+      name: 'zzUnitTestProduct',
+      categoryId: 1, // TODO create a category to guarantee one exists
+      unitPrice: 12.50,
+      unitsInStock: 4,
+      discontinued: false
+    });
+    done();
+  });
+  afterEach(done => {
+    Product.delete(product.id)
+      .then(() => done())
+      .catch(err => done(err));
+  });
   it('should successfully create a new product', done => {
-    console.log(product.unitsOnOrder);
-    Product.create(product).then(data => {
-      expect(data.id).to.not.be.an('undefined');
+    product.create().then(() => {
+      expect(product.id).to.be.a('number');
       done();
     })
       .catch(err => done(err));

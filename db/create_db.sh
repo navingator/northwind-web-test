@@ -11,7 +11,10 @@ PRODUCTS_DIR="$DIR/extensions/products.sql"
 dropdb northwind
 createdb northwind
 
+# Create database from dump
 psql northwind < $NORTHWIND_DIR
+
+# Extend the database
 psql northwind < $USER_DIR
 psql northwind < $PRODUCTS_DIR
 

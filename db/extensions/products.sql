@@ -6,3 +6,4 @@ ALTER TABLE products ALTER COLUMN productid SET DEFAULT nextval('products_id_seq
 ALTER TABLE products ADD UNIQUE (productname);
 ALTER TABLE products ALTER COLUMN categoryid SET NOT NULL;
 ALTER TABLE products ALTER COLUMN discontinued TYPE bool USING CASE WHEN discontinued=0 THEN FALSE ELSE TRUE END;
+ALTER TABLE products ALTER COLUMN discontinued SET DEFAULT 'f';
