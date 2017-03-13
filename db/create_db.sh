@@ -6,6 +6,7 @@ DIR="$(dirname $(readlink -f $0))"
 
 NORTHWIND_DIR="$DIR/northwind_psql/northwind.sql"
 USER_DIR="$DIR/extensions/users.sql"
+CATEGORIES_DIR="$DIR/extensions/categories.sql"
 PRODUCTS_DIR="$DIR/extensions/products.sql"
 
 dropdb northwind
@@ -16,6 +17,7 @@ psql northwind < $NORTHWIND_DIR
 
 # Extend the database
 psql northwind < $USER_DIR
+psql northwind < $CATEGORIES_DIR
 psql northwind < $PRODUCTS_DIR
 
 # Create a role northwind_user before this part
