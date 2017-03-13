@@ -3,6 +3,12 @@ logs
 *.log
 npm-debug.log*
 
+# dotenv required file
+.env
+
+# mocha test outputs
+mochawesome-report
+
 # Dependency directories
 node_modules
 jspm_packages
@@ -12,9 +18,3 @@ jspm_packages
 *.js.map
 !public/src/systemjs.config.extras.js
 !public/src/systemjs.config.js
-
-# Local Ports
-ports.json
-
-# dotenv required file
-.env
