@@ -22,7 +22,7 @@ let productTemplate = new Product({
  * Unit Tests
  */
 describe('Product Model Unit Tests', () => {
-  describe('Delete request with', () => {
+  describe('Delete product', () => {
     describe('Existing product ID', () => {
       let product = new Product(productTemplate);
       before(done => {
@@ -46,6 +46,21 @@ describe('Product Model Unit Tests', () => {
     });
     it('should fail silently', done => {
       expect(error).to.be.an('undefined');
+      done();
+    });
+  });
+
+  describe('Product ID validation', () => {
+    it('should return true, when the ID is a number', done => {
+      expect(Product.isValidId(4)).to.be.equal(true);
+      done();
+    });
+    it('it should return true when the ID can convert to a number', done => {
+      expect(Product.isValidId('20')).to.be.equal(true);
+      done();
+    });
+    it('it should return false when the ID cannot convert to a number', done => {
+      expect(Product.isValidId('4B200')).to.be.equal(false);
       done();
     });
   });

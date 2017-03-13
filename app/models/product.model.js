@@ -51,10 +51,17 @@ class Product {
       id: dbProduct.productid,
       name: dbProduct.productname,
       categoryId: dbProduct.categoryid,
-      unitPrice: dbProduct.unitPrice,
+      unitPrice: dbProduct.unitprice,
       unitsInStock: dbProduct.unitsinstock,
       discontinued: dbProduct.discontinued
     });
+  }
+
+  static isValidId(id) {
+    if(isNaN(id)) {
+      return false;
+    }
+    return true;
   }
 
   /**

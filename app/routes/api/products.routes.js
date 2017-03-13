@@ -7,8 +7,11 @@ module.exports = function (router) {
   router.route('/products')
     .get(products.list)
     .post(products.create);
-  router.route('/products/:id')
+  router.route('/products/:productId')
     .get(products.get)
     .put(products.update)
     .delete(products.delete);
+
+  // Process the product ID before hitting the route
+  router.param('productId', products.getById);
 };

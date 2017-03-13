@@ -43,8 +43,15 @@ describe('Product Routes Unit Tests', () => {
         }
         done();
       });
-      xit('is saved in database', done => {
-        done();
+      it('is saved in database', done => {
+        Product.get(product.id)
+          .then(dbProduct => {
+            for (let property in product) {
+              expect(dbProduct).to.have.property(property, product[property]);
+            }
+            done();
+          })
+          .catch(err => done(err));
       });
       after(done => api.cleanup(product, done));
     });
@@ -128,12 +135,10 @@ describe('Product Routes Unit Tests', () => {
   });
   describe('unauthenticated get request with', () => {
     describe('no parameters', () => {
-      let products;
       let response;
       before(done => {
         api.list(res => {
           response = res;
-          products = res.body;
           done();
         });
       });
@@ -142,22 +147,47 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
       it('returns an array of Product objects', done => {
-        expect(products).to.be.an('Array');
+        expect(response.body).to.be.an('Array');
         done();
       });
     });
     describe('valid product id', () => {
-      xit('returns success status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.create(product, () => {
+          api.get(product.id, res => {
+            response = res;
+            done();
+          });
+        });
+      });
+      it('returns success status', done => {
+        expect(response.status).to.equal(200);
         done();
       });
-      xit('returns expected product', done => {
+      it('returns expected product', done => {
+        for(let property in product) {
+          expect(response.body).to.have.property(property, product[property]);
+        }
         done();
       });
+      after(done => api.cleanup(product, done));
     });
     describe('invalid product id', () => {
-      xit('returns not found status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.get(90, res => {
+          response = res;
+          done();
+        });
+      });
+      it('returns not found status', done => {
+        expect(response.status).to.equal(404);
         done();
       });
+      after(done => api.cleanup(product, done));
     });
     describe('valid category id parameter', () => {
       xit('returns success status', done => {

@@ -6,7 +6,7 @@ let Product = require(path.resolve('./app/models/product.model.js'));
 exports.list = function(req, res) {
   Product.list()
     .then(products => res.json(products))
-    .catch(err => res.status(400).send(err));
+    .catch(err => res.status(400).send(err)); // TODO error
 };
 
 /**
@@ -16,18 +16,16 @@ exports.list = function(req, res) {
 exports.create = function(req, res) {
   let product = new Product(req.body);
   product.create()
-    .then(() => {
-      res.json(product);
-    })
-    .catch(err => {
-      res.status(400).send(err);
-    });
+    .then(() => res.json(product))
+    .catch(err => res.status(400).send(err)); // TODO error
 };
 
+/**
+ * Retrieves a product and sends it back to the caller as JSON
+ * The data should be preprocessed by getById, so no errors will be thrown here
+ */
 exports.get = function(req, res) {
-  let id = req.params.id;
-  console.log(id);
-  res.send(400); // TODO implement
+  res.json(req.product);
 };
 
 exports.update = function(req, res) {
@@ -36,4 +34,23 @@ exports.update = function(req, res) {
 
 exports.delete = function(req, res) {
   res.send(400); //TODO implement
+};
+
+/**
+ * Middleware to store the product on req.product
+ * Validates that the product exists and sends errors:
+ *  400 - invalid product ID
+ *  404 - Product ID valid, but product not found
+ * Should be called by Router.param
+ */
+exports.getById = function(req, res, next, id) {
+  if (!Product.isValidId(id)) {
+    return res.status(400).send(); //TODO error
+  }
+  Product.get(id)
+    .then(product => {
+      req.product = product;
+      next();
+    })
+    .catch(() => res.status(404).send()); //TODO error
 };
