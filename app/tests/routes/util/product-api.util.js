@@ -72,11 +72,18 @@ module.exports = function(app) {
       .end((err, res) => cb(res));
   };
 
+  let remove = function(productId, cb) {
+    chai.request(app)
+      .delete('/api/products/' + productId)
+      .end((err, res) => cb(res));
+  };
+
   return {
     create: create,
     cleanup: cleanup,
     get: get,
     list: list,
-    update: update
+    update: update,
+    delete: remove
   };
 };

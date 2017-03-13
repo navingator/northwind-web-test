@@ -332,18 +332,43 @@ describe('Product Routes Unit Tests', () => {
   });
   describe('unauthenticated delete request with', () => {
     describe('valid product id', () => {
-      xit('returns success status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.create(product, () => {
+          api.delete(product.id, res => {
+            response = res;
+            done();
+          });
+        });
+      });
+      it('returns success status', done => {
+        expect(response.status).to.equal(200);
         done();
       });
-      xit('returns expected product', done => {
+      it('returns expected product', done => {
+        for (let property in product) {
+          expect(response.body).to.have.property(property, product[property]);
+        }
         done();
       });
-      xit('is deleted from database', done => {
-        done();
+      it('is deleted from database', done => {
+        api.get(product.id, res => {
+          expect(res.status).to.equal(404);
+          done();
+        });
       });
     });
     describe('invalid product id', () => {
-      xit('returns not found status', done => {
+      let response;
+      before(done => {
+        api.delete(90, res => {
+          response = res;
+          done();
+        });
+      });
+      it('returns not found status', done => {
+        expect(response.status).to.equal(404);
         done();
       });
     });

@@ -36,11 +36,13 @@ exports.update = function(req, res) {
   product.id = req.product.id;
   product.update()
     .then(() => res.status(200).send())
-    .catch(err => res.status(400).send(err));
+    .catch(err => res.status(400).send(err)); //TODO error
 };
 
 exports.delete = function(req, res) {
-  res.send(400); //TODO implement
+  Product.delete(req.product.id)
+    .then(() => res.json(req.product))
+    .catch(err => res.status(400).send(err)); //TODO error
 };
 
 /**
