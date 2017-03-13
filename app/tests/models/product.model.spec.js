@@ -23,6 +23,7 @@ let productTemplate = new Product({
  */
 describe('Product Model Unit Tests', () => {
   describe('Delete product', () => {
+    
     describe('Existing product ID', () => {
       let product = new Product(productTemplate);
       before(done => {
@@ -34,19 +35,21 @@ describe('Product Model Unit Tests', () => {
       it('should successfully delete the product',
         () => expect(Product.get(product.id)).to.be.rejected);
     });
-  describe('Invalid product ID', () => {
-    let error;
-    before(done => {
-      Product.delete(80)
-        .then(() => done())
-        .catch(err => {
-          error = err;
-          done();
-        });
-    });
-    it('should fail silently', done => {
-      expect(error).to.be.an('undefined');
-      done();
+
+    describe('Invalid product ID', () => {
+      let error;
+      before(done => {
+        Product.delete(80)
+          .then(() => done())
+          .catch(err => {
+            error = err;
+            done();
+          });
+      });
+      it('should fail silently', done => {
+        expect(error).to.be.an('undefined');
+        done();
+      });
     });
   });
 
@@ -65,5 +68,77 @@ describe('Product Model Unit Tests', () => {
     });
   });
 
+  describe('Update product', () => {
+    describe('with valid product', () => {
+      let product = new Product(productTemplate);
+      before(done => {
+        product.create()
+          .then(() => {
+            product.name='zzUnitTestProduct2';
+            product.categoryId=2;
+            product.unitPrice=1;
+            product.unitsInStock=100;
+            product.discontinued=true;
+            return product.update();
+          })
+          .then(() => {
+            done();
+          })
+          .catch(err => done(err));
+      });
+      it('should update the product in the database', done => {
+        Product.get(product.id)
+          .then(dbProduct => {
+            for (let property in product) {
+              expect(dbProduct).to.have.property(property, product[property]);
+            }
+            done();
+          });
+      });
+      after(done => {
+        Product.delete(product.id)
+          .then(() => done())
+          .catch(err => done(err));
+      });
+    });
+    describe('with an invalid property', () => {
+      let product = new Product(productTemplate);
+      let error;
+      before(done => {
+        product.create()
+          .then(() => {
+            product.name='';
+            product.categoryId=2;
+            product.unitPrice=1;
+            product.unitsInStock=100;
+            product.discontinued=true;
+            return product.update();
+          })
+          .then(() => {
+            done();
+          })
+          .catch(err => {
+            error = err;
+            done();
+          });
+      });
+      it('should throw an error', done => {
+        expect(error).to.not.be.an('undefined');
+        done();
+      });
+      it('should not update the product in the database', done => {
+        Product.get(product.id)
+          .then(dbProduct => {
+            expect(dbProduct.name).to.equal('zzUnitTestProduct');
+            done();
+          });
+      });
+      after(done => {
+        Product.delete(product.id)
+          .then(() => done())
+          .catch(err => done(err));
+      });
+    });
   });
+
 });

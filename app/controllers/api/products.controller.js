@@ -28,8 +28,15 @@ exports.get = function(req, res) {
   res.json(req.product);
 };
 
+/**
+ * Updates a product in the database
+ */
 exports.update = function(req, res) {
-  res.send(400); //TODO implement
+  let product = new Product(req.body);
+  product.id = req.product.id;
+  product.update()
+    .then(() => res.status(200).send())
+    .catch(err => res.status(400).send(err));
 };
 
 exports.delete = function(req, res) {
@@ -51,6 +58,7 @@ exports.getById = function(req, res, next, id) {
     .then(product => {
       req.product = product;
       next();
+      return null;
     })
-    .catch(() => res.status(404).send()); //TODO error
+    .catch(err => res.status(404).send(err)); //TODO error
 };

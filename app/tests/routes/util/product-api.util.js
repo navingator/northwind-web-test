@@ -60,10 +60,23 @@ module.exports = function(app) {
       .end((err, res) => cb(res));
   };
 
+  /**
+   * Updates a product in the database
+   * @param {Product}  product Product object with updated values
+   * @param {Function} cb      Callback function to store results
+   */
+  let update = function(product, cb) {
+    chai.request(app)
+      .put('/api/products/' + product.id)
+      .send(product)
+      .end((err, res) => cb(res));
+  };
+
   return {
     create: create,
     cleanup: cleanup,
     get: get,
-    list: list
+    list: list,
+    update: update
   };
 };

@@ -205,46 +205,128 @@ describe('Product Routes Unit Tests', () => {
   });
   describe('unauthenticated update request with', () => {
     describe('valid product', () => {
-      xit('returns success status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.create(product, () => {
+          product.name='zzUnitTestProduct2';
+          product.categoryId=2;
+          product.unitPrice=1;
+          product.unitsInStock=100;
+          product.discontinued=true;
+          api.update(product, res => {
+            response = res;
+            done();
+          });
+        });
+      });
+      it('returns success status', done => {
+        expect(response.status).to.be.equal(200);
         done();
       });
-      xit('returns expected product', done => {
-        done();
+      it('is saved in database', done => {
+        Product.get(product.id)
+          .then(dbProduct => {
+            for(let property in product) {
+              expect(dbProduct).to.have.property(property, product[property]);
+            }
+            done();
+          })
+          .catch(err => done(err));
       });
-      xit('is saved in database', done => {
-        done();
-      });
+      after(done => api.cleanup(product, done));
     });
     describe('empty name', () => {
-      xit('returns invalid status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.create(product, () => {
+          product.name = '';
+          api.update(product, res => {
+            response = res;
+            done();
+          });
+        });
+      });
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
         done();
       });
       xit('returns error message', done => {
         done();
       });
+      after(done => api.cleanup(product, done));
     });
     describe('name longer than 40 characters', () => {
-      xit('returns invalid status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.create(product, () => {
+          product.name = 'zzUnitTestcanyoubelievethatthisis45characters';
+          api.update(product, res => {
+            response = res;
+            done();
+          });
+        });
+      });
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
         done();
       });
       xit('returns error message', done => {
         done();
       });
+      after(done => api.cleanup(product, done));
     });
     describe('invalid category id', () => {
-      xit('returns invalid status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.create(product, () => {
+          product.categoryId=10;
+          api.update(product, res => {
+            response = res;
+            done();
+          });
+        });
+      });
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
         done();
       });
       xit('returns error message', done => {
         done();
       });
+      after(done => api.cleanup(product, done));
     });
     describe('duplicate name', () => {
-      xit('returns invalid status', done => {
+      let product1 = new Product(productTemplate);
+      let product2 = new Product(productTemplate);
+      let response;
+      before(done => {
+        api.create(product1, () => {
+          product2.name = 'zzUnitTest2';
+          api.create(product2, () => {
+            product2.name = product1.name;
+            api.update(product2, res => {
+              response = res;
+              done();
+            });
+          });
+        });
+      });
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
         done();
       });
       xit('returns error message', done => {
         done();
+      });
+      after(done => {
+        Product.delete(product1.id)
+          .then(Product.delete(product2.id))
+          .then(() => done())
+          .catch(err => done(err));
       });
     });
   });

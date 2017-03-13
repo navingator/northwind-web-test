@@ -28,17 +28,29 @@ class Product {
   }
 
   /**
-   * Creates a product in the database and returns a promise object and sets the
-   * id of the product object to the returned database id
-   * @returns  {promise}  Promise for database insertion
+   * Creates a product in the database
+   * @returns {promise}  Promise for database insertion
    * SIDE EFFECTS: sets id property to database id
    */
   create() {
-    return db.one('INSERT INTO products(productname, categoryid, unitprice, ' +
+    return db.one(
+      'INSERT INTO products(productname, categoryid, unitprice, ' +
       'unitsinstock, discontinued) ' +
       'VALUES(${name}, ${categoryId}, ${unitPrice}, ${unitsInStock}, ' +
       '${discontinued}) returning productid', this)
       .then(data => this.id = data.productid);
+  }
+
+  /**
+   * Updates a product in the database
+   * @returns {promise} Promise for database update
+   */
+  update() {
+    return db.none(
+      'UPDATE products ' +
+      'SET (productname, categoryid, unitprice, unitsinstock, discontinued) ' +
+      '= (${name}, ${categoryId}, ${unitPrice}, ${unitsInStock}, ${discontinued}) '+
+      'WHERE productid=${id}', this);
   }
 
   /**
@@ -57,6 +69,11 @@ class Product {
     });
   }
 
+  /**
+   * Validates whether the passed in product ID is a valid ID
+   * @param   {number}  id ID to validate
+   * @returns {boolean}    Whether the ID is valid
+   */
   static isValidId(id) {
     if(isNaN(id)) {
       return false;
