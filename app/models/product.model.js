@@ -42,14 +42,49 @@ class Product {
   }
 
   /**
+   * Converts a product received from the database into a Product object
+   * @param   {object} dbProduct product object from the database
+   * @returns {Product}          Product object
+   */
+  static convertFromDbProduct(dbProduct) {
+    return new Product({
+      id: dbProduct.productid,
+      name: dbProduct.productname,
+      categoryId: dbProduct.categoryid,
+      unitPrice: dbProduct.unitPrice,
+      unitsInStock: dbProduct.unitsinstock,
+      discontinued: dbProduct.discontinued
+    });
+  }
+
+  /**
    * Deletes a product from the database with the given ID. Resolves to the result
    * of the postgres delete.
    * @param   {number}  id  ID of the product to be deleted
    * @returns {promise}     promise for database deletion that resolves to the query result
    */
   static delete(id) {
-    return db.result('DELETE FROM products WHERE productid=${id}',
-      {id: id});
+    return db.result('DELETE FROM products WHERE productid=${id}', {id: id});
+  }
+
+  /**
+   * Retrieves a product from the database with the given ID. Throws an error if
+   * one is not found
+   * @param   {number}  id ID of the product to Retrieves
+   * @returns {promise}    Promise object that resolves to a Product
+   */
+  static get(id) {
+    return db.one('SELECT * FROM products WHERE productid=${id}', {id: id})
+      .then(data => Product.convertFromDbProduct(data));
+  }
+
+  /**
+   * Retrieves all products from the database
+   * @returns {promise} Promise object that resolves to an array of Product objects
+   */
+  static list() {
+    return db.any('SELECT * FROM products')
+      .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
 }
 

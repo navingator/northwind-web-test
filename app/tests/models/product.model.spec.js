@@ -1,4 +1,5 @@
 'use strict';
+/*jshint expr: true*/
 process.env.NODE_ENV='test'; // TODO do this globally for tests
 
 let path = require('path');
@@ -10,55 +11,44 @@ chai.use(chaiAP);
 require(path.resolve('./server'));
 let Product = require(path.resolve('./app/models/product.model.js'));
 
-let product;
+let productTemplate = new Product({
+  name: 'zzUnitTestProduct',
+  categoryId: 1, // TODO create a category to guarantee one exists
+  unitPrice: 12.50,
+  unitsInStock: 4,
+  discontinued: false
+});
 /**
  * Unit Tests
  */
 describe('Product Model Unit Tests', () => {
-  beforeEach(done => {
-    product = new Product({
-      name: 'zzUnitTestProduct',
-      categoryId: 1, // TODO create a category to guarantee one exists
-      unitPrice: 12.50,
-      unitsInStock: 4,
-      discontinued: false
+  describe('Delete request with', () => {
+    describe('Existing product ID', () => {
+      let product = new Product(productTemplate);
+      before(done => {
+        product.create()
+          .then(() => Product.delete(product.id))
+          .then(() => done())
+          .catch(err => done(err));
+      });
+      it('should successfully delete the product',
+        () => expect(Product.get(product.id)).to.be.rejected);
     });
-    done();
-  });
-  afterEach(done => {
-    Product.delete(product.id)
-      .then(() => done())
-      .catch(err => done(err));
-  });
-  it('should successfully create a new product', done => {
-    product.create().then(() => {
-      expect(product.id).to.be.a('number');
+  describe('Invalid product ID', () => {
+    let error;
+    before(done => {
+      Product.delete(80)
+        .then(() => done())
+        .catch(err => {
+          error = err;
+          done();
+        });
+    });
+    it('should fail silently', done => {
+      expect(error).to.be.an('undefined');
       done();
-    })
-      .catch(err => done(err));
+    });
   });
-  xit('should get a previously created product', done => {
-    done();
-  });
-  xit('should retrieve a number of created products', done => {
-    done();
-  });
-  xit('should retrieve products from a specified category', done => {
-    done();
-  });
-  xit('should fail to retrieve a product that does not exist', done => {
-    done();
-  });
-  xit('should update a product', done => {
-    done();
-  });
-  xit('should fail to update a product that does not exist', done => {
-    done();
-  });
-  xit('should delete a previously created product', done => {
-    done();
-  });
-  xit('should fail to delete a product that does not exist', done => {
-    done();
+
   });
 });

@@ -87,7 +87,17 @@ describe('Product Routes Unit Tests', () => {
       after(done => api.cleanup(product, done));
     });
     describe('invalid category id', () => {
-      xit('returns invalid status', done => {
+      let product = new Product(productTemplate);
+      let response;
+      before(done => {
+        product.categoryId = 10;
+        api.create(product, res => {
+          response = res;
+          done();
+        });
+      });
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
         done();
       });
       xit('returns error message', done => {
@@ -118,10 +128,21 @@ describe('Product Routes Unit Tests', () => {
   });
   describe('unauthenticated get request with', () => {
     describe('no parameters', () => {
-      xit('returns success status', done => {
+      let products;
+      let response;
+      before(done => {
+        api.list(res => {
+          response = res;
+          products = res.body;
+          done();
+        });
+      });
+      it('returns success status', done => {
+        expect(response.status).to.equal(200);
         done();
       });
-      xit('returns all products', done => {
+      it('returns an array of Product objects', done => {
+        expect(products).to.be.an('Array');
         done();
       });
     });
