@@ -29,7 +29,7 @@ module.exports = function () {
     name: 'northwind.connect.sid',
     secret: process.env.SESSION_SECRET,
     resave: false, //https://github.com/expressjs/session#resave typically false, unless we implement touch method
-    saveUnitialized: false // https://github.com/expressjs/session#saveuninitialized
+    saveUninitialized: false // https://github.com/expressjs/session#saveuninitialized
   }));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -37,6 +37,9 @@ module.exports = function () {
   // Static files
   app.use(express.static(path.resolve('./public'))); // set the static files location, example: /public/img will be /img for client
   app.use('/node_modules', express.static(path.resolve('./node_modules')));
+  if(process.env.NODE_ENV === 'development') {
+    app.use(express.static(path.resolve('./mochawesome-reports'))); // exposes mochawesome.html
+  }
 
   // Routes
   app.use('/api', api);

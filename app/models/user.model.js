@@ -47,7 +47,7 @@ User.hashPassword = function(password) {
  * Public static method that creates a user in the database
  * @param  {object}  user User object that contains username, lastName, firstName,
  *                        and password properties
- * @return {promise}      Promise for database insertion
+ * @return {promise}      Promise for database insertion, resolving to the created user's ID
  */
 User.createUser = function (user) {
   return User.hashPassword(user.password)
