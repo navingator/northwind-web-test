@@ -14,7 +14,6 @@ class Product {
    *   @property {string}   name          Product name
    *   @property {number}   categoryId    Database ID of the product's category
    *   @property {number}   unitPrice     Price per unit
-   *   @property {number}   unitsOnOrder  Units currently on order
    *   @property {boolean}  discontinued  Whether the unit is discontinued
    * @return {Product}    The created product object
    */
