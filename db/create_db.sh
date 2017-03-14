@@ -4,21 +4,20 @@
 # Gets the base directory for this file and it's operations
 DIR="$(dirname $(readlink -f $0))"
 
-NORTHWIND_DIR="$DIR/northwind_psql/northwind.sql"
-USER_DIR="$DIR/extensions/users.sql"
-CATEGORIES_DIR="$DIR/extensions/categories.sql"
-PRODUCTS_DIR="$DIR/extensions/products.sql"
+NORTHWIND_DIR="$DIR/northwind_psql"
+EXTENSION_DIR="$DIR/extensions"
 
 dropdb northwind
 createdb northwind
 
 # Create database from dump
-psql northwind < $NORTHWIND_DIR
+psql northwind < $NORTHWIND_DIR/northwind.sql
 
 # Extend the database
-psql northwind < $USER_DIR
-psql northwind < $CATEGORIES_DIR
-psql northwind < $PRODUCTS_DIR
+psql northwind < $EXTENSION_DIR/users.sql
+psql northwind < $EXTENSION_DIR/categories.sql
+psql northwind < $EXTENSION_DIR/products.sql
+psql northwind < $EXTENSION_DIR/drop_excess_tables.sql #must be last
 
 # Create a role northwind_user before this part
 psql template1 -c "GRANT ALL ON DATABASE northwind TO northwind_user;"
