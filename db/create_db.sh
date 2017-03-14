@@ -21,7 +21,7 @@ psql $DB < $EXTENSION_DIR/products.sql
 psql $DB < $EXTENSION_DIR/drop_excess_tables.sql #must be last
 
 # Add errors
-$DIR/scripts/errors_refresh.sh $DB
+bash $DIR/scripts/errors_refresh.sh $DB
 
 # Create a role northwind_user before this part
 psql template1 -c "GRANT ALL ON DATABASE $DB TO northwind_user;"
