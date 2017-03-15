@@ -3,10 +3,27 @@
 let path = require('path');
 var db = require(path.resolve('./app/config/db.config'));
 
+
+/**
+ * Class representing Node-Postgres errors, to be served to an API caller in
+ * the event of an error
+ */
 class ApiError extends Error {
   constructor(code, message) {
     super(message);
     this.code = code;
+  }
+
+  /**
+   * Function that allows JSON.stringify() to access the message property of the
+   * error prototype.
+   * NOTE If this object grows substantially, consider adding toJSON to the Error prototype
+   */
+  toJSON() {
+    return {
+      code: this.code,
+      message: this.message
+    };
   }
 
   /**
@@ -59,7 +76,7 @@ class ApiError extends Error {
     if (dbError.constraint) { where += ' AND db_constraint=${constraint}'; }
 
     return db.one(
-      'SELECT errorid,message from errors ' +
+      'SELECT errorid,message FROM errors ' +
       where, dbError)
       .then(error => new ApiError(error.errorid, error.message))
       .catch(() => {
