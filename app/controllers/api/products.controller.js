@@ -2,11 +2,12 @@
 
 let path = require('path');
 let Product = require(path.resolve('./app/models/product.model.js'));
+let ApiUtils = require('./api-utils');
 
 exports.list = function(req, res) {
   Product.list()
     .then(products => res.json(products))
-    .catch(err => res.status(400).send(err)); // TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
@@ -17,7 +18,7 @@ exports.create = function(req, res) {
   let product = new Product(req.body);
   product.create()
     .then(() => res.json(product))
-    .catch(err => res.status(400).send(err)); // TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
@@ -36,13 +37,13 @@ exports.update = function(req, res) {
   product.id = req.product.id;
   product.update()
     .then(() => res.status(200).send())
-    .catch(err => res.status(400).send(err)); //TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 exports.delete = function(req, res) {
   Product.delete(req.product.id)
     .then(() => res.json(req.product))
-    .catch(err => res.status(400).send(err)); //TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
@@ -54,7 +55,7 @@ exports.delete = function(req, res) {
  */
 exports.getById = function(req, res, next, id) {
   if (!Product.isValidId(id)) {
-    return res.status(400).send(); //TODO error
+    return res.status(400).end(); //TODO error
   }
   Product.get(id)
     .then(product => {
@@ -62,5 +63,5 @@ exports.getById = function(req, res, next, id) {
       next();
       return null;
     })
-    .catch(err => res.status(404).send(err)); //TODO error
+    .catch(() => res.status(404).end());
 };
