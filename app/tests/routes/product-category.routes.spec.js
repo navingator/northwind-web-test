@@ -11,35 +11,18 @@ let app = require(path.resolve('./server'));
 let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
 let api = require('./util/product-category-api.util')(app);
 
+let zzUnit = 'zzUnit'; // TODO place this in a central file and require it in all tests
+
  /* Set up a test product category - do NOT use directly in functions */
 let productCatTemplate = new ProductCategory({
-  name: 'zzUTstProdCat',
+  name: zzUnit + 'ProdCat',
   description: 'Unit test product category - Should be deleted if seen outside of testing',
   picture: './somewhere-out-there'
 });
 
 describe('ProductCat unit test', () => {
 
-  before(done => {
-    ProductCategory.findByStr(productCatTemplate.name)
-    .then(dbProductCat => {
-      for (let i = 0; i < dbProductCat.length; i++) {
-        let productCategory = dbProductCat[i];
-        if (productCategory.name === productCatTemplate.name) {
-          return productCategory.id;
-        }
-      }
-      return null;
-    })
-    .then(id => {
-      if (id) {
-        ProductCategory.remove(id)
-          .then(() => done());
-      } else {
-        done();
-      }
-    });
-  });
+  before(done => api.cleanup(done));
 
   describe('unauthenticated create request with', () => {
 
@@ -48,10 +31,11 @@ describe('ProductCat unit test', () => {
       let response;
 
       before(done => {
-        api.create(productCategory, res => {
-          response = res;
-          done();
-        });
+        api.create(productCategory)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns success status', done => {
@@ -79,7 +63,7 @@ describe('ProductCat unit test', () => {
           .catch(err => done(err));
       }); //is saved in database
 
-      after(done => api.cleanup(productCategory, done));
+      after(done => api.cleanup(done));
 
     }); //valid category
 
@@ -89,10 +73,11 @@ describe('ProductCat unit test', () => {
 
       before(done => {
         productCategory.name = '';
-        api.create(productCategory, res => {
-          response = res;
-          done();
-        });
+        api.create(productCategory)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
@@ -100,10 +85,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      xit('returns validation message', () => {
+      it('returns validation message', () => {
       }); //returns validation message
 
-      after(done => api.cleanup(productCategory, done));
+      after(done => api.cleanup(done));
 
     }); //empty name
 
@@ -113,10 +98,11 @@ describe('ProductCat unit test', () => {
 
       before(done => {
         productCategory.name = 'This name is longer than 15 characters';
-        api.create(productCategory, res => {
-          response = res;
-          done();
-        });
+        api.create(productCategory)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
@@ -124,10 +110,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      xit('returns validation message', () => {
+      it('returns validation message', () => {
       }); //returns validation message
 
-      after(done => api.cleanup(productCategory, done));
+      after(done => api.cleanup(done));
 
     }); //name longer than 15 chars in length
 
@@ -137,10 +123,11 @@ describe('ProductCat unit test', () => {
 
       before(done => {
         productCategory.name = 'a';
-        api.create(productCategory, res => {
-          response = res;
-          done();
-        });
+        api.create(productCategory)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
@@ -148,10 +135,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      xit('returns validation message', () => {
+      it('returns validation message', () => {
       }); //returns validation message
 
-      after(done => api.cleanup(productCategory, done));
+      after(done => api.cleanup(done));
 
     }); //name shorter than 3 chars in length
 
@@ -161,12 +148,14 @@ describe('ProductCat unit test', () => {
       let response;
 
       before(done => {
-        api.create(productCategory, () => {
-          api.create(dupProductCategory, res => {
+        api.create(productCategory)
+          .then(() => {
+            return api.create(dupProductCategory);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
       });
 
       it('returns invalid status', done => {
@@ -174,10 +163,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      xit('returns validation message', () => {
+      it('returns validation message', () => {
       }); //returns validation message
 
-      after(done => api.cleanup(productCategory, done));
+      after(done => api.cleanup(done));
 
     }); //duplicate name
 
@@ -189,10 +178,11 @@ describe('ProductCat unit test', () => {
         productCategory.description = 'This is a very long description. This ' +
         'is to check to see if the description can not be longer than 100 ' +
         'characters. This is the end of the description.';
-        api.create(productCategory, res => {
-          response = res;
-          done();
-        });
+        api.create(productCategory)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
@@ -200,10 +190,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      xit('returns validation message', () => {
+      it('returns validation message', () => {
       }); //returns validation message
 
-      after(done => api.cleanup(productCategory, done));
+      after(done => api.cleanup(done));
 
     }); //description longer than 100 chars in length
 
@@ -216,10 +206,11 @@ describe('ProductCat unit test', () => {
       let response;
 
       before(done => {
-        api.list(res => {
-          response = res;
-          done();
-        });
+        api.list()
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('lists all categories in the database', done => {
@@ -241,12 +232,15 @@ describe('ProductCat unit test', () => {
       let response;
 
       before(done => {
-        api.create(productCategory, () => {
-          api.get(productCategory.id, res => {
+        api.create(productCategory)
+          .then(() => {
+            return api.get(productCategory.id);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
+
       });
 
       it('returns success status', done => {
@@ -259,7 +253,7 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns the expected category
 
-      after(done => api.cleanup(productCategory,done));
+      after(done => api.cleanup(done));
 
     }); //valid category id
 
@@ -267,16 +261,20 @@ describe('ProductCat unit test', () => {
       let response;
 
       before(done => {
-        api.get('stringid', res => {
-          response = res;
-          done();
-        });
+        api.get('stringid')
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       }); //returns not found status
+
+      it('returns validation message', () => {
+      }); //returns validation message
 
     }); //invalid category id
 
@@ -286,15 +284,18 @@ describe('ProductCat unit test', () => {
       let uniqueId;
 
       before(done => {
-        api.create(productCategory, () => {
-          uniqueId = productCategory.id;
-          api.delete(productCategory.id, () => {
-            api.get(uniqueId, res => {
-              response = res;
-              done();
-            });
+        api.create(productCategory)
+          .then(() => {
+            uniqueId = productCategory.id;
+            return api.delete(productCategory.id);
+          })
+          .then(() => {
+            return api.get(uniqueId);
+          })
+          .then(res => {
+            response = res;
+            done();
           });
-        });
       });
 
       it('returns not found status', done => {
@@ -311,15 +312,18 @@ describe('ProductCat unit test', () => {
       let response;
 
       before(done => {
-        api.create(productCategory, () => {
-          productCategory2.name += '2';
-          api.create(productCategory2, () => {
-            api.search(productCatTemplate.name, res => {
-              response = res;
-              done();
-            });
+        api.create(productCategory)
+          .then(() => {
+            productCategory2.name += '2';
+            return api.create(productCategory2);
+          })
+          .then(() => {
+            return api.search(productCatTemplate.name);
+          })
+          .then(res => {
+            response = res;
+            done();
           });
-        });
       });
 
       it('returns a list of categories', () => {
@@ -337,22 +341,19 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns success status
 
-      after(done => {
-        ProductCategory.remove(productCategory.id)
-          .then(ProductCategory.remove(productCategory2.id))
-          .then(() => done())
-          .catch((err) => done(err));
-      });
+      after(done => api.cleanup(done));
 
     }); //valid search string
     describe('empty search string', () => {
       let response;
 
       before(done => {
-        api.search('', res => {
-          response = res;
-          done();
-        });
+        api.search('')
+          .then(res => {
+            response = res;
+            done();
+          })
+          .catch(err => console.log(err.message));
       });
 
       it('returns invalid status', done => {
@@ -360,7 +361,7 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      xit('returns validation message', () => {
+      it('returns validation message', () => {
       }); //returns validation message
 
     }); //empty search string
@@ -369,72 +370,305 @@ describe('ProductCat unit test', () => {
       let response;
 
       before(done => {
-        api.search('ZZTestReserved', res => {
-          response = res;
-          done();
-        });
+        api.search(zzUnit)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
-      xit('returns success status', () => {
+      it('returns success status', done => {
+        expect(response.status).to.equal(200);
+        done();
       }); //returns success status
-      xit('returns an empty object', () => {
+
+      it('returns an empty object', done => {
+        expect(response.body.length).to.equal(0);
+        done();
       }); //returns an empty object
+
     }); //invalid search string
+
   }); //unauthenticated get request with
+
   describe('unauthenticated update request with', () => {
+
     describe('valid category', () => {
-      xit('returns success status', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            productCategory.name = zzUnit + 'UpPC';
+            productCategory.picture = './somewhere-else';
+            return api.update(productCategory);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns success status', done => {
+        expect(response.status).to.equal(200);
+        done();
       }); //returns success status
-      xit('returns category details', () => {
+
+      it('returns category details', done => {
+        expect(response.body.name).to.equal(productCategory.name);
+        expect(response.body.picture).to.equal(productCategory.picture);
+        expect(response.body.description).to.equal(productCatTemplate.description);
+        done();
       }); //returns category details
-      xit('is updated in database', () => {
+
+      it('is updated in database', done => {
+        api.get(productCategory.id)
+          .then(res => {
+            for (let property in res.body) {
+              expect(res.body).to.have.property(property, productCategory[property]);
+            }
+            done();
+          });
       }); //is updated in database
-      xit('only updates specified record', () => {
-      }); //only updates specified record
+
+      after(done => api.cleanup(done));
+
     }); //valid category
+
     describe('empty category name', () => {
-      xit('returns invalid status', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            delete productCategory.name;
+            return api.update(productCategory);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
+        done();
       }); //returns invalid status
-      xit('returns validation message', () => {
+
+      it('returns validation message', () => {
       }); //returns validation message
+
+      after(done => api.cleanup(done));
+
     }); //empty category name
-    describe('category name longer than 15 chars in length', () => {
-      xit('returns invalid status', () => {
+
+    describe('category name that is longer than 15 letters', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            productCategory.name = zzUnit + 'NameLongerThan15Letters';
+            return api.update(productCategory);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
+        done();
       }); //returns invalid status
-      xit('returns validation message', () => {
+
+      it('returns validation message', () => {
       }); //returns validation message
-    }); //category name longer than 15 chars in length
-    describe('category name shorter than 3 chars in length', () => {
-      xit('returns invalid status', () => {
+
+      after(done => api.cleanup(done));
+
+    }); //category name that is longer than 15 letters
+    describe('category name that is shorter than 3 letters', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            productCategory.name = 'zz';
+            return api.update(productCategory);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
+        done();
       }); //returns invalid status
-      xit('returns validation message', () => {
+
+      it('returns validation message', () => {
       }); //returns validation message
-    }); //category name shorter than 3 chars in length
+
+      after(done => api.cleanup(done));
+
+    }); //category name that is shorter than 3 letters
+
     describe('duplicate category name', () => {
-      xit('returns invalid status', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let productCategory2 = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            productCategory2.name += '2';
+            return api.create(productCategory2);
+          })
+          .then(() => {
+            productCategory.name = productCategory2.name;
+            return api.update(productCategory);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
+        done();
       }); //returns invalid status
-      xit('returns validation message', () => {
+
+      it('returns validation message', () => {
       }); //returns validation message
+
+      after(done => api.cleanup(done));
+
     }); //duplicate category name
-    describe('description longer than 100 chars in length', () => {
-      xit('returns invalid status', () => {
+
+    describe('description longer than 100 characters', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            productCategory.description = 'This is a very long description. This ' +
+            'is to check to see if the description can not be longer than 100 ' +
+            'characters. This is the end of the description.';
+            return api.update(productCategory);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
+        done();
       }); //returns invalid status
-      xit('returns validation message', () => {
+
+      it('returns validation message', () => {
       }); //returns validation message
-    }); //description longer than 100 chars in length
+
+      after(done => api.cleanup(done));
+
+    }); //description longer than 100 characters
+
   }); //unauthenticated update request with
   describe('unauthenticated delete request with', () => {
+
     describe('valid category id', () => {
-      xit('returns success status', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            return api.delete(productCategory.id);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns success status', done => {
+        expect(response.status).to.equal(200);
+        done();
       }); //returns success status
-      xit('returns category details', () => {
+
+      it('returns category details', () => {
+        for (let property in response.body) {
+          expect(response.body).to.have.property(property, productCategory[property]);
+        }
       }); //returns category details
-      xit('is deleted from database', () => {
+
+      it('is deleted from database', done => {
+        ProductCategory.findById(productCategory.id)
+          .then(() => done(new Error('Should not have found anything')))
+          .catch(err => {
+            expect(err.code).to.equal(0);
+            done();
+          });
       }); //is deleted from database
+
     }); //valid category id
+
     describe('invalid category id', () => {
-      xit('returns not found status', () => {
+      let response;
+
+      before(done => {
+        api.delete('productCategory.id')
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns invalid status', done => {
+        expect(response.status).to.equal(400);
+        done();
       }); //returns not found status
+
+      it('returns validation message', () => {
+      }); //returns validation message
+
     }); //invalid category id
+
+    describe('category id not in database', () => {
+      let productCategory = new ProductCategory(productCatTemplate);
+      let response;
+
+      before(done => {
+        api.create(productCategory)
+          .then(() => {
+            return api.delete(productCategory.id);
+          })
+          .then(() => {
+            return api.delete(productCategory.id);
+          })
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns not found status', done => {
+        expect(response.status).to.equal(404);
+        done();
+      }); //returns not found status
+
+    }); //category id not in database
+
   }); //unauthenticated delete request with
+
 }); //Product category model unit tests

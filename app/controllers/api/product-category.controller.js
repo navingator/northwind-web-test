@@ -3,6 +3,7 @@
 /* Import dependencies */
 let path = require('path');
 let ProductCat = require(path.resolve('./app/models/product-category.model.js'));
+let ApiUtils = require('./api-utils');
 
 /**
 * Creates a Product Category
@@ -13,7 +14,7 @@ exports.create = function(req, res) {
   let productCat = new ProductCat(req.body);
   productCat.create()
     .then(() => res.json(productCat))
-    .catch(err => res.status(400).send(err)); //TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
@@ -28,7 +29,7 @@ exports.update = function(req, res) {
     .then(() => {
       res.json(productCat);
     })
-    .catch(err => res.status(400).send(err)); //TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
@@ -39,9 +40,9 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   ProductCat.remove(req.params.prodCatId)
     .then(() => {
-      res.status(200).send();
+      res.status(200).send(req.productCat);
     })
-    .catch(err => res.status(400).send(err)); //TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
@@ -54,7 +55,7 @@ exports.get = function(req, res) {
 };
 
 /**
-* Find Product Categories by a Search String
+* Find product categories by a search string
 * @return   {promise}   Resolves to an array of product category objects
 */
 exports.byStr = function(req,res) {
@@ -62,7 +63,7 @@ exports.byStr = function(req,res) {
     .then(productCats => {
       res.json(productCats);
     })
-    .catch(err => res.status(400).send(err)); //TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
@@ -74,7 +75,7 @@ exports.fullList = function(req,res) {
     .then(productCats => {
       res.json(productCats);
     })
-    .catch(err => res.status(400).send(err)); //TODO error
+    .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**

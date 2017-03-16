@@ -1,9 +1,6 @@
 'use strict';
-let path = require('path');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-
-let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
 
 chai.use(chaiHttp);
 
@@ -11,83 +8,91 @@ module.exports = function(app) {
   /**
    * Creates an object using the API
    * @param  {ProductCategory}  productCategory Product category to create
-   * @param  {Function}         cb              Callback function - used to set the
-   *                                            res property from the caller
+   * @return {Promise}          res             Resolves to the express response which
+   *                                            contains a product category object
    * SIDE EFFECTS: Sets the product category's ID
    */
-  let create = function(productCategory, cb) {
-    chai.request(app)
+  let create = function(productCategory) {
+    return chai.request(app)
       .post('/api/product_category')
       .send(productCategory)
-      .end((err, res) => {
+      .then(res => {
         productCategory.id = res.body.id; // Set product ID for easy deletion later
-        cb(res);
+        return res;
       });
   };
 
   /**
    * Deletes a given object from the database
    * @param  {Product}  productCategory  Product Category object to delete from the database
+   * @return {Promise}                   Resolves to the express response
+   */
+  let remove = function(productCatId) {
+    return chai.request(app)
+      .delete('/api/product_category/' + productCatId);
+  };
+
+  /**
+   * Seacrches the database for a given search string
+   * @param  {string}  searchStr  String to be searched on
+   * @return {Promise}            Resolves to the express response which contains
+   *                              an array of product category objects
+   */
+  let search = function(searchStr) {
+    return chai.request(app)
+      .get('/api/product_category/search/' + searchStr);
+  };
+
+  /**
+   * Deletes all objects with a name that starts with 'zzUnit' from the database
    * @param  {Function} cb               Callback function - likely mocha's done function
    */
-  let cleanup = function(productCategory, cb) {
-    if (productCategory.id) {
-      ProductCategory.remove(productCategory.id)
-        .then(() => cb())
-        .catch(err => cb(err));
-    } else {
-      cb();
-    }
+  let cleanup = function(cb) {
+    search('zzUnit')
+      .then(res => {
+        let promiseArray = [];
+        for (let record of res.body) {
+          promiseArray.push(remove(record.id));
+        }
+        Promise.all(promiseArray)
+          .then(() => cb());
+      });
   };
 
   /**
    * Gets a product category from the database, given the ID
    * @param  {number}   productCatId ID of the product to retrieve
    * @param  {Function} cb           Callback function to store the response
+   * @return {Promise}               Resolves to the express response which
+   *                                 contains a product category object
    */
-  let get = function(productCatId, cb) {
-    chai.request(app)
-      .get('/api/product_category/' + productCatId)
-      .end((err, res) => cb(res));
-  };
-
-  let search = function(searchStr, cb) {
-    chai.request(app)
-      .get('/api/product_category/search/' + searchStr)
-      .end((err, res) => cb(res));
+  let get = function(productCatId) {
+    return chai.request(app)
+      .get('/api/product_category/' + productCatId);
   };
 
   /**
    * Gets all of the product categories from the database
    * @param  {Function} cb Callback function to store results
+   * @return {Promise}               Resolves to the express response which
+   *                                 contains a list of product category objects
    */
-  let list = function(cb) {
-    chai.request(app)
-      .get('/api/product_category')
-      .end((err, res) => cb(res));
+  let list = function() {
+    return chai.request(app)
+      .get('/api/product_category');
   };
 
   /**
    * Updates a product category in the database
    * @param {ProductCategory} product Product category object with updated values
    * @param {Function}        cb      Callback function to store results
+   * @return {Promise}               Resolves to the express response which
+   *                                 contains a product category object
    */
-  let update = function(productCategory, cb) {
-    chai.request(app)
+  let update = function(productCategory) {
+    return chai.request(app)
       .put('/api/product_category/' + productCategory.id)
-      .send(productCategory)
-      .end((err, res) => cb(res));
-  };
-
-  /**
-   * Deletes a given object from the database
-   * @param  {Product}  productCategory  Product Category object to delete from the database
-   * @param  {Function} cb               Callback function to store results
-   */
-  let remove = function(productCatId, cb) {
-    chai.request(app)
-      .delete('/api/product_category/' + productCatId)
-      .end((err, res) => cb(res));
+      .send(productCategory);
   };
 
   return {

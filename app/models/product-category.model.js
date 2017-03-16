@@ -90,8 +90,6 @@ class ProductCategory {
         });
   }
 
-  // static findByStrReturnNone
-
   /**
   * Retrieves the entire list of the categories table
   * @return   {promise}   Resolves to a complete list of the categories table
