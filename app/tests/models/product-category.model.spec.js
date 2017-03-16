@@ -54,7 +54,7 @@ describe('Product category model unit tests', () => {
    */
   after(done => {
     if(productCategory.id) {
-      ProductCategory.delete(productCategory.id)
+      ProductCategory.remove(productCategory.id)
         .then(() => done())
         .catch(err => done(err));
     } else {
