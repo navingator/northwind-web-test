@@ -109,6 +109,22 @@ class Product {
     return db.any('SELECT * FROM products')
       .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
+
+  /**
+  * Finds a product from the database that starts with a given string
+  * @param  {string}  str   Seatch string
+  * @return {promise}       Resolves to an array of product objects
+  */
+  static search(str) {
+    str = str + '%';
+    return db.any(
+      'SELECT * ' +
+      'FROM products ' +
+      'WHERE productname ILIKE ${str}', {str: str})
+        .then(records => {
+          return records.map(record => Product.convertFromDbProduct(record));
+        });
+  }
 }
 
 module.exports = Product;

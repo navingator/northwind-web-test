@@ -21,6 +21,7 @@ let productTemplate = new Product({
   discontinued: false
 });
 describe('Product Routes Unit Tests', () => {
+  before(done => api.cleanup(done));
 
   describe('unauthenticated create request with', () => {
 
@@ -29,10 +30,11 @@ describe('Product Routes Unit Tests', () => {
       let product = new Product(productTemplate);
       let response;
       before(done => {
-        api.create(product, res => {
-          response = res;
-          done();
-        });
+        api.create(product)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns success status', done => {
@@ -60,7 +62,7 @@ describe('Product Routes Unit Tests', () => {
           .catch(err => done(err));
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
     describe('empty name', () => {
 
@@ -68,10 +70,11 @@ describe('Product Routes Unit Tests', () => {
       let response;
       before(done => {
         product.name = '';
-        api.create(product, res => {
-          response = res;
-          done();
-        });
+        api.create(product)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
@@ -85,7 +88,7 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
     describe('name longer than 40 characters', () => {
 
@@ -93,10 +96,11 @@ describe('Product Routes Unit Tests', () => {
       let response;
       before(done => {
         product.name = 'zzUnitTestcanyoubelievethatthisis45characters';
-        api.create(product, res => {
-          response = res;
-          done();
-        });
+        api.create(product)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
@@ -110,7 +114,7 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
 
     describe('invalid category id', () => {
@@ -119,10 +123,11 @@ describe('Product Routes Unit Tests', () => {
       let response;
       before(done => {
         product.categoryId = 10;
-        api.create(product, res => {
-          response = res;
-          done();
-        });
+        api.create(product)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns invalid status', done => {
@@ -143,12 +148,14 @@ describe('Product Routes Unit Tests', () => {
       let response;
 
       before(done => {
-        api.create(product, () => {
-          api.create(dupeproduct, res => {
-            response = res;
-            done();
+        api.create(product)
+          .then(() => {
+            return api.create(dupeproduct);
+          })
+          .then(res => {
+              response = res;
+              done();
           });
-        });
       });
 
       it('returns invalid status', done => {
@@ -162,7 +169,7 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
   });
   describe('unauthenticated get request with', () => {
@@ -171,10 +178,11 @@ describe('Product Routes Unit Tests', () => {
 
       let response;
       before(done => {
-        api.list(res => {
-          response = res;
-          done();
-        });
+        api.list()
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns success status', done => {
@@ -194,12 +202,14 @@ describe('Product Routes Unit Tests', () => {
       let response;
 
       before(done => {
-        api.create(product, () => {
-          api.get(product.id, res => {
+        api.create(product)
+          .then(() => {
+            return api.get(product.id);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
       });
 
       it('returns success status', done => {
@@ -214,25 +224,22 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
     describe('invalid product id', () => {
-
-      let product = new Product(productTemplate);
       let response;
       before(done => {
-        api.get(90, res => {
-          response = res;
-          done();
-        });
+        api.get(90)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns not found status', done => {
         expect(response.status).to.equal(404);
         done();
       });
-
-      after(done => api.cleanup(product, done));
     });
 
     describe('valid category id parameter', () => {
@@ -260,17 +267,19 @@ describe('Product Routes Unit Tests', () => {
       let product = new Product(productTemplate);
       let response;
       before(done => {
-        api.create(product, () => {
-          product.name='zzUnitTestProduct2';
-          product.categoryId=2;
-          product.unitPrice=1;
-          product.unitsInStock=100;
-          product.discontinued=true;
-          api.update(product, res => {
+        api.create(product)
+          .then(() => {
+            product.name='zzUnitTestProduct2';
+            product.categoryId=2;
+            product.unitPrice=1;
+            product.unitsInStock=100;
+            product.discontinued=true;
+            return api.update(product);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
       });
 
       it('returns success status', done => {
@@ -289,7 +298,7 @@ describe('Product Routes Unit Tests', () => {
           .catch(err => done(err));
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
 
     describe('empty name', () => {
@@ -297,13 +306,15 @@ describe('Product Routes Unit Tests', () => {
       let product = new Product(productTemplate);
       let response;
       before(done => {
-        api.create(product, () => {
-          product.name = '';
-          api.update(product, res => {
+        api.create(product)
+          .then(() => {
+            product.name = '';
+            return api.update(product);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
       });
 
       it('returns invalid status', done => {
@@ -317,7 +328,7 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
 
     describe('name longer than 40 characters', () => {
@@ -325,13 +336,15 @@ describe('Product Routes Unit Tests', () => {
       let product = new Product(productTemplate);
       let response;
       before(done => {
-        api.create(product, () => {
-          product.name = 'zzUnitTestcanyoubelievethatthisis45characters';
-          api.update(product, res => {
+        api.create(product)
+          .then(() => {
+            product.name = 'zzUnitTestcanyoubelievethatthisis45characters';
+            return api.update(product);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
       });
 
       it('returns invalid status', done => {
@@ -345,7 +358,7 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
     describe('invalid category id', () => {
 
@@ -353,13 +366,15 @@ describe('Product Routes Unit Tests', () => {
       let response;
 
       before(done => {
-        api.create(product, () => {
-          product.categoryId=10;
-          api.update(product, res => {
+        api.create(product)
+          .then(() => {
+            product.categoryId=10;
+            return api.update(product);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
       });
 
       it('returns invalid status', done => {
@@ -373,7 +388,7 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => api.cleanup(product, done));
+      after(done => api.cleanup(done));
     });
     describe('duplicate name', () => {
 
@@ -381,16 +396,19 @@ describe('Product Routes Unit Tests', () => {
       let product2 = new Product(productTemplate);
       let response;
       before(done => {
-        api.create(product1, () => {
-          product2.name = 'zzUnitTest2';
-          api.create(product2, () => {
+        api.create(product1) // create the first product
+          .then(() => {
+            product2.name = productTemplate.name + '2';
+            return api.create(product2); // create the second product
+          })
+          .then(() => {
             product2.name = product1.name;
-            api.update(product2, res => {
-              response = res;
-              done();
-            });
+            return api.update(product2); // attempt to update the second product to the 1st's name
+          })
+          .then(res => {
+            response = res;
+            done();
           });
-        });
       });
 
       it('returns invalid status', done => {
@@ -404,12 +422,7 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
 
-      after(done => {
-        Product.delete(product1.id)
-          .then(Product.delete(product2.id))
-          .then(() => done())
-          .catch(err => done(err));
-      });
+      after(done => api.cleanup(done));
     });
   });
   describe('unauthenticated delete request with', () => {
@@ -418,12 +431,14 @@ describe('Product Routes Unit Tests', () => {
       let product = new Product(productTemplate);
       let response;
       before(done => {
-        api.create(product, () => {
-          api.delete(product.id, res => {
+        api.create(product)
+          .then(() => {
+            return api.delete(product.id);
+          })
+          .then(res => {
             response = res;
             done();
           });
-        });
       });
 
       it('returns success status', done => {
@@ -439,20 +454,22 @@ describe('Product Routes Unit Tests', () => {
       });
 
       it('is deleted from database', done => {
-        api.get(product.id, res => {
-          expect(res.status).to.equal(404);
-          done();
-        });
+        api.get(product.id)
+          .then(res => {
+            expect(res.status).to.equal(404);
+            done();
+          });
       });
     });
     describe('invalid product id', () => {
 
       let response;
       before(done => {
-        api.delete(90, res => {
-          response = res;
-          done();
-        });
+        api.delete(90)
+          .then(res => {
+            response = res;
+            done();
+          });
       });
 
       it('returns not found status', done => {
@@ -460,5 +477,61 @@ describe('Product Routes Unit Tests', () => {
         done();
       });
     });
+  });
+
+  describe('unauthenticated search request with', () => {
+    before(done => {
+      let product1 = new Product(productTemplate);
+      let product2 = new Product(productTemplate);
+      product2.name = productTemplate.name + '2';
+      api.create(product1)
+        .then(() => {
+          api.create(product2);
+        })
+        .then(() => {
+          done();
+        });
+    });
+
+    describe('valid search string for existing products', () => {
+
+      let response;
+      before(done => {
+        api.search(productTemplate.name)
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns success status', done => {
+        expect(response.status).to.equal(200);
+        done();
+      });
+
+      it('returns the correct number of products', done => {
+        expect(response.body.length).to.equal(2);
+        done();
+      });
+    });
+
+    describe('valid search string for nonexistant products', () => {
+
+      let response;
+      before(done => {
+        api.search(productTemplate.name + 'invalid')
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns not found status', done => {
+        expect(response.status).to.equal(404);
+        done();
+      });
+    });
+
+    after(done => api.cleanup(done));
   });
 });
