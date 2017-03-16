@@ -1,9 +1,6 @@
 'use strict';
-let path = require('path');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-
-let Product = require(path.resolve('./app/models/product.model.js'));
 
 chai.use(chaiHttp);
 
@@ -12,78 +9,103 @@ module.exports = function(app) {
    * Creates an object using the API
    * @param  {Product}  product Product to create
    * @param  {Function} cb      Callback function - used to set the res property from the caller
+   * @return {Promise}          Promise that resolves to an express response
    * SIDE EFFECTS: Sets the product's ID
    */
-  let create = function(product, cb) {
-    chai.request(app)
+  let create = function(product) {
+    return chai.request(app)
       .post('/api/products')
       .send(product)
-      .end((err, res) => {
+      .then(res => {
         product.id = res.body.id; // set product ID for easy deletion later
-        cb(res);
+        return res;
       });
-  };
-
-  /**
-   * Deletes a given object from the database
-   * @param  {Product}  product Product object to delete from the database
-   * @param  {Function} cb      callback function - likely mocha's done function
-   */
-  let cleanup = function(product, cb) {
-    if (product.id) {
-      Product.delete(product.id)
-        .then(() => cb())
-        .catch(err => cb(err));
-    } else {
-      cb();
-    }
   };
 
   /**
    * Gets a product from the database, given the ID
    * @param  {number}   productId ID of the product to retrieve
-   * @param  {Function} cb        Callback function to store the response
+   * @return {Promise}            Promise that resolves to an express response
    */
-  let get = function(productId, cb) {
-    chai.request(app)
-      .get('/api/products/' + productId)
-      .end((err, res) => cb(res));
+  let get = function(productId) {
+    return chai.request(app)
+      .get('/api/products/' + productId);
   };
 
   /**
    * Gets all of the products from the database
-   * @param  {Function} cb Callback function to store results
+   * @return {Promise} Promise that resolves to an express response
    */
-  let list = function(cb) {
-    chai.request(app)
-      .get('/api/products')
-      .end((err, res) => cb(res));
+  let list = function() {
+    return chai.request(app)
+      .get('/api/products');
+  };
+
+  /**
+   * Searches for products that begin with the searchStr
+   * @param  {string}  searchStr String to search
+   * @return {Promise}           Promise that resolves to an express response
+   */
+  let search = function(searchStr) {
+    return chai.request(app)
+      .get('/api/products/search/' + searchStr);
   };
 
   /**
    * Updates a product in the database
    * @param {Product}  product Product object with updated values
-   * @param {Function} cb      Callback function to store results
+   * @return {Promise}         Promise that resolves to an express response
    */
-  let update = function(product, cb) {
-    chai.request(app)
+  let update = function(product) {
+    return chai.request(app)
       .put('/api/products/' + product.id)
-      .send(product)
-      .end((err, res) => cb(res));
+      .send(product);
   };
 
-  let remove = function(productId, cb) {
-    chai.request(app)
-      .delete('/api/products/' + productId)
-      .end((err, res) => cb(res));
+  /**
+   * Removes a product in the database
+   * @param  {number}   productId Id of the product to remove
+   * @return {Promise}            Promise that resolves to an express response
+   */
+  let remove = function(productId) {
+    return chai.request(app)
+      .delete('/api/products/' + productId);
+  };
+
+  /**
+   * Deletes a given object from the database
+   * @param  {Product}  product Product object to delete from the database
+   * @param  {Function} [cb]    callback function - likely mocha's done function
+   */
+  let cleanup = function(cb) {
+    search('zzUnitTest')
+      .then(res => {
+        // Quit if nothing was found
+        if(res.status === 404) {
+          return null;
+        }
+        // Remove anything that was found
+        let promises = [];
+        for (let product of res.body) {
+          promises.push(remove(product.id));
+        }
+        return Promise.all(promises);
+      })
+      .then(() => {
+        if(cb) {
+          cb();
+        }
+        return null;
+      });
   };
 
   return {
     create: create,
-    cleanup: cleanup,
     get: get,
     list: list,
+    search: search,
     update: update,
-    delete: remove
+    delete: remove,
+    cleanup: cleanup
   };
 };
