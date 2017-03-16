@@ -21,8 +21,11 @@ let productTemplate = new Product({
   discontinued: false
 });
 describe('Product Routes Unit Tests', () => {
+
   describe('unauthenticated create request with', () => {
+
     describe('valid product', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -31,10 +34,12 @@ describe('Product Routes Unit Tests', () => {
           done();
         });
       });
+
       it('returns success status', done => {
         expect(response.status).to.equal(200);
         done();
       });
+
       it('returns expected product', done => {
         expect(response.body).to.have.property('id');
         product.id = response.body.id;
@@ -43,6 +48,7 @@ describe('Product Routes Unit Tests', () => {
         }
         done();
       });
+
       it('is saved in database', done => {
         Product.get(product.id)
           .then(dbProduct => {
@@ -53,9 +59,11 @@ describe('Product Routes Unit Tests', () => {
           })
           .catch(err => done(err));
       });
+
       after(done => api.cleanup(product, done));
     });
     describe('empty name', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -65,16 +73,22 @@ describe('Product Routes Unit Tests', () => {
           done();
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2020);
+        expect(response.body).to.have.property('message', 'Product name must be between 3 and 40 characters.');
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
     describe('name longer than 40 characters', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -84,16 +98,23 @@ describe('Product Routes Unit Tests', () => {
           done();
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2020);
+        expect(response.body).to.have.property('message', 'Product name must be between 3 and 40 characters.');
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
+
     describe('invalid category id', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -103,18 +124,24 @@ describe('Product Routes Unit Tests', () => {
           done();
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2030);
+        expect(response.body).to.have.property('message', 'Chosen category is not a valid category.');
         done();
       });
     });
     describe('duplicate name', () => {
+
       let product = new Product(productTemplate);
       let dupeproduct = new Product(productTemplate);
       let response;
+
       before(done => {
         api.create(product, () => {
           api.create(dupeproduct, res => {
@@ -123,18 +150,25 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2010);
+        expect(response.body).to.have.property('message', 'Product name must be unique.');
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
   });
   describe('unauthenticated get request with', () => {
+
     describe('no parameters', () => {
+
       let response;
       before(done => {
         api.list(res => {
@@ -142,18 +176,23 @@ describe('Product Routes Unit Tests', () => {
           done();
         });
       });
+
       it('returns success status', done => {
         expect(response.status).to.equal(200);
         done();
       });
+
       it('returns an array of Product objects', done => {
         expect(response.body).to.be.an('Array');
         done();
       });
     });
+
     describe('valid product id', () => {
+
       let product = new Product(productTemplate);
       let response;
+
       before(done => {
         api.create(product, () => {
           api.get(product.id, res => {
@@ -162,19 +201,23 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns success status', done => {
         expect(response.status).to.equal(200);
         done();
       });
+
       it('returns expected product', done => {
         for(let property in product) {
           expect(response.body).to.have.property(property, product[property]);
         }
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
     describe('invalid product id', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -183,28 +226,37 @@ describe('Product Routes Unit Tests', () => {
           done();
         });
       });
+
       it('returns not found status', done => {
         expect(response.status).to.equal(404);
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
+
     describe('valid category id parameter', () => {
+
       xit('returns success status', done => {
         done();
       });
+
       xit('returns expected products', done => {
         done();
       });
     });
+
     describe('invalid category id parameter', () => {
+
       xit('returns not found status', done => {
         done();
       });
     });
   });
   describe('unauthenticated update request with', () => {
+
     describe('valid product', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -220,10 +272,12 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns success status', done => {
         expect(response.status).to.be.equal(200);
         done();
       });
+
       it('is saved in database', done => {
         Product.get(product.id)
           .then(dbProduct => {
@@ -234,9 +288,12 @@ describe('Product Routes Unit Tests', () => {
           })
           .catch(err => done(err));
       });
+
       after(done => api.cleanup(product, done));
     });
+
     describe('empty name', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -248,16 +305,23 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2020);
+        expect(response.body).to.have.property('message', 'Product name must be between 3 and 40 characters.');
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
+
     describe('name longer than 40 characters', () => {
+
       let product = new Product(productTemplate);
       let response;
       before(done => {
@@ -269,18 +333,25 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2020);
+        expect(response.body).to.have.property('message', 'Product name must be between 3 and 40 characters.');
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
     describe('invalid category id', () => {
+
       let product = new Product(productTemplate);
       let response;
+
       before(done => {
         api.create(product, () => {
           product.categoryId=10;
@@ -290,16 +361,22 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2030);
+        expect(response.body).to.have.property('message', 'Chosen category is not a valid category.');
         done();
       });
+
       after(done => api.cleanup(product, done));
     });
     describe('duplicate name', () => {
+
       let product1 = new Product(productTemplate);
       let product2 = new Product(productTemplate);
       let response;
@@ -315,13 +392,18 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns invalid status', done => {
         expect(response.status).to.equal(400);
         done();
       });
-      xit('returns error message', done => {
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 2010);
+        expect(response.body).to.have.property('message', 'Product name must be unique.');
         done();
       });
+
       after(done => {
         Product.delete(product1.id)
           .then(Product.delete(product2.id))
@@ -331,6 +413,7 @@ describe('Product Routes Unit Tests', () => {
     });
   });
   describe('unauthenticated delete request with', () => {
+
     describe('valid product id', () => {
       let product = new Product(productTemplate);
       let response;
@@ -342,16 +425,19 @@ describe('Product Routes Unit Tests', () => {
           });
         });
       });
+
       it('returns success status', done => {
         expect(response.status).to.equal(200);
         done();
       });
+
       it('returns expected product', done => {
         for (let property in product) {
           expect(response.body).to.have.property(property, product[property]);
         }
         done();
       });
+
       it('is deleted from database', done => {
         api.get(product.id, res => {
           expect(res.status).to.equal(404);
@@ -360,6 +446,7 @@ describe('Product Routes Unit Tests', () => {
       });
     });
     describe('invalid product id', () => {
+
       let response;
       before(done => {
         api.delete(90, res => {
@@ -367,6 +454,7 @@ describe('Product Routes Unit Tests', () => {
           done();
         });
       });
+
       it('returns not found status', done => {
         expect(response.status).to.equal(404);
         done();
