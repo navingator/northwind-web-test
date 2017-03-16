@@ -1,12 +1,13 @@
 'use strict';
 // configuration ===========================================
+global.Promise = require('bluebird'); // Set the global promise library
 require('dotenv').config();
-var config = require('./app/config/config'); // general configuration
-var app = require('./app/config/express.config')(); // express configuration
+let config = require('./app/config/config'); // general configuration
+let app = require('./app/config/express.config')(); // express configuration
 require('./app/config/passport.config')(); // passport configuration
 
 // start app ===============================================
-var port = config.port; // set our port
+let port = config.port; // set our port
 app.listen(port, config.startBrowserSync);
 console.log('Listening on port ' + port); // shoutout to the user
 
