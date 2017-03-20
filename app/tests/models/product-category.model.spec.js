@@ -40,7 +40,7 @@ describe('Product category model unit tests', () => {
       done();
     });
     it('creates a new product categry that can be retrieved from the database', done => {
-      ProductCategory.findById(productCategory.id)
+      ProductCategory.read(productCategory.id)
         .then(dbProductCategory => {
           expect(dbProductCategory.name).to.deep.equal(productCategory.name);
           done();
@@ -54,7 +54,7 @@ describe('Product category model unit tests', () => {
    */
   after(done => {
     if(productCategory.id) {
-      ProductCategory.remove(productCategory.id)
+      ProductCategory.delete(productCategory.id)
         .then(() => done())
         .catch(err => done(err));
     } else {

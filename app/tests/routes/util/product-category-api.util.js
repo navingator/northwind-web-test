@@ -50,12 +50,22 @@ module.exports = function(app) {
   let cleanup = function(cb) {
     search('zzUnit')
       .then(res => {
+        // Quit if nothing was found
+        if(res.status === 404) {
+          return null;
+        }
+        // Remove anything that was found
         let promiseArray = [];
         for (let record of res.body) {
           promiseArray.push(remove(record.id));
         }
-        Promise.all(promiseArray)
-          .then(() => cb());
+        return Promise.all(promiseArray);
+      })
+      .then(() => {
+        if(cb) {
+          cb();
+        }
+        return null;
       });
   };
 

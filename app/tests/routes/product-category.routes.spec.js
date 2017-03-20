@@ -53,7 +53,7 @@ describe('ProductCat unit test', () => {
       }); //returns category details including new id
 
       it('is saved in database', done => {
-        ProductCategory.findById(productCategory.id)
+        ProductCategory.read(productCategory.id)
           .then(dbProductCat => {
             for (let property in productCategory) {
               expect(dbProductCat).to.have.property(property, productCategory[property]);
@@ -613,7 +613,7 @@ describe('ProductCat unit test', () => {
       }); //returns category details
 
       it('is deleted from database', done => {
-        ProductCategory.findById(productCategory.id)
+        ProductCategory.read(productCategory.id)
           .then(() => done(new Error('Should not have found anything')))
           .catch(err => {
             expect(err.code).to.equal(0);

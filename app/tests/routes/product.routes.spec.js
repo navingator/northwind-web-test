@@ -52,7 +52,7 @@ describe('Product Routes Unit Tests', () => {
       });
 
       it('is saved in database', done => {
-        Product.get(product.id)
+        Product.read(product.id)
           .then(dbProduct => {
             for (let property in product) {
               expect(dbProduct).to.have.property(property, product[property]);
@@ -288,7 +288,7 @@ describe('Product Routes Unit Tests', () => {
       });
 
       it('is saved in database', done => {
-        Product.get(product.id)
+        Product.read(product.id)
           .then(dbProduct => {
             for(let property in product) {
               expect(dbProduct).to.have.property(property, product[property]);

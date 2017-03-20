@@ -33,7 +33,7 @@ describe('Product Model Unit Tests', () => {
           .catch(err => done(err));
       });
       it('should successfully delete the product',
-        () => expect(Product.get(product.id)).to.be.rejected);
+        () => expect(Product.read(product.id)).to.be.rejected);
     });
 
     describe('Invalid product ID', () => {
@@ -87,7 +87,7 @@ describe('Product Model Unit Tests', () => {
           .catch(err => done(err));
       });
       it('should update the product in the database', done => {
-        Product.get(product.id)
+        Product.read(product.id)
           .then(dbProduct => {
             for (let property in product) {
               expect(dbProduct).to.have.property(property, product[property]);
@@ -127,7 +127,7 @@ describe('Product Model Unit Tests', () => {
         done();
       });
       it('should not update the product in the database', done => {
-        Product.get(product.id)
+        Product.read(product.id)
           .then(dbProduct => {
             expect(dbProduct.name).to.equal('zzUnitTestProduct');
             done();

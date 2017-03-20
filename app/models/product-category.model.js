@@ -4,69 +4,82 @@
 var path = require('path');
 var db = require(path.resolve('./app/config/db.config'));
 
-/* Import maps */
+/* TODO Import maps */
 
-/**
-* Product category class used for database calls
-* @property  {number}  id              Product category database ID
-* @property  {string}  name            Product category name
-* @property  {string}  description     Product category description
-* @property  {string}  picture         File path to the product category image
-* @property  {number}  parent          The product category that this product category
-*                                      belongs to. May be empty. Creates a tree
-*/
 class ProductCategory {
-  constructor(productCategory) {
-    this.id = productCategory.id;
-    this.name = productCategory.name;
-    this.description = productCategory.description;
-    this.picture = productCategory.picture;
+  /**
+  * Constructor for the product category class used for database calls
+  * @param     {object}  obj             The object that will be used to create
+  *                                      the product category
+  * @property  {number}  id              Product category database ID
+  * @property  {string}  name            Product category name
+  * @property  {string}  description     Product category description
+  * @property  {string}  picture         File path to the product category image
+  * @return    {ProductCategory}         The created product category object
+  */
+  constructor(obj) {
+    this.id = obj.id;
+    this.name = obj.name;
+    this.description = obj.description;
+    this.picture = obj.picture;
   }
 
  /**
   * Creates a product category in the database
   * @return  {promise}  Resolves to a product category's id
-  * SIDE EFFECTS: A product category is created in the database. Id sequence +1.
+  * SIDE EFFECTS: sets id property to database id.
   */
   create() {
     return db.one(
       'INSERT INTO categories(categoryname, description, picture) ' +
       'VALUES(${name}, ${description}, ${picture}) ' +
       'RETURNING categoryid', this)
-        .then(prodCatId => this.id = prodCatId.categoryid);
+      .then(prodCatId => this.id = prodCatId);
    }
 
   /**
   * Updates an exisiting product category with new information
-  * @param  {object}  productCategory   Product category to be updated
   * @return {promise}                   Resolves to a success boolean
-  * SIDE EFFECTS: A product category's information is changed in the database
   */
   update() {
-    return db.result(
+    return db.none(
       'UPDATE categories ' +
       'SET (categoryname, description, picture) = (${name}, ${description}, ${picture}) ' +
       'WHERE categoryid = ${id}', this);
   }
 
   /**
-  * Removes a product category from the database by ID
-  * @param  {number}  id   Product category database ID to be deleted
-  * @return {promise}      Resolves to a success or fail boolean
-  * SIDE EFFECTS: A product category is removed form the database
+  * Converts a category from the database into a ProductCategory object
+  * @param  {object}           dbCategory  Product category object in db syntax
+  * @return {ProductCategory}              ProductCategory object
   */
-  static remove(id) {
-    return db.result(
+  static convertFromDb(dbCategory) { /* TODO convert to a map file */
+    return new ProductCategory({
+      id: dbCategory.categoryid,
+      name: dbCategory.categoryname,
+      description: dbCategory.description,
+      picture: dbCategory.picture
+    });
+  }
+
+  /**
+  * Deletes a product category from the database by ID
+  * @param  {number}  id   Product category database ID to be deleted
+  * @return {promise}      Resolves upon database deletion
+  */
+  static delete(id) {
+    return db.none(
       'DELETE FROM categories ' +
       'WHERE categoryid=${id}',{id: id});
   }
 
   /**
-  * Finds a product category from the database when given an ID
+  * Finds a product category from the database when given an ID. Throws an error if
+  * one is not found
   * @param  {number}  id   Product category database ID to be searched
-  * @return {promise}      Resolves to a product category object in server syntax
+  * @return {promise}      Resolves to a ProductCategory object
   */
-  static findById(id) {
+  static read(id) {
     return db.one(
       'SELECT * ' +
       'FROM categories ' +
@@ -77,22 +90,22 @@ class ProductCategory {
   /**
   * Finds a product from the database that starts with a given string
   * @param  {string}  str   Seatch string
-  * @return {promise}       Resolves to an array of product category objects
+  * @return {promise}       Resolves to an array of ProductCategory objects
   */
-  static findByStr(str) {
-    str = str+'%';
+  static search(str) {
+    str = str + '%';
     return db.any(
       'SELECT * ' +
       'FROM categories ' +
       'WHERE categoryname ILIKE ${str}',{str: str})
-        .then(searchRes => {
-          return searchRes.map(searchRes => ProductCategory.convertFromDb(searchRes));
+        .then(records => {
+          return records.map(record => ProductCategory.convertFromDb(record));
         });
   }
 
   /**
   * Retrieves the entire list of the categories table
-  * @return   {promise}   Resolves to a complete list of the categories table
+  * @return   {promise}   Resolves to an array of ProductCategory objects
   */
   static listAll() {
     return db.any(
@@ -105,37 +118,24 @@ class ProductCategory {
 
   /**
   * Retrieves the amount of records in the product category table
-  * @return   {object}    with the property 'count' which is set to the amount
-  *                       of records in the product category table
+  * @return   {Promise}   Resolves to an object with the property 'count'
+  *                       which is set to the amount of records in the product
+  *                       category table
   */
   static tableCount() {
     return db.one(
       'SELECT COUNT (*) ' +
       'AS count ' +
-      'FROM categories');
+      'FROM categories');  //TODO pull out the count into a variable
   }
 
   /**
   * Validates whether the passed in product ID is a valid ID
   * @param    {number}  id   Id to validate
-  * @return   {promise}      Resolves to a success or fail boolean
+  * @return   {boolean}      Whether the id is valid
   */
   static isValidId(id) {
     return !isNaN(id);
-  }
-
-  /**
-  * Converts a category from db syntax to server syntax
-  * @param  {object}  dbCategory  Product category object in db syntax
-  * @return {object}              The product category object in server syntax
-  */
-  static convertFromDb(dbCategory) { /* TODO convert to a map file */
-    return new ProductCategory({
-      id: dbCategory.categoryid,
-      name: dbCategory.categoryname,
-      description: dbCategory.description,
-      picture: dbCategory.picture
-    });
   }
 }
 module.exports = ProductCategory;

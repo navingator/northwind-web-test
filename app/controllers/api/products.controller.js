@@ -5,13 +5,13 @@ let Product = require(path.resolve('./app/models/product.model.js'));
 let ApiUtils = require('./api-utils');
 
 exports.list = function(req, res) {
-  Product.list()
+  Product.listAll()
     .then(products => res.json(products))
     .catch(err => ApiUtils.handleDbError(err, res));
 };
 
 /**
- * Creates a product and stores it in the database. Sends the object back to
+ * Creates a Product object and stores it in the database. Sends the object back to
  * the caller
  */
 exports.create = function(req, res) {
@@ -34,9 +34,8 @@ exports.get = function(req, res) {
  */
 exports.update = function(req, res) {
   let product = new Product(req.body);
-  product.id = req.product.id;
   product.update()
-    .then(() => res.status(200).send())
+    .then(() => res.json(product))
     .catch(err => ApiUtils.handleDbError(err, res));
 };
 
@@ -76,7 +75,7 @@ exports.getById = function(req, res, next, id) {
   if (!Product.isValidId(id)) {
     return res.status(400).end(); //TODO error
   }
-  Product.get(id)
+  Product.read(id)
     .then(product => {
       req.product = product;
       next();

@@ -73,21 +73,17 @@ class Product {
    * @param   {number}  id ID to validate
    * @returns {boolean}    Whether the ID is valid
    */
-  static isValidId(id) {
-    if(isNaN(id)) {
-      return false;
-    }
-    return true;
-  }
+   static isValidId(id) {
+     return !isNaN(id);
+   }
 
   /**
-   * Deletes a product from the database with the given ID. Resolves to the result
-   * of the postgres delete.
+   * Deletes a product from the database with the given ID
    * @param   {number}  id  ID of the product to be deleted
-   * @returns {promise}     promise for database deletion that resolves to the query result
+   * @returns {promise}     Resolves upon database deletion
    */
   static delete(id) {
-    return db.result('DELETE FROM products WHERE productid=${id}', {id: id});
+    return db.none('DELETE FROM products WHERE productid=${id}', {id: id});
   }
 
   /**
@@ -96,7 +92,7 @@ class Product {
    * @param   {number}  id ID of the product to Retrieves
    * @returns {promise}    Promise object that resolves to a Product
    */
-  static get(id) {
+  static read(id) {
     return db.one('SELECT * FROM products WHERE productid=${id}', {id: id})
       .then(data => Product.convertFromDbProduct(data));
   }
@@ -105,7 +101,7 @@ class Product {
    * Retrieves all products from the database
    * @returns {promise} Promise object that resolves to an array of Product objects
    */
-  static list() {
+  static listAll() {
     return db.any('SELECT * FROM products')
       .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
