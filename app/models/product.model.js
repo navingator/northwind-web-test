@@ -1,7 +1,6 @@
 'use strict';
 
-let path = require('path');
-var db = require(path.resolve('./app/config/db.config'));
+let db = require('./db.model');
 
 /**
  * Product class for use with database
@@ -112,11 +111,10 @@ class Product {
   * @return {promise}       Resolves to an array of product objects
   */
   static search(str) {
-    str = str + '%';
     return db.any(
       'SELECT * ' +
       'FROM products ' +
-      'WHERE productname ILIKE ${str}', {str: str})
+      'WHERE productname ILIKE \'${str#}%\'', {str: str})
         .then(records => {
           return records.map(record => Product.convertFromDbProduct(record));
         });

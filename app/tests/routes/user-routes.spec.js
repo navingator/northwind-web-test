@@ -1,6 +1,6 @@
 'use strict';
 /*jshint expr: true*/
-process.env.NODE_ENV='test'; // TODO do this globally for tests
+process.env.NODE_ENV='test';
 //TODO suppress stdout for these tests (result from HTTP calls)
 
 let path = require('path');

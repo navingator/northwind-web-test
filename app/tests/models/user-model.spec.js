@@ -1,6 +1,6 @@
 'use strict';
 /*jshint expr: true*/
-process.env.NODE_ENV='test'; // TODO do this globally for tests
+process.env.NODE_ENV='test';
 
 let path = require('path');
 let chai = require('chai');

@@ -1,7 +1,7 @@
 'use strict';
 
 /*jshint expr: true*/
-process.env.NODE_ENV='test'; // TODO do this globally for tests
+process.env.NODE_ENV='test';
 
 /* Import dependencies */
 let path = require('path');
@@ -20,7 +20,7 @@ let productCatTemplate = new ProductCategory({
   picture: './somewhere-out-there'
 });
 
-describe('ProductCat unit test', () => {
+describe('Product Category unit test', () => {
 
   before(done => api.cleanup(done));
 
@@ -53,6 +53,7 @@ describe('ProductCat unit test', () => {
       }); //returns category details including new id
 
       it('is saved in database', done => {
+        console.log(productCategory.id);
         ProductCategory.read(productCategory.id)
           .then(dbProductCat => {
             for (let property in productCategory) {
@@ -85,7 +86,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3020);
+        expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -110,7 +114,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3020);
+        expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -135,7 +142,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3020);
+        expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -163,7 +173,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3010);
+        expect(response.body).to.have.property('message', 'Category name must be unique.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -190,7 +203,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3030);
+        expect(response.body).to.have.property('message', 'Category description must be less than 100 characters.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -219,8 +235,8 @@ describe('ProductCat unit test', () => {
           expect(productCategory).to.have.property(property);
         }
         ProductCategory.tableCount()
-          .then(table => {
-            expect(response.body.length).to.equal(+table.count);
+          .then(count => {
+            expect(response.body.length).to.equal(count);
             done();
           });
       }); //lists all categories in the database
@@ -273,7 +289,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns not found status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 4000);
+        expect(response.body).to.have.property('message', 'ID is invalid.');
+        done();
       }); //returns validation message
 
     }); //invalid category id
@@ -361,9 +380,6 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
-      }); //returns validation message
-
     }); //empty search string
 
     describe('search string with no hits', () => {
@@ -377,15 +393,10 @@ describe('ProductCat unit test', () => {
           });
       });
 
-      it('returns success status', done => {
-        expect(response.status).to.equal(200);
+      it('returns not found status', done => {
+        expect(response.status).to.equal(404);
         done();
-      }); //returns success status
-
-      it('returns an empty object', done => {
-        expect(response.body.length).to.equal(0);
-        done();
-      }); //returns an empty object
+      }); //returns not found status
 
     }); //invalid search string
 
@@ -457,7 +468,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3000);
+        expect(response.body).to.have.property('message', 'Category name cannot be empty.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -485,7 +499,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3020);
+        expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -512,7 +529,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3020);
+        expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -546,7 +566,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3010);
+        expect(response.body).to.have.property('message', 'Category name must be unique.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -576,7 +599,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns invalid status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 3030);
+        expect(response.body).to.have.property('message', 'Category description must be less than 100 characters.');
+        done();
       }); //returns validation message
 
       after(done => api.cleanup(done));
@@ -613,12 +639,12 @@ describe('ProductCat unit test', () => {
       }); //returns category details
 
       it('is deleted from database', done => {
-        ProductCategory.read(productCategory.id)
-          .then(() => done(new Error('Should not have found anything')))
-          .catch(err => {
-            expect(err.code).to.equal(0);
+        api.get(productCategory.id)
+          .then(res => {
+            expect(res.status).to.equal(404); // not found
             done();
-          });
+          })
+          .catch(err => done(err));
       }); //is deleted from database
 
     }); //valid category id
@@ -639,7 +665,10 @@ describe('ProductCat unit test', () => {
         done();
       }); //returns not found status
 
-      it('returns validation message', () => {
+      it('returns validation message', done => {
+        expect(response.body).to.have.property('code', 4000);
+        expect(response.body).to.have.property('message', 'ID is invalid.');
+        done();
       }); //returns validation message
 
     }); //invalid category id

@@ -1,5 +1,5 @@
 'use strict';
-process.env.NODE_ENV='test'; // TODO do this globally for tests
+process.env.NODE_ENV='test';
 
 /* dependencies for the test */
 let path = require('path');
@@ -10,55 +10,25 @@ chai.use(chaiAP);
 
 require(path.resolve('./server'));
 let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
-let productCategory;
 
 /**
- * Set up a test product category
+ * Unit Tests
  */
-describe('Product category model unit tests', () => {
-  before(done => {
-    productCategory = new ProductCategory({
-      name: 'zzUTestProdCat',
-      description: 'Unit Test Product Category',
-      picture: './db/northwind_psql/EntityRelation\ model.png'
-    });
-    done();
-  });
+describe('Product Model Unit Tests', () => {
 
-  /**
-  * Unit Tests
-  */
-  describe('unauthenticated create request with valid category', () => {
-    before(done => {
-      productCategory.create().then(() => {
-        done();
-      })
-      .catch(err => done(err));
-    });
-    it('creates a new product categry with an numeric id', done => {
-      expect(productCategory.id).to.be.a('number');
+  describe('Product ID validation', () => {
+    it('should return true, when the ID is a number', done => {
+      expect(ProductCategory.isValidId(4)).to.be.equal(true);
       done();
     });
-    it('creates a new product categry that can be retrieved from the database', done => {
-      ProductCategory.read(productCategory.id)
-        .then(dbProductCategory => {
-          expect(dbProductCategory.name).to.deep.equal(productCategory.name);
-          done();
-        })
-        .catch(err => done(err));
+    it('it should return true when the ID can convert to a number', done => {
+      expect(ProductCategory.isValidId('20')).to.be.equal(true);
+      done();
+    });
+    it('it should return false when the ID cannot convert to a number', done => {
+      expect(ProductCategory.isValidId('4B200')).to.be.equal(false);
+      done();
     });
   });
 
-  /**
-   * Clean up test product category
-   */
-  after(done => {
-    if(productCategory.id) {
-      ProductCategory.delete(productCategory.id)
-        .then(() => done())
-        .catch(err => done(err));
-    } else {
-      done();
-    }
-  });
 });

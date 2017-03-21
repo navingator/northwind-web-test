@@ -1,6 +1,6 @@
 'use strict';
 /*jshint expr: true*/
-process.env.NODE_ENV='test'; // TODO do this globally for tests
+process.env.NODE_ENV='test';
 
 let path = require('path');
 let chai = require('chai');
@@ -226,7 +226,7 @@ describe('Product Routes Unit Tests', () => {
 
       after(done => api.cleanup(done));
     });
-    describe('invalid product id', () => {
+    describe('non-existant product id', () => {
       let response;
       before(done => {
         api.get(90)
@@ -242,6 +242,28 @@ describe('Product Routes Unit Tests', () => {
       });
     });
 
+    describe('invalid product id', () => {
+      let response;
+      before(done => {
+        api.get('bluefish')
+          .then(res => {
+            response = res;
+            done();
+          });
+      });
+
+      it('returns error status', done => {
+        expect(response.status).to.equal(400);
+        done();
+      });
+
+      it('returns error', done => {
+        expect(response.body).to.have.property('code', 4000);
+        expect(response.body).to.have.property('message', 'ID is invalid.');
+        done();
+      });
+    });
+
     describe('valid category id parameter', () => {
 
       xit('returns success status', done => {
@@ -253,7 +275,7 @@ describe('Product Routes Unit Tests', () => {
       });
     });
 
-    describe('invalid category id parameter', () => {
+    describe('non-existant category id parameter', () => {
 
       xit('returns not found status', done => {
         done();
@@ -461,7 +483,7 @@ describe('Product Routes Unit Tests', () => {
           });
       });
     });
-    describe('invalid product id', () => {
+    describe('unknown product id', () => {
 
       let response;
       before(done => {

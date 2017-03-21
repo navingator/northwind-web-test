@@ -1,8 +1,7 @@
 'use strict';
 
-var bcrypt = require('bcrypt');
-var path = require('path');
-var db = require(path.resolve('./app/config/db.config'));
+let bcrypt = require('bcrypt');
+let db = require('./db.model');
 
 /**
  * User class that should be newed. Contains information about a specific user
@@ -92,7 +91,7 @@ User.getUserById = function (id) {
  * @return {promise}    promise that resolvse to result object from the query;
  */
 User.delete = function(id) {
-  return db.result('DELETE FROM users WHERE id=${id}',
+  return db.none('DELETE FROM users WHERE id=${id}',
     {id: id});
 };
 

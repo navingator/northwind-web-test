@@ -2,12 +2,12 @@
 
 let path = require('path');
 let Product = require(path.resolve('./app/models/product.model.js'));
-let ApiUtils = require('./api-utils');
+let ApiError = require(path.resolve('./app/models/api-error.model.js'));
 
 exports.list = function(req, res) {
   Product.listAll()
     .then(products => res.json(products))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -18,7 +18,7 @@ exports.create = function(req, res) {
   let product = new Product(req.body);
   product.create()
     .then(() => res.json(product))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -36,7 +36,7 @@ exports.update = function(req, res) {
   let product = new Product(req.body);
   product.update()
     .then(() => res.json(product))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -45,7 +45,7 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   Product.delete(req.product.id)
     .then(() => res.json(req.product))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -61,7 +61,7 @@ exports.search = function(req,res) {
       }
       res.json(products);
     })
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -73,7 +73,8 @@ exports.search = function(req,res) {
  */
 exports.getById = function(req, res, next, id) {
   if (!Product.isValidId(id)) {
-    return res.status(400).end(); //TODO error
+    ApiError.getApiError(4000)
+      .then(apiError => res.status(400).send(apiError));
   }
   Product.read(id)
     .then(product => {

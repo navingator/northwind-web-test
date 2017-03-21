@@ -1,4 +1,5 @@
-﻿ERRORID,MESSAGE,DB_ERROR_CODE,DB_TABLE,DB_COL,DB_CONSTRAINT
+ERRORID,MESSAGE,DB_ERROR_CODE,DB_TABLE,DB_COL,DB_CONSTRAINT
+0,Error not found in errors table.,,,,
 1000,Username cannot be empty.,23502,users,username,
 1001,First name cannot be empty.,23502,users,first_name,
 1002,Last name cannot be empty.,23502,users,last_name,
@@ -13,4 +14,8 @@
 3000,Category name cannot be empty.,23502,categories,categoryname,
 3010,Category name must be unique.,23505,categories,,categories_categoryname_key
 3020,Category name must be between 3 and 15 characters.,23514,categories,,categories_categoryname_check
-3030,Category description must be less than 1000 characters.,23514,categories,,categories_description_check
+3030,Category description must be less than 100 characters.,23514,categories,,categories_description_check
+4000,ID is invalid.,,,,
+4001,Search parameters are invalid.,,,,
+4100,There was a database error.,,,,
+4101,No data found from the database.,,,,

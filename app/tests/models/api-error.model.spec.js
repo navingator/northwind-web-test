@@ -1,6 +1,6 @@
 'use strict';
 /*jshint expr: true*/
-process.env.NODE_ENV='test'; // TODO do this globally for tests
+process.env.NODE_ENV='test';
 
 let path = require('path');
 let chai = require('chai');
@@ -24,7 +24,7 @@ describe('API Error Unit Tests', () => {
           column: 'username'
         };
 
-        ApiError.getApiError(dbError)
+        ApiError.lookupError(dbError)
           .then(apierr => {
             apiError = apierr;
             done();
@@ -47,6 +47,7 @@ describe('API Error Unit Tests', () => {
     });
 
     describe('with specified constraint', () => {
+
       let dbError;
       let apiError;
       before(done => {
@@ -56,7 +57,7 @@ describe('API Error Unit Tests', () => {
           constraint: 'users_username_key'
         };
 
-        ApiError.getApiError(dbError)
+        ApiError.lookupError(dbError)
           .then(apierr => {
             apiError = apierr;
             done();
@@ -79,10 +80,10 @@ describe('API Error Unit Tests', () => {
     });
 
     describe('with unknown error', () => {
+
       let dbError;
       let apiError;
       let error;
-
       before(done => {
         dbError = {
           code: '12345',
@@ -90,7 +91,7 @@ describe('API Error Unit Tests', () => {
           column: 'testC'
         };
 
-        ApiError.getApiError(dbError)
+        ApiError.lookupError(dbError)
           .then(apierr => {
             apiError = apierr;
             done(new Error('Should not find error in database'));
@@ -102,21 +103,25 @@ describe('API Error Unit Tests', () => {
       });
 
       it('should throw an error', done => {
-        expect(error.message).to.equal('Postgres error not found in database.');
+        expect(error.code).to.equal(0);
+        expect(error.message).to.equal(
+          'Postgres error not found in errors database:' +
+          '\ncode = 12345' +
+          '\ntable = testT' +
+          '\ncolumn = testC'
+        );
         done();
       });
     });
 
     describe('without required error elements', () => {
-      let dbError;
-      let apiError;
-      let error;
 
+      let dbError;
+      let error;
       before(done => {
         dbError = new Error('test error');
-        ApiError.getApiError(dbError)
-          .then(apiErr => {
-            apiError = apiErr;
+        ApiError.lookupError(dbError)
+          .then(() => {
             done(new Error('Should not find error in database'));
           })
           .catch(err => {
@@ -125,9 +130,72 @@ describe('API Error Unit Tests', () => {
           });
       });
       it('should throw an error', done => {
-        expect(error.message).to.equal('Invalid postgres error');
+        expect(error.code).to.equal(0);
+        expect(error.message).to.equal('Postgres error not found in errors database:');
         done();
       });
+    });
+  });
+
+  describe('get generic API error', () => {
+
+    describe('with a known error', () => {
+
+      let apiError;
+      let code = 4000;
+      before(done => {
+        ApiError.getApiError(code)
+          .then(apiErr => {
+            apiError = apiErr;
+            done();
+          })
+          .catch(err => done(err));
+      });
+
+      it('gets the appropriate error ', done => {
+        expect(apiError.code).to.equal(code);
+        expect(apiError.message).to.equal('ID is invalid.');
+        done();
+      });
+
+    });
+
+    describe('with an unknown error', () => {
+      let code = '9999999999';
+      let error;
+      before(done => {
+        ApiError.getApiError(code)
+          .then(() => done(new Error('Should not find error ' + code + ' in database')))
+          .catch(err => {
+            error = err;
+            done();
+          });
+      });
+
+      it('throws an ApiError', done => {
+        expect(error.code).to.equal(0);
+        expect(error.message).to.equal('Error (id = ' + code + ') not found in database.');
+        done();
+      });
+    });
+
+    describe('with an invalid error code', () => {
+      let code = 'ABCDEFG';
+      let error;
+      before(done => {
+        ApiError.getApiError(code)
+          .then(() => done(new Error('Should not find error ' + code + ' in database')))
+          .catch(err => {
+            error = err;
+            done();
+          });
+      });
+      it('throws an error', done => {
+        expect(error.code).to.equal(0);
+        expect(error.message).to.equal('Error (id = ' + code + ') not found in database.');
+        done();
+      });
+
     });
   });
 });
