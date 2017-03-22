@@ -5,6 +5,7 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 module.exports = function(app) {
+
   /**
    * Creates an object using the API
    * @param  {ProductCategory}  productCategory Product category to create
@@ -47,8 +48,8 @@ module.exports = function(app) {
    * Deletes all objects with a name that starts with 'zzUnit' from the database
    * @param  {Function} cb               Callback function - likely mocha's done function
    */
-  let cleanup = function(cb) {
-    search('zzUnit')
+  let cleanup = function() {
+    return search('zzUnit')
       .then(res => {
         // Quit if nothing was found
         if(res.status === 404) {
@@ -60,12 +61,6 @@ module.exports = function(app) {
           promiseArray.push(remove(record.id));
         }
         return Promise.all(promiseArray);
-      })
-      .then(() => {
-        if(cb) {
-          cb();
-        }
-        return null;
       });
   };
 

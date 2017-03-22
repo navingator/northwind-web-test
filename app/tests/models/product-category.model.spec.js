@@ -17,17 +17,14 @@ let ProductCategory = require(path.resolve('./app/models/product-category.model.
 describe('Product Model Unit Tests', () => {
 
   describe('Product ID validation', () => {
-    it('should return true, when the ID is a number', done => {
+    it('should return true, when the ID is a number', () => {
       expect(ProductCategory.isValidId(4)).to.be.equal(true);
-      done();
     });
-    it('it should return true when the ID can convert to a number', done => {
+    it('it should return true when the ID can convert to a number', () => {
       expect(ProductCategory.isValidId('20')).to.be.equal(true);
-      done();
     });
-    it('it should return false when the ID cannot convert to a number', done => {
+    it('it should return false when the ID cannot convert to a number', () => {
       expect(ProductCategory.isValidId('4B200')).to.be.equal(false);
-      done();
     });
   });
 

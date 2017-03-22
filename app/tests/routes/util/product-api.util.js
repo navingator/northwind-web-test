@@ -77,8 +77,8 @@ module.exports = function(app) {
    * @param  {Product}  product Product object to delete from the database
    * @param  {Function} [cb]    callback function - likely mocha's done function
    */
-  let cleanup = function(cb) {
-    search('zzUnitTest')
+  let cleanup = function() {
+    return search('zzUnitTest')
       .then(res => {
         // Quit if nothing was found
         if(res.status === 404) {
@@ -90,12 +90,6 @@ module.exports = function(app) {
           promises.push(remove(product.id));
         }
         return Promise.all(promises);
-      })
-      .then(() => {
-        if(cb) {
-          cb();
-        }
-        return null;
       });
   };
 
