@@ -5,14 +5,16 @@ let path = require('path');
 
 module.exports = function (router) {
   let ProductCategory = require(path.resolve('./app/controllers/api/product-category.controller'));
-  router.route('/product_category')
+  router.route('/product_categories')
     .get(ProductCategory.fullList)
     .post(ProductCategory.create);
-  router.route('/product_category/:prodCatId')
+  router.route('/product_categories/:prodCatId')
     .get(ProductCategory.get)
     .put(ProductCategory.update)
     .delete(ProductCategory.delete);
-  router.route('/product_category/search/:prodCatStr')
+  router.route('/product_categories/:prodCatId/products')
+    .get(ProductCategory.getProducts);
+  router.route('/product_categories/search/:prodCatStr')
     .get(ProductCategory.search);
 
   // Process the product ID before hitting the route

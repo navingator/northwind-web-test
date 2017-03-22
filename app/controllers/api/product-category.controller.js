@@ -3,6 +3,7 @@
 /* Import dependencies */
 let path = require('path');
 let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
+let Product = require(path.resolve('./app/models/product.model.js'));
 let ApiError = require(path.resolve('./app/models/api-error.model.js'));
 
 /**
@@ -22,6 +23,12 @@ exports.create = function(req, res) {
 */
 exports.get = function(req, res) {
   res.json(req.productCat);
+};
+
+exports.getProducts = function(req, res) {
+  Product.getByCategory(req.productCat.id)
+    .then(products => res.json(products))
+    .catch(err => res.status(400).send(err));
 };
 
 /**

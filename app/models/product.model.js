@@ -88,12 +88,24 @@ class Product {
   /**
    * Retrieves a product from the database with the given ID. Throws an error if
    * one is not found
-   * @param   {number}  id ID of the product to Retrieves
+   * @param   {number}  id ID of the product to retrieve
    * @returns {promise}    Promise object that resolves to a Product
    */
   static read(id) {
     return db.one('SELECT * FROM products WHERE productid=${id}', {id: id})
       .then(data => Product.convertFromDbProduct(data));
+  }
+
+  /**
+   * Retrieves all products from the database with the given category ID.
+   * @param   {number}  categoryId Category ID desired
+   * @returns {promise}            Promise object that resolves to an array of products
+   */
+  static getByCategory(categoryId) {
+    return db.any(
+      'SELECT * FROM products ' +
+      'WHERE categoryid=${categoryId}', {categoryId: categoryId})
+      .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
 
   /**

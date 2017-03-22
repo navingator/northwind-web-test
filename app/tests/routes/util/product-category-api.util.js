@@ -15,7 +15,7 @@ module.exports = function(app) {
    */
   let create = function(productCategory) {
     return chai.request(app)
-      .post('/api/product_category')
+      .post('/api/product_categories')
       .send(productCategory)
       .then(res => {
         productCategory.id = res.body.id; // Set product ID for easy deletion later
@@ -30,7 +30,7 @@ module.exports = function(app) {
    */
   let remove = function(productCatId) {
     return chai.request(app)
-      .delete('/api/product_category/' + productCatId);
+      .delete('/api/product_categories/' + productCatId);
   };
 
   /**
@@ -41,7 +41,7 @@ module.exports = function(app) {
    */
   let search = function(searchStr) {
     return chai.request(app)
-      .get('/api/product_category/search/' + searchStr);
+      .get('/api/product_categories/search/' + searchStr);
   };
 
   /**
@@ -73,7 +73,12 @@ module.exports = function(app) {
    */
   let get = function(productCatId) {
     return chai.request(app)
-      .get('/api/product_category/' + productCatId);
+      .get('/api/product_categories/' + productCatId);
+  };
+
+  let getProducts = function(productCatId) {
+    return chai.request(app)
+      .get('/api/product_categories/' + productCatId + '/products');
   };
 
   /**
@@ -84,7 +89,7 @@ module.exports = function(app) {
    */
   let list = function() {
     return chai.request(app)
-      .get('/api/product_category');
+      .get('/api/product_categories');
   };
 
   /**
@@ -96,7 +101,7 @@ module.exports = function(app) {
    */
   let update = function(productCategory) {
     return chai.request(app)
-      .put('/api/product_category/' + productCategory.id)
+      .put('/api/product_categories/' + productCategory.id)
       .send(productCategory);
   };
 
@@ -104,6 +109,7 @@ module.exports = function(app) {
     create: create,
     cleanup: cleanup,
     get: get,
+    getProducts: getProducts,
     search: search,
     list: list,
     update: update,

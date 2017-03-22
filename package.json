@@ -5,6 +5,7 @@
   "scripts" : {
     "build": "tsc -p ./public/src/",
     "build:watch": "tsc -p ./public/src/ -w",
+    "test": "npm run test:server",
     "test:server": "mocha ./app/tests --recursive --timeout 5000 --reporter mochawesome",
     "serve": "nodemon server.js",
     "start" : "concurrently \"npm run build:watch\" \"npm run serve\""

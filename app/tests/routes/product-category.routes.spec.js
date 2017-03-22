@@ -9,7 +9,9 @@ let chai = require('chai');
 let expect = chai.expect;
 let app = require(path.resolve('./server'));
 let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
-let api = require('./util/product-category-api.util')(app);
+let Product = require(path.resolve('./app/models/product.model.js'));
+let categoryApi = require('./util/product-category-api.util')(app);
+let productApi = require('./util/product-api.util')(app);
 
 /* Set up a test product category - do NOT use directly in functions */
 let namePrefix = 'zzUnit';
@@ -22,7 +24,7 @@ let categoryTemplate = new ProductCategory({
 
 describe('Product Category unit test', () => {
 
-  before(api.cleanup);
+  before(categoryApi.cleanup);
 
   describe('unauthenticated create request with', () => {
 
@@ -32,7 +34,7 @@ describe('Product Category unit test', () => {
       let response;
       before(() => {
         productCategory = new ProductCategory(categoryTemplate);
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(res => response = res);
       });
 
@@ -56,7 +58,7 @@ describe('Product Category unit test', () => {
           });
       }); //is saved in database
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //valid category
 
@@ -66,7 +68,7 @@ describe('Product Category unit test', () => {
 
       before(() => {
         productCategory.name = '';
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(res => response = res);
       });
 
@@ -77,7 +79,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //empty name
 
@@ -87,7 +89,7 @@ describe('Product Category unit test', () => {
 
       before(() => {
         productCategory.name = 'This name is longer than 15 characters';
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(res => response = res);
       });
 
@@ -98,7 +100,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
       });
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //name longer than 15 chars in length
 
@@ -108,7 +110,7 @@ describe('Product Category unit test', () => {
 
       before(() => {
         productCategory.name = 'a';
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(res => response = res);
       });
 
@@ -119,7 +121,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //name shorter than 3 chars in length
 
@@ -129,8 +131,8 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
-          .then(() => api.create(dupProductCategory))
+        return categoryApi.create(productCategory)
+          .then(() => categoryApi.create(dupProductCategory))
           .then(res => response = res);
       });
 
@@ -141,7 +143,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name must be unique.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //duplicate name
 
@@ -153,7 +155,7 @@ describe('Product Category unit test', () => {
         productCategory.description = 'This is a very long description. This ' +
         'is to check to see if the description can not be longer than 100 ' +
         'characters. This is the end of the description.';
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(res => response = res);
       });
 
@@ -164,7 +166,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category description must be less than 100 characters.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //description longer than 100 chars in length
 
@@ -177,7 +179,7 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.list()
+        return categoryApi.list()
           .then(res => response = res);
       });
 
@@ -197,8 +199,8 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
-          .then(() => api.get(productCategory.id))
+        return categoryApi.create(productCategory)
+          .then(() => categoryApi.get(productCategory.id))
           .then(res => response = res);
       });
 
@@ -206,7 +208,7 @@ describe('Product Category unit test', () => {
 
       it('returns the expected category', () => expect(response.body.id).to.equal(productCategory.id));
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //valid category id
 
@@ -214,7 +216,7 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.get('stringid')
+        return categoryApi.get('stringid')
           .then(res => response = res);
       });
 
@@ -233,12 +235,12 @@ describe('Product Category unit test', () => {
       let uniqueId;
 
       before(() => {
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(() => {
             uniqueId = productCategory.id;
-            return api.delete(productCategory.id);
+            return categoryApi.delete(productCategory.id);
           })
-          .then(() => api.get(uniqueId))
+          .then(() => categoryApi.get(uniqueId))
           .then(res => response = res);
       });
 
@@ -253,12 +255,12 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(() => {
             productCategory2.name += '2';
-            return api.create(productCategory2);
+            return categoryApi.create(productCategory2);
           })
-          .then(() => api.search(categoryTemplate.name))
+          .then(() => categoryApi.search(categoryTemplate.name))
           .then(res => response = res);
       });
 
@@ -275,14 +277,14 @@ describe('Product Category unit test', () => {
 
       it('returns success status', () => expect(response.status).to.equal(200));
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //valid search string
     describe('empty search string', () => {
       let response;
 
       before(() => {
-        return api.search('')
+        return categoryApi.search('')
           .then(res => response = res);
       });
 
@@ -294,7 +296,7 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.search(namePrefix)
+        return categoryApi.search(namePrefix)
           .then(res => response = res);
       });
 
@@ -305,26 +307,54 @@ describe('Product Category unit test', () => {
   }); //unauthenticated get request with
 
   describe('unauthenticated get products request with', () => {
+    let category;
+
+    before(() => {
+      let product1 = new Product({
+        name: 'zzUnitTestProduct',
+        unitPrice: 12.50,
+        unitsInStock: 4,
+        discontinued: false
+      });
+      let product2 = new Product(product1);
+      product2.name = product1.name + '2';
+      category = new ProductCategory(categoryTemplate);
+      return categoryApi.create(category)
+        .then(() => {
+          product1.categoryId = category.id;
+          product2.categoryId = category.id;
+        })
+        .then(() => productApi.create(product1))
+        .then(() => productApi.create(product2));
+    });
+
+    after(() => {
+      return productApi.cleanup()
+        .then(categoryApi.cleanup);
+    });
 
     describe('valid category id parameter', () => {
 
-      let products;
       let response;
-
-      xit('returns success status', () => {
-        expect(response.status).to.equal(200);
+      before(() => {
+        return categoryApi.getProducts(category.id)
+          .then(res => response = res);
       });
 
-      xit('returns expected products', () => {
-        expect(products).to.be.an('object');
-      });
+      it('returns success status', () => expect(response.status).to.equal(200));
+
+      it('returns expected products', () => expect(response.body).to.have.property('length', 2));
     });
 
     describe('non-existant category id parameter', () => {
 
       let response;
+      before(() => {
+        return categoryApi.getProducts(90)
+          .then(res => response = res);
+      });
 
-      xit('returns not found status', () => {
+      it('returns not found status', () => {
         expect(response.status).to.equal(404);
       });
     });
@@ -333,15 +363,16 @@ describe('Product Category unit test', () => {
   describe('unauthenticated update request with', () => {
 
     describe('valid category', () => {
-      let productCategory = new ProductCategory(categoryTemplate);
+      let productCategory;
       let response;
 
       before(() => {
-        return api.create(productCategory)
+        productCategory = new ProductCategory(categoryTemplate);
+        return categoryApi.create(productCategory)
           .then(() => {
             productCategory.name = namePrefix + 'UpPC';
             productCategory.picture = './somewhere-else';
-            return api.update(productCategory);
+            return categoryApi.update(productCategory);
           })
           .then(res => response = res);
       });
@@ -356,7 +387,7 @@ describe('Product Category unit test', () => {
       }); //returns category details
 
       it('is updated in database', () => {
-        api.get(productCategory.id)
+        categoryApi.get(productCategory.id)
           .then(res => {
             for (let property in res.body) {
               expect(res.body).to.have.property(property, productCategory[property]);
@@ -364,7 +395,7 @@ describe('Product Category unit test', () => {
           });
       }); //is updated in database
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //valid category
 
@@ -373,10 +404,10 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(() => {
             delete productCategory.name;
-            return api.update(productCategory);
+            return categoryApi.update(productCategory);
           })
           .then(res => response = res);
       });
@@ -388,7 +419,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name cannot be empty.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //empty category name
 
@@ -397,10 +428,10 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(() => {
             productCategory.name = namePrefix + 'NameLongerThan15Letters';
-            return api.update(productCategory);
+            return categoryApi.update(productCategory);
           })
           .then(res => response = res);
       });
@@ -412,7 +443,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //category name that is longer than 15 letters
     describe('category name that is shorter than 3 letters', () => {
@@ -420,10 +451,10 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(() => {
             productCategory.name = 'zz';
-            return api.update(productCategory);
+            return categoryApi.update(productCategory);
           })
           .then(res => response = res);
       });
@@ -435,7 +466,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //category name that is shorter than 3 letters
 
@@ -445,14 +476,14 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(() => {
             productCategory2.name += '2';
-            return api.create(productCategory2);
+            return categoryApi.create(productCategory2);
           })
           .then(() => {
             productCategory.name = productCategory2.name;
-            return api.update(productCategory);
+            return categoryApi.update(productCategory);
           })
           .then(res => response = res);
       });
@@ -465,7 +496,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category name must be unique.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //duplicate category name
 
@@ -474,12 +505,12 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
+        return categoryApi.create(productCategory)
           .then(() => {
             productCategory.description = 'This is a very long description. This ' +
             'is to check to see if the description can not be longer than 100 ' +
             'characters. This is the end of the description.';
-            return api.update(productCategory);
+            return categoryApi.update(productCategory);
           })
           .then(res => response = res);
       });
@@ -491,7 +522,7 @@ describe('Product Category unit test', () => {
         expect(response.body).to.have.property('message', 'Category description must be less than 100 characters.');
       }); //returns validation message
 
-      after(api.cleanup);
+      after(categoryApi.cleanup);
 
     }); //description longer than 100 characters
 
@@ -503,8 +534,8 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
-          .then(() => api.delete(productCategory.id))
+        return categoryApi.create(productCategory)
+          .then(() => categoryApi.delete(productCategory.id))
           .then(res => response = res);
       });
 
@@ -517,7 +548,7 @@ describe('Product Category unit test', () => {
       }); //returns category details
 
       it('is deleted from database', () => {
-        return api.get(productCategory.id)
+        return categoryApi.get(productCategory.id)
           .then(res => expect(res.status).to.equal(404));
       }); //is deleted from database
 
@@ -527,7 +558,7 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.delete('productCategory.id')
+        return categoryApi.delete('productCategory.id')
           .then(res => response = res);
       });
 
@@ -545,9 +576,9 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return api.create(productCategory)
-          .then(() => api.delete(productCategory.id)) // Delete the ID, but ensure the ID does not exist
-          .then(() => api.delete(productCategory.id)) // Perform the test
+        return categoryApi.create(productCategory)
+          .then(() => categoryApi.delete(productCategory.id)) // Delete the ID, but ensure the ID does not exist
+          .then(() => categoryApi.delete(productCategory.id)) // Perform the test
           .then(res => response = res);
       });
 
@@ -556,6 +587,6 @@ describe('Product Category unit test', () => {
     }); //category id not in database
 
   }); //unauthenticated delete request with
-  after(api.cleanup);
+  after(categoryApi.cleanup);
 
 }); //Product category model unit tests
