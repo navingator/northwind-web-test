@@ -15,9 +15,8 @@ exports.create = function(req, res) {
     username: req.body.username,
     password: req.body.password
   });
-  return User.createUser(user)
-    .then(data => {
-      user.id = data.id;
+  return user.create()
+    .then(() => {
       delete user.password; // remove sensitive data before login
       req.login(user, err => {
         if (err) {
@@ -27,14 +26,11 @@ exports.create = function(req, res) {
         }
       });
     })
-    .catch(function(err) {
-      console.log(err); //TODO better logging method
-      res.status(400).send(err);
-    });
+    .catch(err => res.status(400).send(err));
 };
 
 exports.signin = function(req, res, next) {
-  passport.authenticate('local', function (err, user, info) {
+  passport.authenticate('local', (err, user, info) => {
     if (err) {
       res.status(400).send(err); // send error back to the user
     } else if (!user) {

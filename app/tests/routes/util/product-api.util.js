@@ -8,7 +8,6 @@ module.exports = function(app) {
   /**
    * Creates an object using the API
    * @param  {Product}  product Product to create
-   * @param  {Function} cb      Callback function - used to set the res property from the caller
    * @return {Promise}          Promise that resolves to an express response
    * SIDE EFFECTS: Sets the product's ID
    */
@@ -73,9 +72,7 @@ module.exports = function(app) {
   };
 
   /**
-   * Deletes a given object from the database
-   * @param  {Product}  product Product object to delete from the database
-   * @param  {Function} [cb]    callback function - likely mocha's done function
+   * Deletes products that start with zzUnitTest from the database
    */
   let cleanup = function() {
     return search('zzUnitTest')

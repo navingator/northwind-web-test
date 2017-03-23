@@ -49,7 +49,6 @@ describe('Product Category unit test', () => {
       }); //returns category details including new id
 
       it('is saved in database', () => {
-        console.log(productCategory.id);
         return ProductCategory.read(productCategory.id)
           .then(dbProductCat => {
             for (let property in productCategory) {
@@ -75,8 +74,8 @@ describe('Product Category unit test', () => {
       it('returns invalid status', () => expect(response.status).to.equal(400));
 
       it('returns validation message', () => {
-        expect(response.body).to.have.property('code', 3020);
-        expect(response.body).to.have.property('message', 'Category name must be between 3 and 15 characters.');
+        expect(response.body).to.have.property('code', 3000);
+        expect(response.body).to.have.property('message', 'Category name cannot be empty.');
       }); //returns validation message
 
       after(categoryApi.cleanup);

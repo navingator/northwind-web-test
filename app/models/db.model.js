@@ -46,24 +46,56 @@ function handleDbError(err) {
 }
 
 /**
+ * Trims values to clean database records
+ * Any values set to an empty string will be nulled
+ * @param  {object} values Object to be trimmed
+ * @return {object}        New object with values trimmed and nulled
+ */
+function trimValues(values) {
+  let newValues = {};
+  for(let prop in values) {
+    let value = values[prop];
+    if (typeof(value) === 'string') {
+      value = value.trim();
+      if(value === '') {
+        value = null;
+      }
+    }
+    newValues[prop] = value;
+  }
+  return newValues;
+}
+
+/**
+ * Helper function to query the database. Trims values before querying and
+ * handles database errors after the query.
+ * @param  {function} queryFn  pg-promise function to use to query the database
+ * @param  {string} queryStr   Query string
+ * @param  {object} values     Object containing values that query maps to
+ * @return {Promise}           Promise that resolves to query data
+ */
+function queryDb(queryFn, queryStr, values) {
+  let newValues = trimValues(values);
+  return queryFn(queryStr, newValues)
+    .catch(err => handleDbError(err));
+}
+
+/**
  * Queries the database, expecting any number of rows
  * @param  {string}  query  Query string mapped by object
  * @param  {object}  values Object containing values that query maps to
  * @return {Promise}        Promise that resolves to query data
  */
 exports.any = function(query, values) {
-  return db.any(query, values)
-    .catch(err => handleDbError(err));
+  return queryDb(db.any, query, values);
 };
 
 exports.one = function(query, values) {
-  return db.one(query, values)
-    .catch(err => handleDbError(err));
+  return queryDb(db.one, query, values);
 };
 
 exports.none = function(query, values) {
-  return db.none(query, values)
-    .catch(err => handleDbError(err));
+  return queryDb(db.none, query, values);
 };
 
 exports.queryErrors = function(query, values) {

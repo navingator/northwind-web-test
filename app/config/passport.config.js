@@ -13,7 +13,7 @@ module.exports = function() {
 
   // Deserialize sessions
 	passport.deserializeUser(function(id, done) {
-		User.getUserById(id)
+		User.getById(id)
       .then(function(user) {
         delete user.password;
         return done(null, user);

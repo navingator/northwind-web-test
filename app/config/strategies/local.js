@@ -18,7 +18,7 @@ module.exports = function() {
 	 */
 	passport.use(new LocalStrategy(function(username, password, done) {
 		var authUser; // to be used within promises
-		User.getUserByUsername(username)
+		User.getByUsername(username)
 			.then(function(user) {
 				authUser=user;
 				return user.authenticate(password);

@@ -4,9 +4,7 @@ process.env.NODE_ENV='test';
 /* dependencies for the test */
 let path = require('path');
 let chai = require('chai');
-let chaiAP = require('chai-as-promised');
 let expect = chai.expect;
-chai.use(chaiAP);
 
 require(path.resolve('./server'));
 let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));

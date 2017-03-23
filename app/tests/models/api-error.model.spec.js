@@ -1,12 +1,10 @@
 'use strict';
-/*jshint expr: true*/
+
 process.env.NODE_ENV='test';
 
 let path = require('path');
 let chai = require('chai');
-let chaiAP = require('chai-as-promised');
 let expect = chai.expect;
-chai.use(chaiAP);
 
 require(path.resolve('./server'));
 let ApiError = require(path.resolve('./app/models/api-error.model.js'));

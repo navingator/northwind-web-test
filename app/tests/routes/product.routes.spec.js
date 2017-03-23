@@ -85,8 +85,8 @@ describe('Product Routes Unit Tests', () => {
       it('returns invalid status', () => expect(response.status).to.equal(400));
 
       it('returns error', () => {
-        expect(response.body).to.have.property('code', 2020);
-        expect(response.body).to.have.property('message', 'Product name must be between 3 and 40 characters.');
+        expect(response.body).to.have.property('code', 2000);
+        expect(response.body).to.have.property('message', 'Product name cannot be empty.');
       });
 
       after(productApi.cleanup);
@@ -273,8 +273,8 @@ describe('Product Routes Unit Tests', () => {
       it('returns invalid status', () => expect(response.status).to.equal(400));
 
       it('returns error', () => {
-        expect(response.body).to.have.property('code', 2020);
-        expect(response.body).to.have.property('message', 'Product name must be between 3 and 40 characters.');
+        expect(response.body).to.have.property('code', 2000);
+        expect(response.body).to.have.property('message', 'Product name cannot be empty.');
       });
 
       after(productApi.cleanup);
