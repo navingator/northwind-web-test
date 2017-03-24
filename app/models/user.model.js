@@ -37,7 +37,20 @@ class User {
   }
 
   /**
-   * Public static method that creates a user in the database
+   * Compares names between this and the passed in user and returns Whether
+   * they match.
+   * @param  {User}    user   User object
+   * @return {boolean}        Whether the user identifiers match
+   */
+  compareIdentifiers(user) {
+    if (!user.firstName || !user.lastName) { return false; }
+    let firstNameMatch = this.firstName.toLowerCase() === user.firstName.toLowerCase();
+    let lastNameMatch = this.lastName.toLowerCase() === user.lastName.toLowerCase();
+    return ( firstNameMatch && lastNameMatch);
+  }
+
+  /**
+   * Method that creates a user in the database
    * @param  {object}  user User object that contains username, lastName, firstName,
    *                        and password properties
    * @return {promise}      Promise for database insertion
@@ -62,6 +75,28 @@ class User {
   }
 
   /**
+   * Method to update a user's password
+   * @param  {string}  newPassword new password
+   * @return {promise}             Promise for database update
+   * SIDE EFFECTS: Sets the user's password to a hashed password
+   */
+  updatePassword(newPassword) {
+    // check for empty password before hashing
+    if(!newPassword) {
+      return ApiError.getApiError(1003)
+        .then(apiError => Promise.reject(apiError));
+    }
+    return User.hashPassword(newPassword)
+      .then(hash => {
+        this.password = hash;
+        return db.none(
+          'UPDATE users ' +
+          'SET password = ${password} ' +
+          'WHERE userid=${id}', this);
+      });
+  }
+
+  /**
    * Creates a User object from a database query result
    * @param  {Object} dbUser User result from database
    * @return {User}          User object
@@ -81,12 +116,13 @@ class User {
    * @return {promise}          promise that resolves to a hash string
    */
   static hashPassword(password) {
-    var saltRounds = 10;
+    let saltRounds = 10;
     return bcrypt.hash(password, saltRounds);
   }
 
   /**
    * Returns a user object. Throws an error if more than 1 user or no users are found.
+   * Converts a generic not found ApiError to a more descriptive error
    * @param  {string}  username username of the user
    * @return {promise}          Promise that resolves to a single user
    */
@@ -97,6 +133,13 @@ class User {
       {username: username})
       .then(function(data) {
         return User.convertFromDbUser(data);
+      })
+      .catch(apiErr => {
+        if(apiErr.code === 4001) {
+          return ApiError.getApiError(1100)
+            .then(apiErr => Promise.reject(apiErr));
+        }
+        return Promise.reject(apiErr); // Pass it along for other errors
       });
   }
 

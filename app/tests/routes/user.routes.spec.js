@@ -201,9 +201,31 @@ describe('User API Routes Unit Test', () => {
           .then(res => response = res);
       });
 
+      after(() => api.signout());
+
       it('returns success status', () => expect(response.status).to.equal(200));
-      xit('returns the user object to the caller');
-      xit('returns the serialized user in a cookie');
+
+      it('returns the user object without password', () => {
+        for(let prop in user) {
+          if(prop === 'password') {
+            expect(response.body).to.not.have.property('password');
+            break;
+          }
+          expect(response.body).to.have.property(prop, user[prop]);
+        }
+      });
+
+      it('returns the serialized user in a cookie', () => {
+        expect(response.header).to.have.property('set-cookie');
+      });
+
+      it('allows users to access protected routes', () => {
+        return api.me()
+          .then(res => {
+            expect(res.status).to.equal(200);
+            expect(res.body).to.deep.equal.user;
+          });
+      });
     });
 
     describe('unknown user', () => {
@@ -215,11 +237,10 @@ describe('User API Routes Unit Test', () => {
           .then(res => response = res);
       });
 
-
-
       it('returns invalid status', () => expect(response.status).to.equal(400));
-      xit('returns error', () => {
-        //TODO
+      it('returns error', () => {
+        expect(response.body).to.have.property('code', 1100);
+        expect(response.body).to.have.property('message', 'Username does not exist. Please create an account.');
       });
     });
 
@@ -232,9 +253,177 @@ describe('User API Routes Unit Test', () => {
           .then(res => response = res);
       });
       it('returns invalid status', () => expect(response.status).to.equal(400));
-      xit('returns error', () => {
-        //TODO
+      it('returns error', () => {
+        expect(response.body).to.have.property('code', 1101);
+        expect(response.body).to.have.property('message', 'Invalid Password. Please try again.');
       });
     });
   });
+
+  describe('signout request', () => {
+
+    let user;
+    before(() => {
+      user = new User(userTemplate);
+      return api.create(user);
+    });
+
+    after(() => cleanupUser(user.username));
+
+    describe('with valid signin', () => {
+
+      let response;
+      before(() => {
+        return api.signin(user)
+          .then(() => api.signout())
+          .then(res => response = res);
+      });
+
+      it('returns success status', () => expect(response.status).to.equal(200));
+      it('cannot access protected routes', () => {
+        return api.me()
+          .then(res => {
+            expect(res.status).to.equal(401);
+            expect(res.body).to.have.property('code', 1200);
+            expect(res.body).to.have.property('message', 'You must be logged in to perform this action.');
+          });
+      });
+    });
+
+    describe('without valid signin', () => {
+
+      let response;
+      before(() => {
+        return api.signout()
+          .then(res => response = res);
+      });
+
+      it('returns success status', () => expect(response.status).to.equal(200));
+    });
+  });
+
+  describe('forgot password request', () => {
+
+    let user;
+    before(() => {
+      user = new User(userTemplate);
+      return api.create(user);
+    });
+
+    after(() => cleanupUser(user.username));
+
+    describe('with valid user identifiers', () => {
+
+      let user2;
+      let response;
+      before(() => {
+        user2 = new User(userTemplate);
+        user2.password = 'newpassword';
+        return api.forgot(user2)
+          .then(res => response = res);
+      });
+
+      afterEach(() => api.signout());
+
+      after(() => api.forgot(user));
+
+      it('returns sucess status', () => expect(response.status).to.equal(200));
+
+      it('does not permit the user to sign in with old credentials', () => {
+        // assumes credentials have changed
+        return api.signin(user)
+          .then(res => expect(res.status).to.equal(400));
+      });
+
+      it('permits the user to sign in with new credentials', () => {
+        return api.signin(user2)
+          .then(res => expect(res.status).to.equal(200));
+      });
+    });
+
+    describe('with an unknown username', () => {
+
+      let user2;
+      let response;
+      before(() => {
+        user2 = new User(userTemplate);
+        user2.username = 'zzunittesting1';
+        user2.password = 'newpassword';
+        return api.forgot(user2)
+          .then(res => response = res);
+      });
+
+      after(() => api.signout());
+
+      it('returns error status', () => expect(response.status).to.equal(400));
+
+      it('returns error message', () => {
+        expect(response.body).to.have.property('code', 1100);
+        expect(response.body).to.have.property('message', 'Username does not exist. Please create an account.');
+      });
+
+      it('permits the user to sign in with old credentials', () => {
+        return api.signin(user)
+          .then(res => expect(res.status).to.equal(200));
+      });
+    });
+
+    describe('without valid user identifiers', () => {
+
+      let user2;
+      let response;
+      before(() => {
+        user2 = new User(userTemplate);
+        user2.firstName = user.firstName + 'a';
+        user2.lastName = user.lastName + 'a';
+        user2.password = 'newpassword';
+        return api.forgot(user2)
+          .then(res => response = res);
+      });
+
+      after(() => api.signout());
+
+      it('returns error status', () => expect(response.status).to.equal(400));
+
+      it('returns error message', () => {
+        expect(response.body).to.have.property('code', 1102);
+        expect(response.body).to.have.property('message', 'Name does not match the given user\'s name.');
+      });
+
+      it('permits the user to sign in with old credentials', () => {
+        return api.signin(user)
+          .then(res => expect(res.status).to.equal(200));
+      });
+    });
+
+    describe('with empty user identifiers', () => {
+
+      let user2;
+      let response;
+      before(() => {
+        user2 = new User(userTemplate);
+        user2.firstName = '';
+        delete user2.lastName;
+        user2.password = 'newpassword';
+        return api.forgot(user2)
+          .then(res => response = res);
+      });
+
+      after(() => api.signout());
+
+      it('returns error status', () => expect(response.status).to.equal(400));
+
+      it('returns error message', () => {
+        expect(response.body).to.have.property('code', 1102);
+        expect(response.body).to.have.property('message', 'Name does not match the given user\'s name.');
+      });
+
+      it('permits the user to sign in with old credentials', () => {
+        return api.signin(user)
+          .then(res => expect(res.status).to.equal(200));
+      });
+    });
+
+  });
+
 });
