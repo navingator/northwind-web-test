@@ -49,7 +49,7 @@ describe('API Error Unit Tests', () => {
           constraint: 'users_username_key'
         };
 
-        ApiError.lookupError(dbError)
+        return ApiError.lookupError(dbError)
           .then(apierr => apiError = apierr);
       });
 
@@ -76,7 +76,7 @@ describe('API Error Unit Tests', () => {
           column: 'testC'
         };
 
-        ApiError.lookupError(dbError)
+        return ApiError.lookupError(dbError)
           .then(apiErr => apiError = apiErr);
       });
 
@@ -100,13 +100,13 @@ describe('API Error Unit Tests', () => {
       let apiError;
       before(() => {
         dbError = new Error('test error');
-        ApiError.lookupError(dbError)
+        return ApiError.lookupError(dbError)
           .then(apiErr => apiError = apiErr);
       });
       it('has an ApiError with code 0', () => {
         expect(apiError.code).to.equal(0);
       });
-      
+
       it('has an ApiError with a descriptive message', () => {
         expect(apiError.message).to.equal('Postgres error not found in errors database:');
       });
@@ -135,7 +135,7 @@ describe('API Error Unit Tests', () => {
       let code = '9999999999';
       let apiError;
       before(() => {
-        ApiError.getApiError(code)
+        return ApiError.getApiError(code)
           .then(apiErr => apiError = apiErr);
       });
 
@@ -152,7 +152,7 @@ describe('API Error Unit Tests', () => {
       let code = 'ABCDEFG';
       let apiError;
       before(() => {
-        ApiError.getApiError(code)
+        return ApiError.getApiError(code)
           .then(err => apiError = err);
       });
 
