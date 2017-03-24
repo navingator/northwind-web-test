@@ -213,7 +213,7 @@ describe('Product Routes Unit Tests', () => {
       it('returns error status', () => expect(response.status).to.equal(400));
 
       it('returns error', () => {
-        expect(response.body).to.have.property('code', 4000);
+        expect(response.body).to.have.property('code', 4100);
         expect(response.body).to.have.property('message', 'ID is invalid.');
       });
     });

@@ -118,7 +118,7 @@ describe('API Error Unit Tests', () => {
     describe('with a known error', () => {
 
       let apiError;
-      let code = 4000;
+      let code = 4100;
       before(() => {
         return ApiError.getApiError(code)
           .then(apiErr => apiError = apiErr);

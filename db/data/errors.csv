@@ -3,9 +3,12 @@ ERRORID,MESSAGE,DB_ERROR_CODE,DB_TABLE,DB_COL,DB_CONSTRAINT
 1000,Username cannot be empty.,23502,users,username,
 1001,First name cannot be empty.,23502,users,first_name,
 1002,Last name cannot be empty.,23502,users,last_name,
-1003,Password cannot be empty.,23502,users,password,
+1003,Password cannot be empty.,23514,users,password,
 1010,Username already taken. Please choose another.,23505,users,,users_username_key
 1020,Username must be between 3 and 15 characters.,23514,users,,users_username_check
+1100,Username does not exist. Please create an account.,,,,
+1101,Invalid Password. Please try again.,,,,
+1102,Name does not match the given user's name.,,,,
 2000,Product name cannot be empty.,23502,products,productname,
 2001,Product category must be specified.,23502,products,categoryid,
 2010,Product name must be unique.,23505,products,,products_productname_key
@@ -15,7 +18,7 @@ ERRORID,MESSAGE,DB_ERROR_CODE,DB_TABLE,DB_COL,DB_CONSTRAINT
 3010,Category name must be unique.,23505,categories,,categories_categoryname_key
 3020,Category name must be between 3 and 15 characters.,23514,categories,,categories_categoryname_check
 3030,Category description must be less than 100 characters.,23514,categories,,categories_description_check
-4000,ID is invalid.,,,,
-4001,Search parameters are invalid.,,,,
-4100,There was a database error.,,,,
-4101,No data found from the database.,,,,
+4000,There was a database error.,,,,
+4001,No data found from the database.,,,,
+4100,ID is invalid.,,,,
+4101,Search parameters are invalid.,,,,

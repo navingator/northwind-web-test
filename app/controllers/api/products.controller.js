@@ -73,7 +73,7 @@ exports.search = function(req,res) {
  */
 exports.getById = function(req, res, next, id) {
   if (!Product.isValidId(id)) {
-    ApiError.getApiError(4000)
+    ApiError.getApiError(4100)
       .then(apiError => res.status(400).send(apiError));
   }
   Product.read(id)

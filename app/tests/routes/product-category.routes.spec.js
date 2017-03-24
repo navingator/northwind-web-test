@@ -222,7 +222,7 @@ describe('Product Category unit test', () => {
       it('returns invalid status', () => expect(response.status).to.equal(400));
 
       it('returns validation message', () => {
-        expect(response.body).to.have.property('code', 4000);
+        expect(response.body).to.have.property('code', 4100);
         expect(response.body).to.have.property('message', 'ID is invalid.');
       }); //returns validation message
 
@@ -564,7 +564,7 @@ describe('Product Category unit test', () => {
       it('returns invalid status', () => expect(response.status).to.equal(400));
 
       it('returns validation message', () => {
-        expect(response.body).to.have.property('code', 4000);
+        expect(response.body).to.have.property('code', 4100);
         expect(response.body).to.have.property('message', 'ID is invalid.');
       }); //returns validation message
 

@@ -85,7 +85,7 @@ exports.fullList = function(req,res) {
 */
 exports.initialById = function(req, res, next, id) {
   if (!ProductCategory.isValidId(id)) {
-    ApiError.getApiError(4000)
+    ApiError.getApiError(4100)
       .then(apiError => res.status(400).send(apiError));
   }
   ProductCategory.read(id)

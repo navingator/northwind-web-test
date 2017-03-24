@@ -14,21 +14,21 @@ let ApiError = require('./api-error.model');
  * @return {number}     ApiError code
  */
 function getErrorCodeFromPgpError(err) {
-  let code = 4100;
+  let code = 4000;
   if (err.name === 'QueryResultError') {
     let codes = pgp.errors.queryResultErrorCode;
     switch (err.code) {
       case codes.noData:
-        code = 4101;
+        code = 4001;
         break;
       case codes.notEmpty:
-        code = 4100;
+        code = 4000;
         break;
       case codes.multiple:
-        code = 4100;
+        code = 4000;
         break;
       default:
-        code = 4100;
+        code = 4000;
     }
   }
 
