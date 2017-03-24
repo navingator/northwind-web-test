@@ -29,8 +29,9 @@ class ApiError extends Error {
 
   /**
    * Function that gets the error message from the database, given the error code
+   * Promises will always resolve to an ApiError object
    * @param   {number}  code      The error ID in the errors table
-   * @returns {Promise}
+   * @returns {Promise}           Resolves to an ApiError
    */
   static getApiError(code) {
     return db.queryErrors(
@@ -39,7 +40,7 @@ class ApiError extends Error {
       {errorId: code}
     )
       .then(error => new ApiError(code, error.message))
-      .catch(() => Promise.reject(new ApiError(0, 'Error (id = ' + code + ') not found in database.')));
+      .catch(() => new ApiError(0, 'Error (id = ' + code + ') not found in database.'));
   }
 
   /**
@@ -78,7 +79,7 @@ class ApiError extends Error {
       'SELECT errorid,message FROM errors ' +
       where, dbError)
       .then(error => new ApiError(error.errorid, error.message))
-      .catch(() => Promise.reject(new ApiError(0, ApiError._getUnhandledErrorMessage(dbError))));
+      .catch(() => new ApiError(0, ApiError._getUnhandledErrorMessage(dbError)));
   }
 
   /**

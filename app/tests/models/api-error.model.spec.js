@@ -68,7 +68,7 @@ describe('API Error Unit Tests', () => {
     describe('with unknown error', () => {
 
       let dbError;
-      let error;
+      let apiError;
       before(() => {
         dbError = {
           code: '12345',
@@ -77,33 +77,38 @@ describe('API Error Unit Tests', () => {
         };
 
         ApiError.lookupError(dbError)
-          .catch(err => error = err);
+          .then(apiErr => apiError = apiErr);
       });
 
-      it('should throw an error', done => {
-        expect(error.code).to.equal(0);
-        expect(error.message).to.equal(
+      it('has an ApiError with code 0', () => {
+        expect(apiError.code).to.equal(0);
+      });
+
+      it('has an ApiError with a descriptive message', () => {
+        expect(apiError.message).to.equal(
           'Postgres error not found in errors database:' +
           '\ncode = 12345' +
           '\ntable = testT' +
           '\ncolumn = testC'
         );
-        done();
       });
     });
 
     describe('without required error elements', () => {
 
       let dbError;
-      let error;
+      let apiError;
       before(() => {
         dbError = new Error('test error');
         ApiError.lookupError(dbError)
-          .catch(err => error = err);
+          .then(apiErr => apiError = apiErr);
       });
-      it('should throw an error', () => {
-        expect(error.code).to.equal(0);
-        expect(error.message).to.equal('Postgres error not found in errors database:');
+      it('has an ApiError with code 0', () => {
+        expect(apiError.code).to.equal(0);
+      });
+      
+      it('has an ApiError with a descriptive message', () => {
+        expect(apiError.message).to.equal('Postgres error not found in errors database:');
       });
     });
   });
@@ -128,29 +133,35 @@ describe('API Error Unit Tests', () => {
 
     describe('with an unknown error', () => {
       let code = '9999999999';
-      let error;
+      let apiError;
       before(() => {
         ApiError.getApiError(code)
-          .catch(err => error = err);
+          .then(apiErr => apiError = apiErr);
       });
 
-      it('throws an ApiError', done => {
-        expect(error.code).to.equal(0);
-        expect(error.message).to.equal('Error (id = ' + code + ') not found in database.');
-        done();
+      it('has an ApiError with code 0', () => {
+        expect(apiError.code).to.equal(0);
+      });
+
+      it('has an ApiError with a descriptive message', () => {
+        expect(apiError.message).to.equal('Error (id = ' + code + ') not found in database.');
       });
     });
 
     describe('with an invalid error code', () => {
       let code = 'ABCDEFG';
-      let error;
+      let apiError;
       before(() => {
         ApiError.getApiError(code)
-          .catch(err => error = err);
+          .then(err => apiError = err);
       });
-      it('throws an error', () => {
-        expect(error.code).to.equal(0);
-        expect(error.message).to.equal('Error (id = ' + code + ') not found in database.');
+
+      it('has an ApiError with code 0', () => {
+        expect(apiError.code).to.equal(0);
+      });
+
+      it('has an ApiError with a descriptive message', () => {
+        expect(apiError.message).to.equal('Error (id = ' + code + ') not found in database.');
       });
 
     });

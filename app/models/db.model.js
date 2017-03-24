@@ -8,9 +8,10 @@ let pgp = dbConfig.pgp;
 let ApiError = require('./api-error.model');
 
 /**
- * Helper function to return an error code from a PgpError
- * @param  {[type]} err [description]
- * @return {[type]}     [description]
+ * Helper function to return an error code from a PgpError. Currently handles
+ * only QueryResultErrors
+ * @param  {Error}  err Error returned from Postgres Promise
+ * @return {number}     ApiError code
  */
 function getErrorCodeFromPgpError(err) {
   let code = 4100;
@@ -34,15 +35,25 @@ function getErrorCodeFromPgpError(err) {
   return code;
 }
 
+/**
+ * Function to handle database errors, returning a rejected promise for handling
+ * down the line
+ * @param  {error}   err An error returned from node-postgres or pg-promise
+ * @return {Promise}     A rejected promise resolving to an ApiError object
+ */
 function handleDbError(err) {
+
+  // If it's an error returned from node-postgres, look it up from db
   if(ApiError.isValidDbError(err)) {
     return ApiError.lookupError(err)
-      .then(err => {
-        return Promise.reject(err);
-      });
+      .then(err => Promise.reject(err));
   }
+  // If it's an error returned from pg-promise, look it up from the helper function
   let code = getErrorCodeFromPgpError(err);
-  return Promise.reject(ApiError.getApiError(code));
+
+  // Get the ApiError from the database, given the error code
+  return ApiError.getApiError(code)
+    .then(err => Promise.reject(err));
 }
 
 /**
