@@ -19,7 +19,8 @@ let userTemplate = new User({
 
 // Utility function to cleanup the user database of unit test users
 function cleanupUser(username) {
-  return User.getByUsername(username)
+  return api.signout()
+    .then(() => User.getByUsername(username))
     .then(user => User.delete(user.id))
     .catch(() => null); // Toss the error if the user does not exist
 }
@@ -60,6 +61,11 @@ describe('User API Routes Unit Test', () => {
             expect(dbUser.lastName).to.equal(userTemplate.lastName);
           });
       });
+
+      it('returns the serialized user in a cookie', () => {
+        expect(response.header).to.have.property('set-cookie');
+      });
+
     });
     describe('pre-existing username', () => {
 
@@ -213,10 +219,6 @@ describe('User API Routes Unit Test', () => {
           }
           expect(response.body).to.have.property(prop, user[prop]);
         }
-      });
-
-      it('returns the serialized user in a cookie', () => {
-        expect(response.header).to.have.property('set-cookie');
       });
 
       it('allows users to access protected routes', () => {

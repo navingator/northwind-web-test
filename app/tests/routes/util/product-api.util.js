@@ -4,7 +4,8 @@ let chaiHttp = require('chai-http');
 
 chai.use(chaiHttp);
 
-module.exports = function(app) {
+module.exports = function(app, agent) {
+
   /**
    * Creates an object using the API
    * @param  {Product}  product Product to create
@@ -12,7 +13,7 @@ module.exports = function(app) {
    * SIDE EFFECTS: Sets the product's ID
    */
   let create = function(product) {
-    return chai.request(app)
+    return agent
       .post('/api/products')
       .send(product)
       .then(res => {
@@ -27,8 +28,7 @@ module.exports = function(app) {
    * @return {Promise}            Promise that resolves to an express response
    */
   let get = function(productId) {
-    return chai.request(app)
-      .get('/api/products/' + productId);
+    return agent.get('/api/products/' + productId);
   };
 
   /**
@@ -36,8 +36,7 @@ module.exports = function(app) {
    * @return {Promise} Promise that resolves to an express response
    */
   let list = function() {
-    return chai.request(app)
-      .get('/api/products');
+    return agent.get('/api/products');
   };
 
   /**
@@ -46,8 +45,7 @@ module.exports = function(app) {
    * @return {Promise}           Promise that resolves to an express response
    */
   let search = function(searchStr) {
-    return chai.request(app)
-      .get('/api/products/search/' + searchStr);
+    return agent.get('/api/products/search/' + searchStr);
   };
 
   /**
@@ -56,8 +54,7 @@ module.exports = function(app) {
    * @return {Promise}         Promise that resolves to an express response
    */
   let update = function(product) {
-    return chai.request(app)
-      .put('/api/products/' + product.id)
+    return agent.put('/api/products/' + product.id)
       .send(product);
   };
 
@@ -67,8 +64,7 @@ module.exports = function(app) {
    * @return {Promise}            Promise that resolves to an express response
    */
   let remove = function(productId) {
-    return chai.request(app)
-      .delete('/api/products/' + productId);
+    return agent.delete('/api/products/' + productId);
   };
 
   /**

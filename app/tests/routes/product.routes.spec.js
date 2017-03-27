@@ -6,10 +6,13 @@ let path = require('path');
 let chai = require('chai');
 let expect = chai.expect;
 let app = require(path.resolve('./server'));
+let User = require(path.resolve('./app/models/user.model.js'));
 let Product = require(path.resolve('./app/models/product.model.js'));
 let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
-let productApi = require('./util/product-api.util')(app);
-let categoryApi = require('./util/product-category-api.util')(app);
+let userApi = require('./util/user-api.util')(app);
+let agent = userApi.agent;
+let productApi = require('./util/product-api.util')(app, agent);
+let categoryApi = require('./util/product-category-api.util')(app, agent);
 
 /**
  * Unit Tests
@@ -22,23 +25,35 @@ let productTemplate = new Product({
   discontinued: false
 }); // initialized in the first before call
 describe('Product Routes Unit Tests', () => {
+  let user;
   before(() => {
     let category = new ProductCategory({
       name: 'zzUnit',
       description: 'Unit test product category - Should be deleted if seen outside of testing',
       picture: './somewhere-out-there'
     });
-    return categoryApi.cleanup()
+
+    user = new User({
+      firstName: 'Unit',
+      lastName: 'zzTesting',
+      username: 'zzUnitTesting',
+      password: 'password1'
+    }); // user for authenticated requests
+
+    return userApi.create(user)
+      .then(() => categoryApi.cleanup())
       .then(() => productApi.cleanup())
       .then(() => categoryApi.create(category))
       .then(res => productTemplate.categoryId = res.body.id);
   });
 
   after(() => {
-    return categoryApi.cleanup();
+    return categoryApi.cleanup()
+      .then(() => userApi.signout())
+      .then(() => User.delete(user.id));
   });
 
-  describe('unauthenticated create request with', () => {
+  describe('authenticated create request with', () => {
 
     describe('valid product', () => {
 
@@ -156,7 +171,7 @@ describe('Product Routes Unit Tests', () => {
       after(productApi.cleanup);
     });
   });
-  describe('unauthenticated get request with', () => {
+  describe('authenticated get request with', () => {
 
     describe('no parameters', () => {
 
@@ -218,7 +233,7 @@ describe('Product Routes Unit Tests', () => {
       });
     });
   });
-  describe('unauthenticated update request with', () => {
+  describe('authenticated update request with', () => {
 
     describe('valid product', () => {
 
@@ -357,7 +372,7 @@ describe('Product Routes Unit Tests', () => {
       after(productApi.cleanup);
     });
   });
-  describe('unauthenticated delete request with', () => {
+  describe('authenticated delete request with', () => {
 
     describe('valid product id', () => {
       let product;
@@ -394,7 +409,7 @@ describe('Product Routes Unit Tests', () => {
     });
   });
 
-  describe('unauthenticated search request with', () => {
+  describe('authenticated search request with', () => {
     before(() => {
       let product1 = new Product(productTemplate);
       let product2 = new Product(productTemplate);
@@ -427,6 +442,40 @@ describe('Product Routes Unit Tests', () => {
       });
 
       it('returns not found status', () => expect(response.status).to.equal(404));
+    });
+  });
+
+  describe('unauthenticated', () => {
+    before(() => userApi.signout());
+
+    after(() => userApi.signin(user));
+
+    it('create request should return unauthenticated status', () => {
+      let product = new Product(productTemplate);
+      return productApi.create(product)
+        .then(res => expect(res.status).to.equal(401));
+    });
+    it('get all products request should return unauthenticated status', () => {
+      return productApi.list()
+        .then(res => expect(res.status).to.equal(401));
+    });
+    it('get product request should return unauthenticated status', () => {
+      return productApi.get(90)
+        .then(res => expect(res.status).to.equal(401));
+    });
+    it('delete product request should return unauthenticated status', () => {
+      return productApi.delete(90)
+        .then(res => expect(res.status).to.equal(401));
+    });
+    it('update product should return unauthenticated status', () => {
+      let product = new Product(productTemplate);
+      product.id = 90;
+      return productApi.update(product)
+        .then(res => expect(res.status).to.equal(401));
+    });
+    it('search products should return unauthenticated status', () => {
+      return productApi.search('zzUnit')
+        .then(res => expect(res.status).to.equal(401));
     });
   });
 });

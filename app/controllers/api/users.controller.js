@@ -83,7 +83,7 @@ exports.forgot = function(req, res) {
 };
 
 /**
- * Function using passport to checkif the user is currently authenticated.
+ * Function using passport to check if the user is currently authenticated.
  * Add this to routes that require authentication. Sends a 401 status on failure
  */
 exports.checkLogin = function(req, res, next) {
@@ -92,6 +92,14 @@ exports.checkLogin = function(req, res, next) {
       .then(apiErr => res.status(401).send(apiErr));
   }
 
+	next();
+};
+
+/**
+ * Function to check if the user is authorized to modify product categories.
+ */
+exports.checkCategoryAuthorization = function(req, res, next) {
+  //TODO
 	next();
 };
 

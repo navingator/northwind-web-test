@@ -15,8 +15,7 @@ module.exports = function(app) {
    * SIDE EFFECTS: Sets the user's ID
    */
   let create = function(user) {
-    return chai.request(app)
-      .post('/api/users')
+    return agent.post('/api/users')
       .send(user)
       .then(res => {
         user.id = res.body.id; // set user ID for easy use later
@@ -46,9 +45,10 @@ module.exports = function(app) {
 
   let me = function() {
     return agent.get('/api/users/me');
-  }
+  };
 
   return {
+    agent: agent,
     create: create,
     signin: signin,
     signout: signout,

@@ -83,7 +83,7 @@ exports.fullList = function(req,res) {
 * CALLED BY: Router.param
 * SIDE EFFECTS: req.productCat is set to the requested product category
 */
-exports.initialById = function(req, res, next, id) {
+exports.getById = function(req, res, next, id) {
   if (!ProductCategory.isValidId(id)) {
     ApiError.getApiError(4100)
       .then(apiError => res.status(400).send(apiError));
