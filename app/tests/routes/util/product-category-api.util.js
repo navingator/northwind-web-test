@@ -4,7 +4,8 @@ let chaiHttp = require('chai-http');
 
 chai.use(chaiHttp);
 
-module.exports = function(app) {
+module.exports = function(app, agent) {
+
   /**
    * Creates an object using the API
    * @param  {ProductCategory}  productCategory Product category to create
@@ -13,8 +14,7 @@ module.exports = function(app) {
    * SIDE EFFECTS: Sets the product category's ID
    */
   let create = function(productCategory) {
-    return chai.request(app)
-      .post('/api/product_category')
+    return agent.post('/api/product_categories')
       .send(productCategory)
       .then(res => {
         productCategory.id = res.body.id; // Set product ID for easy deletion later
@@ -28,8 +28,7 @@ module.exports = function(app) {
    * @return {Promise}                   Resolves to the express response
    */
   let remove = function(productCatId) {
-    return chai.request(app)
-      .delete('/api/product_category/' + productCatId);
+    return agent.delete('/api/product_categories/' + productCatId);
   };
 
   /**
@@ -39,16 +38,15 @@ module.exports = function(app) {
    *                              an array of product category objects
    */
   let search = function(searchStr) {
-    return chai.request(app)
-      .get('/api/product_category/search/' + searchStr);
+    return agent.get('/api/product_categories/search/' + searchStr);
   };
 
   /**
    * Deletes all objects with a name that starts with 'zzUnit' from the database
    * @param  {Function} cb               Callback function - likely mocha's done function
    */
-  let cleanup = function(cb) {
-    search('zzUnit')
+  let cleanup = function() {
+    return search('zzUnit')
       .then(res => {
         // Quit if nothing was found
         if(res.status === 404) {
@@ -60,12 +58,6 @@ module.exports = function(app) {
           promiseArray.push(remove(record.id));
         }
         return Promise.all(promiseArray);
-      })
-      .then(() => {
-        if(cb) {
-          cb();
-        }
-        return null;
       });
   };
 
@@ -77,8 +69,11 @@ module.exports = function(app) {
    *                                 contains a product category object
    */
   let get = function(productCatId) {
-    return chai.request(app)
-      .get('/api/product_category/' + productCatId);
+    return agent.get('/api/product_categories/' + productCatId);
+  };
+
+  let getProducts = function(productCatId) {
+    return agent.get('/api/product_categories/' + productCatId + '/products');
   };
 
   /**
@@ -88,8 +83,7 @@ module.exports = function(app) {
    *                                 contains a list of product category objects
    */
   let list = function() {
-    return chai.request(app)
-      .get('/api/product_category');
+    return agent.get('/api/product_categories');
   };
 
   /**
@@ -100,8 +94,8 @@ module.exports = function(app) {
    *                                 contains a product category object
    */
   let update = function(productCategory) {
-    return chai.request(app)
-      .put('/api/product_category/' + productCategory.id)
+    return agent
+      .put('/api/product_categories/' + productCategory.id)
       .send(productCategory);
   };
 
@@ -109,6 +103,7 @@ module.exports = function(app) {
     create: create,
     cleanup: cleanup,
     get: get,
+    getProducts: getProducts,
     search: search,
     list: list,
     update: update,

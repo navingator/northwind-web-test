@@ -1,10 +1,7 @@
 'use strict';
 
 /* Import dependencies */
-var path = require('path');
-var db = require(path.resolve('./app/config/db.config'));
-
-/* TODO Import maps */
+let db = require('./db.model');
 
 class ProductCategory {
   /**
@@ -34,7 +31,7 @@ class ProductCategory {
       'INSERT INTO categories(categoryname, description, picture) ' +
       'VALUES(${name}, ${description}, ${picture}) ' +
       'RETURNING categoryid', this)
-      .then(prodCatId => this.id = prodCatId);
+      .then(data => this.id = data.categoryid);
    }
 
   /**
@@ -53,7 +50,7 @@ class ProductCategory {
   * @param  {object}           dbCategory  Product category object in db syntax
   * @return {ProductCategory}              ProductCategory object
   */
-  static convertFromDb(dbCategory) { /* TODO convert to a map file */
+  static convertFromDb(dbCategory) {
     return new ProductCategory({
       id: dbCategory.categoryid,
       name: dbCategory.categoryname,
@@ -93,11 +90,10 @@ class ProductCategory {
   * @return {promise}       Resolves to an array of ProductCategory objects
   */
   static search(str) {
-    str = str + '%';
     return db.any(
       'SELECT * ' +
       'FROM categories ' +
-      'WHERE categoryname ILIKE ${str}',{str: str})
+      'WHERE categoryname ILIKE \'${str#}%\'',{str: str})
         .then(records => {
           return records.map(record => ProductCategory.convertFromDb(record));
         });
@@ -126,7 +122,8 @@ class ProductCategory {
     return db.one(
       'SELECT COUNT (*) ' +
       'AS count ' +
-      'FROM categories');  //TODO pull out the count into a variable
+      'FROM categories')
+      .then(data => +data.count);
   }
 
   /**

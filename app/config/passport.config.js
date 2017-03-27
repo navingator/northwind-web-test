@@ -1,8 +1,8 @@
 'use strict';
 
-var passport = require('passport');
-var path = require('path');
-var User = require(path.resolve('./app/models/user.model.js'));
+let passport = require('passport');
+let path = require('path');
+let User = require(path.resolve('./app/models/user.model.js'));
 
 module.exports = function() {
 
@@ -13,7 +13,7 @@ module.exports = function() {
 
   // Deserialize sessions
 	passport.deserializeUser(function(id, done) {
-		User.getUserById(id)
+		User.getById(id)
       .then(function(user) {
         delete user.password;
         return done(null, user);

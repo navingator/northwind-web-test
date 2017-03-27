@@ -3,10 +3,11 @@
 /**
  * Module dependencies.
  */
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var path = require('path');
-var User = require(path.resolve('./app/models/user.model.js'));
+let passport = require('passport');
+let LocalStrategy = require('passport-local').Strategy;
+let path = require('path');
+let User = require(path.resolve('./app/models/user.model'));
+let ApiError = require(path.resolve('./app/models/api-error.model'));
 
 module.exports = function() {
 	// Use local strategy
@@ -17,30 +18,26 @@ module.exports = function() {
 	 * 	info - info to attach with the object
 	 */
 	passport.use(new LocalStrategy(function(username, password, done) {
-		var authUser; // to be used within promises
-		User.getUserByUsername(username)
-			.then(function(user) {
+		let authUser; // to be used within promises
+		User.getByUsername(username)
+			.then(user => {
 				authUser=user;
 				return user.authenticate(password);
 			})
-			.then(function(res) {
+			.then(res => {
 				if(res) {
 					return done(null, authUser);
 				} else {
-					return done(null, false, {
-						message: 'Invalid password'
-					});
+					return ApiError.getApiError(1101)
+						.then(apiErr => Promise.reject(apiErr));
 				}
 			})
-			.catch(function(err) {
-				console.log(err);
-				//TODO separate errors
-				if (err) {
-					return done(null, false, {
-						message: 'Username not found'
-					});
+			.catch(apiErr => {
+				// 1100 - username not found, 1101 - password invalid
+				if (apiErr.code === 1100 || apiErr.code === 1101) {
+					return done(null, false, apiErr);
 				}
-				return done(err);
+				return done(apiErr);
 			});
 	}
 	));

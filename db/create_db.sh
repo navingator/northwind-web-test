@@ -15,10 +15,12 @@ createdb $DB
 psql $DB < $NORTHWIND_DIR/northwind.sql
 
 # Extend the database
-psql $DB < $EXTENSION_DIR/users.sql
 psql $DB < $EXTENSION_DIR/categories.sql
 psql $DB < $EXTENSION_DIR/products.sql
-psql $DB < $EXTENSION_DIR/drop_excess_tables.sql #must be last
+psql $DB < $EXTENSION_DIR/drop_excess_tables.sql #must be after northwind table extensions
+
+psql $DB < $EXTENSION_DIR/users.sql
+psql $DB < $SESSION_DIR/session.sql
 
 # Add errors
 bash $DIR/scripts/errors_refresh.sh $DB

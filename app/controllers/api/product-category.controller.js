@@ -3,7 +3,8 @@
 /* Import dependencies */
 let path = require('path');
 let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
-let ApiUtils = require('./api-utils');
+let Product = require(path.resolve('./app/models/product.model.js'));
+let ApiError = require(path.resolve('./app/models/api-error.model.js'));
 
 /**
 * Creates a ProductCategory object and stores it in the database. Sends the
@@ -13,7 +14,7 @@ exports.create = function(req, res) {
   let productCat = new ProductCategory(req.body);
   productCat.create()
     .then(() => res.json(productCat))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -24,6 +25,12 @@ exports.get = function(req, res) {
   res.json(req.productCat);
 };
 
+exports.getProducts = function(req, res) {
+  Product.getByCategory(req.productCat.id)
+    .then(products => res.json(products))
+    .catch(err => res.status(400).send(err));
+};
+
 /**
 * Updates a Product Category in the database
 */
@@ -31,7 +38,7 @@ exports.update = function(req, res) {
   let productCat = new ProductCategory(req.body);
   productCat.update()
     .then(() => res.json(productCat))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -40,7 +47,7 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   ProductCategory.delete(req.productCat.id)
     .then(() => res.json(req.productCat))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -56,7 +63,7 @@ exports.search = function(req,res) {
       }
       res.json(productCats);
     })
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -65,7 +72,7 @@ exports.search = function(req,res) {
 exports.fullList = function(req,res) {
   ProductCategory.listAll()
     .then(productCats => res.json(productCats))
-    .catch(err => ApiUtils.handleDbError(err, res));
+    .catch(err => res.status(400).send(err));
 };
 
 /**
@@ -76,9 +83,10 @@ exports.fullList = function(req,res) {
 * CALLED BY: Router.param
 * SIDE EFFECTS: req.productCat is set to the requested product category
 */
-exports.initialById = function(req, res, next, id) {
+exports.getById = function(req, res, next, id) {
   if (!ProductCategory.isValidId(id)) {
-    return res.status(400).send(); //TODO error
+    ApiError.getApiError(4100)
+      .then(apiError => res.status(400).send(apiError));
   }
   ProductCategory.read(id)
     .then(productCat => {
@@ -86,5 +94,5 @@ exports.initialById = function(req, res, next, id) {
       next();
       return null;
     })
-    .catch(() => res.status(404).send()); //TODO error
+    .catch(() => res.status(404).end());
 };

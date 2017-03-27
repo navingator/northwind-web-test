@@ -1,7 +1,6 @@
 'use strict';
 
-let path = require('path');
-var db = require(path.resolve('./app/config/db.config'));
+let db = require('./db.model');
 
 
 /**
@@ -11,6 +10,7 @@ var db = require(path.resolve('./app/config/db.config'));
 class ApiError extends Error {
   constructor(code, message) {
     super(message);
+    this.name = 'ApiError';
     this.code = code;
   }
 
@@ -21,27 +21,26 @@ class ApiError extends Error {
    */
   toJSON() {
     return {
+      name: this.name,
       code: this.code,
-      message: this.message
+      message: this.message,
     };
   }
 
   /**
-   * Static function that converts a database error, specifically a Postgres error
-   * created by node-postgres to an ApiError
-   * @param   {Error}   dbError Error object returned from node-postgres
-   * @returns {Promise}         Promise that resolves to an ApiError object
+   * Function that gets the error message from the database, given the error code
+   * Promises will always resolve to an ApiError object
+   * @param   {number}  code      The error ID in the errors table
+   * @returns {Promise}           Resolves to an ApiError
    */
-  static getApiError(dbError) {
-    return new Promise((resolve, reject) => {
-      if(!ApiError.isValidError(dbError)) {
-        // If it's not a postgres error, reject with an error
-        reject(new Error('Invalid postgres error'));
-      } else {
-        // Otherwise, get the error from the database
-        resolve(ApiError._getError(dbError));
-      }
-    });
+  static getApiError(code) {
+    return db.queryErrors(
+      'SELECT message FROM errors ' +
+      'WHERE errorid = ${errorId}',
+      {errorId: code}
+    )
+      .then(error => new ApiError(code, error.message))
+      .catch(() => new ApiError(0, 'Error (id = ' + code + ') not found in database.'));
   }
 
   /**
@@ -52,7 +51,7 @@ class ApiError extends Error {
    * @param   {Error}   err Error object
    * @returns {boolean}     Whether the error is valid for processing
    */
-  static isValidError(err) {
+  static isValidDbError(err) {
     let validCode = err.hasOwnProperty('code');
     if (validCode) { validCode = err.code.length === 5; } // Postgres error standard length 5
     let validParams = err.hasOwnProperty('column') || err.hasOwnProperty('constraint');
@@ -60,28 +59,50 @@ class ApiError extends Error {
   }
 
   /**
-   * Function that gets an error from the database given the following parameters.
+   * Static function that converts a database error, specifically a Postgres error
+   * created by node-postgres to an ApiError from the database given the following parameters.
    * Note that either the column or constraint must be provided
-   * @param {Error}     dbError Postgres Error code with the following properties
+   * @param {Error}     dbError      Postgres Error code with the following properties
    *   @property {string} code         postgres error code
    *   @property {string} table        postgres table related to error
    *   @property {string} [column]     postgres column related to error
    *   @property {string} [constraint] postgres constraint related to error
-   * @returns {Promise}         Promise that resolves to an ApiError
+   * @returns {Promise}              Promise that resolves to an ApiError
    */
-  static _getError(dbError) {
+  static lookupError(dbError) {
 
     let where = 'WHERE db_error_code=${code} AND db_table=${table}';
     if (dbError.column)     { where += ' AND db_col=${column}'; }
     if (dbError.constraint) { where += ' AND db_constraint=${constraint}'; }
 
-    return db.one(
+    return db.queryErrors(
       'SELECT errorid,message FROM errors ' +
       where, dbError)
       .then(error => new ApiError(error.errorid, error.message))
-      .catch(() => {
-        throw new Error('Postgres error not found in database.');
-      });
+      .catch(() => new ApiError(0, ApiError._getUnhandledErrorMessage(dbError)));
+  }
+
+  /**
+   * Gets the error message for an unknown postgres error
+   * @param    {Error}     dbError   Postgres Error code with the following properties
+   *   @property {string} code         postgres error code
+   *   @property {string} table        postgres table related to error
+   *   @property {string} [column]     postgres column related to error
+   *   @property {string} [constraint] postgres constraint related to error
+   * @returns  {string}              Error message
+   */
+  static _getUnhandledErrorMessage(dbError) {
+
+    let msg = 'Postgres error not found in errors database:';
+    let properties = ['code', 'table', 'column', 'constraint'];
+
+    for (let prop of properties) {
+      if(dbError.hasOwnProperty(prop)) {
+        msg += '\n' + prop + ' = ' + dbError[prop];
+      }
+    }
+
+    return msg;
   }
 }
 
