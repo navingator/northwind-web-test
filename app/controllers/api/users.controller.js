@@ -116,6 +116,14 @@ exports.checkLogin = function(req, res, next) {
  * Function to check if the user is authorized to modify product categories.
  */
 exports.checkCategoryAuthorization = function(req, res, next) {
-  //TODO
-	next();
+  if (req.method === 'GET') {
+    return next();
+  }
+  let user = req.user;
+  if (user.isAdmin) {
+    return next();
+  }
+
+  return ApiError.getApiError(1250)
+    .then(apiErr => res.status(403).send(apiErr));
 };

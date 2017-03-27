@@ -41,6 +41,7 @@ describe('Product Routes Unit Tests', () => {
     }); // user for authenticated requests
 
     return userApi.create(user)
+      .then(() => userApi.makeAdmin())
       .then(() => categoryApi.cleanup())
       .then(() => productApi.cleanup())
       .then(() => categoryApi.create(category))

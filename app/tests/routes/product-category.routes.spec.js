@@ -37,6 +37,7 @@ describe('Product Category unit test', () => {
       password: 'password1'
     }); // user for authenticated requests
     return userApi.create(user)
+      .then(() => userApi.makeAdmin())
       .then(() => categoryApi.cleanup());
   });
 
@@ -46,7 +47,7 @@ describe('Product Category unit test', () => {
       .then(() => User.delete(user.id));
   });
 
-  describe('authenticated create request with', () => {
+  describe('authorized create request with', () => {
 
     describe('valid category', () => {
 
@@ -189,7 +190,7 @@ describe('Product Category unit test', () => {
 
     }); //description longer than 100 chars in length
 
-  }); //authenticated create request with
+  }); //authorized create request with
 
   describe('authenticated get request with', () => {
 
@@ -325,7 +326,7 @@ describe('Product Category unit test', () => {
 
   }); //authenticated get request with
 
-  describe('authenticated get products request with', () => {
+  describe('authorized get products request with', () => {
     let category;
 
     before(() => {
@@ -379,7 +380,7 @@ describe('Product Category unit test', () => {
     });
   });
 
-  describe('authenticated update request with', () => {
+  describe('authorized update request with', () => {
 
     describe('valid category', () => {
       let productCategory;
@@ -545,8 +546,8 @@ describe('Product Category unit test', () => {
 
     }); //description longer than 100 characters
 
-  }); //authenticated update request with
-  describe('authenticated delete request with', () => {
+  }); //authorized update request with
+  describe('authorized delete request with', () => {
 
     describe('valid category id', () => {
       let productCategory = new ProductCategory(categoryTemplate);
@@ -605,7 +606,7 @@ describe('Product Category unit test', () => {
 
     }); //category id not in database
 
-  }); //authenticated delete request with
+  }); //authorized delete request with
 
   describe('unauthenticated', () => {
     before(() => userApi.signout());
@@ -639,6 +640,75 @@ describe('Product Category unit test', () => {
       return categoryApi.search('zzUnit')
         .then(res => expect(res.status).to.equal(401));
     });
+  });
+
+  describe('unauthorized', () => {
+
+    let noAuthUser;
+    let category;
+
+    before(() => {
+      noAuthUser = new User({
+        firstName: 'UnitNoAuth',
+        lastName: 'zzTesting',
+        username: 'zzUnitTesting2',
+        password: 'password1'
+      }); // user for unauthorized requests
+
+      category = new ProductCategory(categoryTemplate);
+
+      return categoryApi.create(category)
+        .then(() => userApi.signout())
+        .then(() => userApi.create(noAuthUser));
+    });
+
+    after(() => {
+      return userApi.signout()
+        .then(() => User.delete(noAuthUser.id))
+        .then(() => userApi.signin(user)) // sign the previous user back in
+        .then(() => categoryApi.cleanup()); // use authorized user to clean up issues
+    });
+
+    it('create request should return unauthorized status', () => {
+      let newCategory = new ProductCategory(categoryTemplate);
+      return categoryApi.create(newCategory)
+        .then(res => expect(res.status).to.equal(403));
+    });
+    it('get all categories request should return a list of product categories', () => {
+      return categoryApi.list()
+        .then(res => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.be.an('Array');
+        });
+    });
+    it('get category request should return expected product category', () => {
+      return categoryApi.get(category.id)
+      .then(res => {
+        expect(res.status).to.equal(200);
+        for(let prop in category) {
+          expect(res.body).to.have.property(prop, category[prop]);
+        }
+      });
+    });
+    it('delete category request should return unauthorized status', () => {
+      return categoryApi.delete(category.id)
+        .then(res => expect(res.status).to.equal(403));
+    });
+    it('update category should return unauthorized status', () => {
+      let categoryUpdate = new ProductCategory(categoryTemplate);
+      categoryUpdate.id = category.id;
+      categoryUpdate.description = 'Updated description';
+      return categoryApi.update(category)
+        .then(res => expect(res.status).to.equal(403));
+    });
+    it('search categories should return expected product categories', () => {
+      return categoryApi.search('zzUnit')
+        .then(res => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property('length', 1);
+        });
+    });
+
   });
 
 }); //Product category model unit tests

@@ -10,6 +10,7 @@ ERRORID,MESSAGE,DB_ERROR_CODE,DB_TABLE,DB_COL,DB_CONSTRAINT
 1101,Invalid Password. Please try again.,,,,
 1102,Name does not match the given user's name.,,,,
 1200,You must be logged in to perform this action.,,,,
+1250,You are not authorized to perform this action.,,,,
 2000,Product name cannot be empty.,23502,products,productname,
 2001,Product category must be specified.,23502,products,categoryid,
 2010,Product name must be unique.,23505,products,,products_productname_key
