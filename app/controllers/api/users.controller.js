@@ -21,7 +21,6 @@ function login(err, res, user) {
 
 /**
  * Creates a user, storing it in the database.
- * Returns a promise
  */
 exports.create = function(req, res) {
   let user = new User({
@@ -38,6 +37,9 @@ exports.create = function(req, res) {
     .catch(err => res.status(400).send(err));
 };
 
+/**
+ * Uses passport to sign a user in. Sends a 400 status if there was a problem.
+ */
 exports.signin = function(req, res, next) {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
@@ -51,11 +53,19 @@ exports.signin = function(req, res, next) {
   })(req, res, next);
 };
 
+/**
+ * Uses passport to log a user out, invalidating their session on the server
+ */
 exports.signout = function(req, res) {
   req.logout(); // Passport's logout function
   res.status(200).end();
 };
 
+/**
+ * Function for the forgot password route that allows the user to reset their
+ * password, provided that they properly identified themselves.
+ * Sends 400 status if the username is not found
+ */
 exports.forgot = function(req, res) {
   let tempUser = new User(req.body);
   let user;
@@ -68,13 +78,14 @@ exports.forgot = function(req, res) {
       return ApiError.getApiError(1102)
         .then(apiErr => Promise.reject(apiErr));
     })
-    .then(() => {
-      delete user.password;
-      res.status(200).end();
-    })
+    .then(() => res.status(200).end())
     .catch(err => res.status(400).send(err));
 };
 
+/**
+ * Function using passport to checkif the user is currently authenticated.
+ * Add this to routes that require authentication. Sends a 401 status on failure
+ */
 exports.checkLogin = function(req, res, next) {
   if(!req.isAuthenticated()) {
     return ApiError.getApiError(1200)
