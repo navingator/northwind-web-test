@@ -11,7 +11,7 @@ import { UserRoutingModule } from './user-routing.module';
 /** Components **/
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { SignupCongratsComponent } from './signup-congrats/signup-congrats.component';
+import { SignupCongratsComponent } from './signup_congrats/signup-congrats.component';
 
 /** Services **/
 import { UserAuthService } from './user-auth.service';

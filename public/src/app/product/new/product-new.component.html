@@ -1,0 +1,39 @@
+<section class="row">
+  <h2 class="main-headder col-12 text-center">New Product</h2>
+  <div class="offset-1 col-10 offset-lg-3 col-lg-6">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="row">
+        <div class="form-group col-12"
+          [ngClass]="{
+            'has-danger':(productForm.get('name').invalid && productForm.get('name').dirty),
+            'has-success':(productForm.get('name').valid)
+          }">
+          <label class="form-control-label" for="name">Name</label>
+          <div class="has-tooltip">
+            <input type="text" formControlName="name"
+              class="form-control form-control-success form-control-danger">
+            <div class="tooltip">Required</div>
+          </div>
+        </div>
+        <div class="form-group col-12"
+          [ngClass]="{
+            'has-danger':(productForm.get('category').invalid && productForm.get('category').dirty),
+            'has-success':(productForm.get('category').valid)
+          }">
+          <label class="form-control-label" for="category">Category</label>
+          <div class="has-tooltip">
+            <input type="text" formControlName="category"
+              class="form-control form-control-success form-control-danger">
+            <div class="tooltip">Required</div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Create!</button>
+        </div>
+        <div class="col-12 text-center submit-error" *ngIf="submitError && productForm.invalid">
+          <div>Please correct issues and try again.</div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

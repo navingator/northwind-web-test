@@ -1,0 +1,44 @@
+<div>
+  <!-- SIDENAV -->
+  <md-sidenav-container>
+    <md-sidenav mode="side" align="start" #sidenav>
+      <md-tab-group>
+        <md-tab label=Details>
+          <div class=product-detail>
+            <h6>{{currentProduct.name}} - {{currentProduct.category}}</h6>
+            <p>{{currentProduct.description}}</p>
+          </div>
+          <button md-raised-button (click)="sidenav.close()" class="lg-primary text-white">Close</button>
+        </md-tab>
+        <md-tab label="Edit">
+          <button md-raised-button routerLink="/product/new" class="lg-primary text-white">Create New Product</button>
+          <button md-raised-button (click)="sidenav.close()" class="lg-primary text-white">Close</button>
+        </md-tab>
+      </md-tab-group>
+    </md-sidenav>
+
+      <!-- Main Content -->
+    <h2 class="main-headder col-12 text-center">Products</h2>
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4"
+      *ngFor="let product of products"
+      [style.background]="product.color">
+        <div class="card product-card">
+          <div class="card-block">
+            <h4 class="card-title">{{product.name}}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">Category: {{product.category}}</h6>
+            <p class="card-text">{{product.description}}</p>
+            <div class="button-row">
+              <button md-icon-button (click)="showProduct(product)">
+                <md-icon>arrow_back</md-icon>
+              </button>
+              <button md-icon-button routerLink="/category">
+                <md-icon>dehaze</md-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-sidenav-container>
+</div>

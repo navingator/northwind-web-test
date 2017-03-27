@@ -1,8 +1,11 @@
+/* jshint ignore:start */
 /**
  * System configuration for Angular samples
  * Adjust as necessary for your application needs.
  */
 (function (global) {
+  'use strict';
+
   System.config({
     paths: {
       // paths serve as alias
@@ -22,8 +25,10 @@
       '@angular/http': 'npm:@angular/http/bundles/http.umd.js',
       '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
+      '@angular/material': 'npm:@angular/material/bundles/material.umd.js',
 
       // other libraries
+      'hammerjs':                  'npm:hammerjs/hammer.min.js',
       'rxjs':                      'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
     },

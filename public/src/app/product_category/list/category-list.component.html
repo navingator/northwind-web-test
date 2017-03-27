@@ -1,0 +1,49 @@
+<div>
+  <!-- SIDENAV -->
+  <md-sidenav-container>
+    <md-sidenav mode="side" align="start" #sidenav>
+      <md-tab-group>
+        <md-tab>
+          <template md-tab-label>Details</template>
+          <div class="product-detail">
+            <h6>{{currentProductCat.name}}</h6>
+            <p>{{currentProductCat.description}}</p>
+          </div>
+          <button md-raised-button (click)="sidenav.close()" class="lg-primary text-white">Close</button>
+        </md-tab>
+        <md-tab>
+          <template md-tab-label>Edit</template>
+          <button md-raised-button routerLink="/category/new" class="lg-primary text-white">Create New Category</button>
+          <button md-raised-button (click)="sidenav.close()" class="lg-primary text-white">Close</button>
+        </md-tab>
+      </md-tab-group>
+    </md-sidenav>
+
+    <!-- Main Content -->
+    <h2 class="main-headder col-12 text-center">Categories</h2>
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4"
+      *ngFor="let productCat of productCats"
+      [style.background]="productCat.color">
+        <div class="card product-card">
+          <img class="card-img" src="http://lorempixel.com/500/240/food" class="img-fluid rounded float-left card-image" alt="Card image cap">
+          <div class="card-img-overlay row">
+            <div class="card-content row">
+              <h4 class="card-title strokeme col-12">{{productCat.name}}</h4>
+            </div>
+          </div>
+          <div class="footer">
+            <div class="button-row">
+              <button md-icon-button (click)="showProductCat(productCat)">
+                <md-icon>arrow_back</md-icon>
+              </button>
+              <button md-mini-fab routerLink="/product" [style.background]="productCat.color">
+                <md-icon>dehaze</md-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-sidenav-container>
+</div>

@@ -1,0 +1,98 @@
+/*@import '/node_modules/@angular/material/core/theming/prebuilt/deeppurple-amber.css';*/
+@import './material-theme.css';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+.lg-primary{
+  background-color: #3f51b5;
+}
+
+p {
+  margin: 8px;
+}
+
+md-sidenav-container {
+  height: 100vh;
+}
+
+md-sidenav{
+  width: 320px;
+}
+
+.mat-sidenav-container {
+  background-color: white;
+}
+
+.main-headder {
+  padding-bottom: 5px;
+}
+
+.main-nav {
+  height: 62px;
+}
+
+.card {
+  height: 100%;
+  width: 100%;
+}
+
+.card-image {
+  filter: brightness(80%);
+}
+
+.card-content {
+  margin-top: -20px;
+}
+
+.footer {
+  padding: 10px;
+}
+
+[md-raised-button] {
+  width: 100%;
+}
+
+button.nav-icon {
+  font-size: inherit;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.product-detail {
+  margin-top: 16px;
+  margin-left: 8px;
+  font-size: 16px;
+}
+
+md-icon.logo {
+  font-size: 46px;
+}
+
+md-icon.lg {
+  font-size: 32px;
+  height: 27px;
+  width: 41px;
+}
+
+.font30 {
+  font-size: 30px;
+}
+
+.strokeme
+{
+    color: #fff;
+    text-shadow:
+    -.3px -.3px 0 #000,
+    .3px -.3px 0 #000,
+    -.3px .3px 0 #000,
+    .3px .3px 0 #000;
+}
