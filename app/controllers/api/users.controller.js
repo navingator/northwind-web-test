@@ -16,6 +16,7 @@ function login(err, res, user) {
     res.status(400).send(err);
   } else {
     res.json(user);
+    user.updateLoginTime(); // Runaway promise - should be handled in the background with nothing contingent on it
   }
 }
 
@@ -62,6 +63,15 @@ exports.signout = function(req, res) {
 };
 
 /**
+ * Sets the user as an admin in the database, returning the user
+ */
+exports.makeAdmin = function(req, res) {
+  let user = req.user;
+  return user.makeAdmin()
+    .then(() => res.json(user));
+};
+
+/**
  * Function for the forgot password route that allows the user to reset their
  * password, provided that they properly identified themselves.
  * Sends 400 status if the username is not found
@@ -69,7 +79,7 @@ exports.signout = function(req, res) {
 exports.forgot = function(req, res) {
   let tempUser = new User(req.body);
   let user;
-  User.getByUsername(tempUser.username)
+  return User.getByUsername(tempUser.username)
     .then(dbUser => {
       user = dbUser;
       if(user.compareIdentifiers(tempUser)) {
@@ -80,6 +90,13 @@ exports.forgot = function(req, res) {
     })
     .then(() => res.status(200).end())
     .catch(err => res.status(400).send(err));
+};
+
+/**
+ * Function that returns the current session user
+ */
+exports.me = function(req, res) {
+  res.json(req.user);
 };
 
 /**
@@ -101,8 +118,4 @@ exports.checkLogin = function(req, res, next) {
 exports.checkCategoryAuthorization = function(req, res, next) {
   //TODO
 	next();
-};
-
-exports.me = function(req, res) {
-  res.json(req.user);
 };

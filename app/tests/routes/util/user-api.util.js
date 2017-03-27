@@ -47,12 +47,17 @@ module.exports = function(app) {
     return agent.get('/api/users/me');
   };
 
+  let makeAdmin = function() {
+    return agent.post('/api/users/adminplease');
+  };
+
   return {
     agent: agent,
     create: create,
     signin: signin,
     signout: signout,
     forgot: forgot,
+    makeAdmin: makeAdmin,
     me: me
   };
 

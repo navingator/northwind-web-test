@@ -10,13 +10,14 @@ let ApiError = require('./api-error.model');
 class User {
   /**
    * User class that should be newed. Contains information about a specific user
-   * @param    {object} obj       The object that contains the following properties
-   * @property {number} id        the user's ID
-   * @property {string} firstName the user's first name
-   * @property {string} lastName  the user's last name
-   * @property {string} username  username for the user
-   * @property {string} password  user's (hashed) password
-   * @return   {User}             The created user object
+   * @param    {object}  obj       The object that contains the following properties
+   * @property {number}  id        the user's ID
+   * @property {string}  firstName the user's first name
+   * @property {string}  lastName  the user's last name
+   * @property {string}  username  username for the user
+   * @property {string}  password  user's (hashed) password
+   * @property {boolean} isAdmin   whether this is an admin user
+   * @return   {User}              The created user object
    */
   constructor(obj) {
     this.id = obj.id;
@@ -24,6 +25,7 @@ class User {
     this.lastName = obj.lastName;
     this.username = obj.username;
     this.password = obj.password;
+    this.isAdmin = obj.isAdmin;
   }
 
   /**
@@ -75,6 +77,19 @@ class User {
   }
 
   /**
+   * Method to make the current user an admin user
+   * @return {Promise} Promise for database update
+   * SIDE EFFECTS: Sets the user's isAdmin property to true
+   */
+  makeAdmin() {
+    return db.none(
+      'UPDATE users ' +
+      'SET is_admin = true ' +
+      'WHERE userid=${id}', this)
+      .then(() => this.isAdmin = true);
+  }
+
+  /**
    * Method to update a user's password
    * @param  {string}  newPassword new password
    * @return {promise}             Promise for database update
@@ -97,6 +112,17 @@ class User {
   }
 
   /**
+   * Method to update a user's most recent login time
+   * @return {promise} Promise for database update
+   */
+  updateLoginTime() {
+    return db.none(
+      'UPDATE users ' +
+      'SET last_login = CURRENT_TIMESTAMP ' +
+      'WHERE userid=${id}', this);
+  }
+
+  /**
    * Creates a User object from a database query result
    * @param  {Object} dbUser User result from database
    * @return {User}          User object
@@ -107,7 +133,9 @@ class User {
       firstName: dbUser.first_name, // jshint ignore:line
       lastName: dbUser.last_name, // jshint ignore:line
       username: dbUser.username,
-      password: dbUser.password});
+      password: dbUser.password,
+      isAdmin: dbUser.is_admin // jshint ignore:line
+    });
   }
 
   /**

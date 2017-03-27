@@ -425,7 +425,46 @@ describe('User API Routes Unit Test', () => {
           .then(res => expect(res.status).to.equal(200));
       });
     });
+  });
 
+  describe('make admin request', () => {
+    describe('with authenticated user', () => {
+      let response;
+      let user;
+      before(() => {
+        user = new User(userTemplate);
+        return api.create(user)
+          .then(() => api.makeAdmin())
+          .then(res => response = res);
+      });
+
+      after(() => cleanupUser(user.username));
+
+      it('returns success status', () => expect(response.status).to.equal(200));
+      it('sets user isAdmin property to true', () => {
+        expect(response.body).to.have.property('isAdmin', true);
+      });
+
+    });
+    describe('without authenticated user', () => {
+      let response;
+      let user;
+      before(() => {
+        user = new User(userTemplate);
+        return api.create(user)
+          .then(() => api.signout())
+          .then(() => api.makeAdmin())
+          .then(res => response = res);
+      });
+
+      after(() => cleanupUser(user.username));
+
+      it('returns unauthenticated status', () => expect(response.status).to.equal(401));
+      it('does not set user isAdmin property to true', () => {
+        return User.getById(user.id)
+          .then(dbUser => expect(dbUser).to.have.property('isAdmin', false));
+      });
+    });
   });
 
 });

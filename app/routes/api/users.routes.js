@@ -9,5 +9,6 @@ module.exports = function (router) {
 
   router.route('/users/signin').post(users.signin);
   router.route('/users/signout').post(users.signout);
+  router.route('/users/adminplease').post(users.checkLogin, users.makeAdmin);
   router.route('/users/forgot').post(users.forgot);
 };
