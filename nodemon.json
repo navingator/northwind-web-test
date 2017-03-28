@@ -1,0 +1,7 @@
+{
+  "watch": [
+    "app/",
+    ".env",
+    "server.js"
+  ]
+}
