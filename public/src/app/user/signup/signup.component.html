@@ -36,7 +36,12 @@
           <div class="has-tooltip">
             <input type="text" formControlName="username"
               class="form-control form-control-success form-control-danger">
-            <div class="tooltip">Username already taken</div>
+            <div class="tooltip">
+              <span *ngIf="signupForm.get('username').hasError('required')">Required</span>
+              <span *ngIf="signupForm.get('username').hasError('minlength')">Username must have at least 3 characters.</span>
+              <span *ngIf="signupForm.get('username').hasError('maxlength')">Username must have less than 15 characters.</span>
+              <span *ngIf="signupForm.get('username').hasError('usernameTaken')">Please choose another username.</span>
+            </div>
           </div>
         </div>
         <div class="form-group col-12"
@@ -67,9 +72,9 @@
         <div class="col-12">
           <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Sign Up!</button>
         </div>
-        <div class="col-12 text-center submit-error" *ngIf="submitError && signupForm.invalid">
-          <div>Please correct issues and try again.</div>
-        </div>
+      </div>
+      <div class="text-center submit-error" *ngIf="submitErrorMessage !== ''">
+        {{ submitErrorMessage }}
       </div>
     </form>
   </div>

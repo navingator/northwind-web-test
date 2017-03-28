@@ -3,13 +3,10 @@
   <div class="offset-1 col-10 offset-lg-3 col-lg-6">
     <form (ngSubmit)="onSubmit()" #signInForm="ngForm" novalidate>
       <div class="form-group"
-        [ngClass]="{
-          'has-danger':(username.invalid && username.dirty),
-          'has-success':(username.valid)
-        }">
+        [ngClass]="{ 'has-danger':(username.invalid && username.dirty) }">
         <label class="form-control-label" for="username">Username</label>
         <div class="has-tooltip">
-          <input type="text" class="form-control form-control-success form-control-danger"
+          <input type="text" class="form-control form-control-danger"
             required
             [(ngModel)]="user.username" name="username"
             #username="ngModel">
@@ -17,13 +14,10 @@
         </div>
       </div>
       <div class="form-group"
-        [ngClass]="{
-          'has-danger':(password.invalid && password.dirty),
-          'has-success':(password.valid)
-        }">
+        [ngClass]="{ 'has-danger':(password.invalid && password.dirty) }">
         <label class="form-control-label" for="password">Password</label>
         <div class="has-tooltip">
-          <input type="password" class="form-control form-control-success form-control-danger"
+          <input type="password" class="form-control form-control-danger"
             required
             [(ngModel)]="user.password" name="password"
             #password="ngModel">
@@ -31,6 +25,12 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary text-center" [disabled]="signInForm.invalid || submitted">Sign in!</button>
+      <div class="text-center submit-error" *ngIf="submitErrorMessage !== ''">
+        {{ submitErrorMessage }}
+      </div>
+      <div class="text-center submit-error" *ngIf="usernameNotFound">
+        Username does not match an account. <a routerLink='/signup'>Sign up for an account.</a>
+      </div>
     </form>
   </div>
 </section>
