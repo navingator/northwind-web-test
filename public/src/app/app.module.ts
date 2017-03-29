@@ -3,6 +3,9 @@ import { NgModule }        from '@angular/core';
 import { BrowserModule }   from '@angular/platform-browser';
 import { MaterialModule }  from '@angular/material';
 
+/** Core Module **/
+import { CoreModule } from './core/core.module';
+
 /** Routing Module **/
 import { AppRoutingModule }  from './app-routing.module';
 
@@ -18,6 +21,7 @@ import { AppComponent } from './app.component';
 @NgModule({
   imports: [
     BrowserModule,
+    CoreModule,
     UserModule,
     ProductModule,
     ProdCatModule,
