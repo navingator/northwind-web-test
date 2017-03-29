@@ -1,47 +1,39 @@
-<!-- <div class="bg-inverse">
+<div class="bkg-primary">
   <div class="container">
-    <nav class="navbar navbar-toggleable-sm navbar-inverse"> -->
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <!-- <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsable-navbar" aria-controls="collapsable-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <nav *ngIf='!isLoggedIn' class="navbar navbar-toggleable-sm navbar-inverse">
+        <a class="navbar-brand" routerLink="/">Northwind</a>
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#public-collapsable-navbar" aria-controls="collapsable-navbar" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" routerLink="/">Northwind</a> -->
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <!-- <div class="collapse navbar-collapse" id="collapsable-navbar">
+        <div class="collapse navbar-collapse" id="public-collapsable-navbar">
           <ul class="nav navbar-nav ml-auto">
             <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/signup">Sign Up</a></li>
             <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/signin">Sign In</a></li>
           </ul>
         </div>
     </nav>
-  </div>
-</div> -->
-<div class="d-flex lg-primary text-white font30 main-nav">
-  <div class="p-2">
-    <a routerLink="/category">
-      <md-icon class="logo">all_out</md-icon>
-    </a>
-  </div>
-  <div class="p-2">
-    NorthwindNode
-  </div>
-  <div class="ml-auto p-2 hidden-sm-down">
-    <button md-icon-button class="nav-icon" routerLink="/signup">
-      <md-icon class="lg">person_add</md-icon>
-    </button>
-  </div>
-  <div class="p-2 hidden-sm-down">
-    <button md-icon-button class="nav-icon" routerLink="/signin">
-        <md-icon class="lg">add_shopping_cart</md-icon>
-    </button>
-  </div>
-  <div class="ml-auto p-2 hidden-md-up">
-    <span class="align-top">
-      <button md-icon-button class="nav-icon hamburger">
-        <md-icon class="lg">more_vert</md-icon>
-      </button>
-    </span>
+
+    <nav *ngIf='isLoggedIn' class="navbar navbar-toggleable-sm navbar-inverse">
+        <a class="navbar-brand" routerLink="/">Northwind</a>
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#main-collapsable-navbar" aria-controls="collapsable-navbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="main-collapsable-navbar">
+          <ul class="nav navbar-nav">
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/category">Categories</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/product">Products</a></li>
+          </ul>
+          <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" routerLink="/signout">Sign Out</a></li>
+          </ul>
+        </div>
+    </nav>
   </div>
 </div>
 

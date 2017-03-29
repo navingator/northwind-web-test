@@ -24,7 +24,9 @@
           <div class="tooltip">Required</div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary text-center" [disabled]="signInForm.invalid || submitted">Sign in!</button>
+      <div id="forgotPassword"><a routerLink='/forgot'>Forgot Password?</a></div>
+      <button type="submit" class="btn btn-primary text-center" [disabled]="signInForm.invalid || submitted">Sign in</button>
+      or <a routerLink='/signup'>Sign up!</a>
       <div class="text-center submit-error" *ngIf="submitErrorMessage !== ''">
         {{ submitErrorMessage }}
       </div>

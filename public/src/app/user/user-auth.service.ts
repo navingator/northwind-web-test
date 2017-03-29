@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable }                              from '@angular/core';
 import { Headers, Response, RequestOptions, Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+
+import { ApiHelperService } from '../core/api-helper.service';
 
 import { User } from './user.class';
 
@@ -18,48 +20,67 @@ export class UserAuthService {
 
   constructor(
     private http: Http,
+    private apiHelper: ApiHelperService
   ) {}
 
   /**
    * Calls the users api to create a user in the database. Throws any errors
    * that the server returns.
-   * @param  {User}       user User object with required fields
-   * @return {Observable}      RxJS Observable that contains user information
-   * SIDE EFFECTS: logs the user in
+   * @param  {User}              ser User object with required fields
+   * @return {Observable<User>}      RxJS Observable that emits user information
+   * SIDE EFFECTS: logs the user in and sets the this.user
    */
   createUser(user: User): Observable<User> {
     return this.http.post(this.usersUrl, JSON.stringify(user), this.options)
-      .map(this.extractData)
-      .map(user => this.user = user)
-      .catch(this.handleError);
+      .map(this.apiHelper.extractData)
+      .do(user => this.user = user)
+      .catch(this.apiHelper.handleError);
 
-  }
-
-  authenticate(user: User) {
-    return this.http.post(this.usersUrl+"/signin", JSON.stringify(user), this.options)
-      .map(this.extractData)
-      .map(user => this.user = user)
-      .catch(this.handleError);
-  }
-
-  private extractData(res: Response) {
-    let body = res.json();
-    return body || { };
   }
 
   /**
-   * Handles errors returned from the API
-   * @param  {Response}   error Error as a Response object (from API)
-   * @return {Observable}       Observable that immediately errors with an error object
+   * Checks if the user is logged in.
+   * @return {Observable<User>} Emits User upon completion
+   * SIDE EFFECTS: Sets this.user
    */
-  private handleError (error: Response) {
-    let err: any;
-    if (error instanceof Response) {
-      err = error.json() || '';
-    } else {
-      err = error;
-    }
-    err.message = err.message || 'An error has occured. Please check your connection and try again.'
-    return Observable.throw(err);
+  checkLogin(): Observable<User> {
+    return this.http.get(this.usersUrl + '/me')
+      .map(this.apiHelper.extractData)
+      .do(user => this.user = user)
+      .catch(this.apiHelper.handleError);
+  }
+
+  /**
+   * Calls the users api to authenticate a user in the database. Throws any errors
+   * that the server returns
+   * @param  {User}       user User object with username and password
+   * @return {Observable}      RxJS Observable that emits upon completion
+   */
+  authenticate(user: User): Observable<User> {
+    return this.http.post(this.usersUrl + '/signin', JSON.stringify(user), this.options)
+      .map(this.apiHelper.extractData)
+      .do(user => this.user = user)
+      .catch(this.apiHelper.handleError);
+  }
+
+  /**
+   * Calls the users api to sign out the user
+   * @return {Observable}      RxJS Observable that emits upon completion
+   */
+  signout() {
+    return this.http.post(this.usersUrl + '/signout', null, this.options)
+      .catch(this.apiHelper.handleError);
+  }
+
+  /**
+   * Calls the users api to reset a user's password. Throws errors that the server
+   * returns
+   * @param  {User}       user User object with identifiers and new password attached
+   * @return {Observable}      RxJS Observable that emits new information
+   */
+  forgot(user: User) {
+    return this.http.post(this.usersUrl + '/forgot', JSON.stringify(user), this.options)
+      .do(() => delete this.user)
+      .catch(this.apiHelper.handleError);
   }
 }

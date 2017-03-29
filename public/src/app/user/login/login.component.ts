@@ -7,7 +7,8 @@ import { User } from '../user.class';
 
 @Component({
   moduleId: module.id,
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
 
@@ -25,7 +26,9 @@ export class LoginComponent {
     this.submitted = true;
     this.userAuthService.authenticate(this.user)
       .subscribe(
-        () => this.router.navigate(['/signup-congrats']),
+        () => {
+          this.router.navigate(['/signup-congrats']);
+        },
         err => {
           this.submitted = false;
           if (err.code === 1100) {

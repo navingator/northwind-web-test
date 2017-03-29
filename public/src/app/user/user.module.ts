@@ -11,6 +11,8 @@ import { UserRoutingModule } from './user-routing.module';
 /** Components **/
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { SignoutComponent } from './signout/signout.component';
+import { ForgotComponent } from './forgot/forgot.component';
 import { SignupCongratsComponent } from './signup_congrats/signup-congrats.component';
 
 /** Services **/
@@ -27,6 +29,8 @@ import { UserAuthService } from './user-auth.service';
   declarations: [
     LoginComponent,
     SignupComponent,
+    SignoutComponent,
+    ForgotComponent,
     SignupCongratsComponent
   ],
   providers: [

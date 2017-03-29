@@ -18,11 +18,11 @@ export class ApiHelperService {
    * @param  {Response}   error Error as a Response object (from API)
    * @return {Observable}       Observable that immediately errors with an error object
    */
-  handleError (error: Response) {
+  handleError = (error: Response) => {
     let err: any;
     if (error instanceof Response) {
       if (error.status === 401) {
-        this.router.navigate(['/signin'])
+        this.router.navigate(['/signin']);
       }
       err = error.json() || '';
     } else {
