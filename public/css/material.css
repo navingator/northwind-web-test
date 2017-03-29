@@ -2,20 +2,26 @@
 @import './material-theme.css';
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-
+/* initialization css */
 body {
   margin: 0;
   font-family: Roboto, sans-serif;
-}
-
-.lg-primary{
-  background-color: #3f51b5;
 }
 
 p {
   margin: 8px;
 }
 
+.font30 {
+  font-size: 30px;
+}
+
+/* the primary color for the project */
+.lg-primary{
+  background-color: #3f51b5;
+}
+
+/* sidenav styling */
 md-sidenav-container {
   height: 100vh;
 }
@@ -28,14 +34,13 @@ md-sidenav{
   background-color: white;
 }
 
-.main-headder {
-  padding-bottom: 5px;
+.product-detail {
+  margin-top: 16px;
+  margin-left: 8px;
+  font-size: 16px;
 }
 
-.main-nav {
-  height: 62px;
-}
-
+/* card styling */
 .card {
   height: 100%;
   width: 100%;
@@ -53,24 +58,13 @@ md-sidenav{
   padding: 10px;
 }
 
-[md-raised-button] {
-  width: 100%;
+/*title and nav styling */
+.main-headder {
+  padding-bottom: 5px;
 }
 
-button.nav-icon {
-  font-size: inherit;
-}
-
-.button-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.product-detail {
-  margin-top: 16px;
-  margin-left: 8px;
-  font-size: 16px;
+.main-nav {
+  height: 62px;
 }
 
 md-icon.logo {
@@ -83,11 +77,24 @@ md-icon.lg {
   width: 41px;
 }
 
-.font30 {
-  font-size: 30px;
+/* button styling */
+[md-raised-button] {
+  width: 100%;
 }
 
-.strokeme
+.create-btn {
+  width: 100%;
+  height: 100%;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* shadow */
+.strokeshadow
 {
     color: #fff;
     text-shadow:

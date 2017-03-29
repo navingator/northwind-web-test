@@ -1,5 +1,10 @@
-import { Component, ViewChild }  from '@angular/core';
+import { Component, ViewChild, OnInit }  from '@angular/core';
 import { MdSidenav }     from '@angular/material';
+import { Observable }          from 'rxjs/Observable';
+
+import { ProdCatService }  from '../prodcat.service';
+
+import { ProdCat } from '../prodcat.class';
 
 import 'hammerjs';
 
@@ -7,20 +12,37 @@ import 'hammerjs';
   moduleId: module.id,
   templateUrl: './category-list.component.html',
 })
-export class CatListComponent {
-  productCats = [
-    {color: 'lightblue', name: "Phones", description: "A phone from Apple."},
-    {color: 'lightgreen', name: "Beverages", description: "Sweet and savory sauces, relishes, spreads, and seasonings"},
-    {color: 'lightpink', name: "Confections", description: "Desserts, candies, and sweet breads"},
-    {color: '#DDBDF1', name: "Produce", description: "Dried fruit and bean curd"},
-  ];
+export class CatListComponent{
+  prodCats: ProdCat[];
+
+  constructor(
+    private prodCatService: ProdCatService
+  ) {}
+
+  ngOnInit() {
+    this.prodCatService.listCategories()
+      .subscribe(
+        prodCats => this.prodCats = prodCats,
+        (error: Error) => console.error('Error: ' + error),
+      );
+  }
 
   @ViewChild('sidenav') sidenav: MdSidenav;
-  currentProductCat = {};
+  currentProdCat: ProdCat;
 
-  showProductCat(productCat: {}) {
-    console.log(productCat);
-    this.currentProductCat = productCat;
+
+  showProdCat(prodCat: ProdCat) {
+    this.currentProdCat = prodCat;
     this.sidenav.open();
   }
+
+  deleteProdCat(currentProdCat: ProdCat) {
+    if (!currentProdCat) { return; }
+    this.prodCatService.deleteCategory(currentProdCat.id)
+      .subscribe(
+        () => this.prodCats = this.prodCats.filter(arrayCat => arrayCat !== currentProdCat),
+        (error: Error) => console.error('Error: ' + error),
+      )
+  }
+
 }

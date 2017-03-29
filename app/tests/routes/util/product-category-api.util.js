@@ -14,7 +14,7 @@ module.exports = function(app, agent) {
    * SIDE EFFECTS: Sets the product category's ID
    */
   let create = function(productCategory) {
-    return agent.post('/api/product_categories')
+    return agent.post('/api/categories')
       .send(productCategory)
       .then(res => {
         productCategory.id = res.body.id; // Set product ID for easy deletion later
@@ -28,7 +28,7 @@ module.exports = function(app, agent) {
    * @return {Promise}                   Resolves to the express response
    */
   let remove = function(productCatId) {
-    return agent.delete('/api/product_categories/' + productCatId);
+    return agent.delete('/api/categories/' + productCatId);
   };
 
   /**
@@ -38,7 +38,7 @@ module.exports = function(app, agent) {
    *                              an array of product category objects
    */
   let search = function(searchStr) {
-    return agent.get('/api/product_categories/search/' + searchStr);
+    return agent.get('/api/categories/search/' + searchStr);
   };
 
   /**
@@ -69,11 +69,11 @@ module.exports = function(app, agent) {
    *                                 contains a product category object
    */
   let get = function(productCatId) {
-    return agent.get('/api/product_categories/' + productCatId);
+    return agent.get('/api/categories/' + productCatId);
   };
 
   let getProducts = function(productCatId) {
-    return agent.get('/api/product_categories/' + productCatId + '/products');
+    return agent.get('/api/categories/' + productCatId + '/products');
   };
 
   /**
@@ -83,7 +83,7 @@ module.exports = function(app, agent) {
    *                                 contains a list of product category objects
    */
   let list = function() {
-    return agent.get('/api/product_categories');
+    return agent.get('/api/categories');
   };
 
   /**
@@ -95,7 +95,7 @@ module.exports = function(app, agent) {
    */
   let update = function(productCategory) {
     return agent
-      .put('/api/product_categories/' + productCategory.id)
+      .put('/api/categories/' + productCategory.id)
       .send(productCategory);
   };
 

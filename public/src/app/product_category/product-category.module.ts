@@ -16,6 +16,7 @@ import { CatNewComponent } from './new/category-new.component';
 import { CatListComponent } from './list/category-list.component';
 
 /** Services **/
+import { ProdCatService } from './prodcat.service';
 
 @NgModule({
   imports: [
@@ -31,5 +32,8 @@ import { CatListComponent } from './list/category-list.component';
     CatNewComponent,
     CatListComponent
   ],
+  providers: [
+    ProdCatService
+  ]
 })
 export class ProdCatModule { }

@@ -1,23 +1,31 @@
-import { Component }                          from '@angular/core';
+import { Component, OnInit }     from '@angular/core';
 import { FormBuilder, FormGroup, Validators,
   AbstractControl, FormControl }              from '@angular/forms';
+import { Observable }          from 'rxjs/Observable';
+import { Router }              from '@angular/router';
 
-import { ProductCat }  from '../productcat.class';
+import { ProdCatService }  from '../prodcat.service';
+
+import { ProdCat }  from '../prodcat.class';
 
 @Component({
   moduleId: module.id,
   templateUrl: './category-new.component.html',
 })
-export class CatNewComponent {
+export class CatNewComponent implements OnInit  {
   categoryForm: FormGroup;
-  prodCat = new ProductCat();
+  prodCat = new ProdCat();
 
   submitted = false;
   submitError = false;
 
   constructor(
-    private fb: FormBuilder
-  ) {
+    private fb: FormBuilder,
+    private prodCatService: ProdCatService,
+    private router: Router,
+  ) {}
+
+  ngOnInit() {
     this.createCatNewForm();
   }
 
@@ -41,6 +49,10 @@ export class CatNewComponent {
     this.prodCat.name = this.categoryForm.get('name').value;
     this.prodCat.description = this.categoryForm.get('description').value;
     //TODO send it to a service to be processed
+    this.prodCatService.createCategory(this.prodCat)
+      .subscribe(
+        () => this.router.navigate(['/category'])
+      )
   }
 
   private markAllDirty(control: AbstractControl) {
