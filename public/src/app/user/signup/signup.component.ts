@@ -2,9 +2,7 @@ import { Component, OnChanges }               from '@angular/core';
 import { FormBuilder, FormGroup, Validators,
   AbstractControl, FormControl }              from '@angular/forms';
 
-import { Router }                             from '@angular/router';
-
-import { UserAuthService } from '../user-auth.service';
+import { AuthService } from '../auth.service';
 
 import { User } from '../user.class'
 
@@ -24,8 +22,7 @@ export class SignupComponent {
 
   constructor(
       private fb: FormBuilder,
-      private userAuthService: UserAuthService,
-      private router: Router
+      private authService: AuthService
     ) {
     this.createSignupForm();
   }
@@ -65,10 +62,10 @@ export class SignupComponent {
     this.user.username = this.signupForm.get('username').value;
     this.user.password = this.signupForm.get('password').value;
 
-    // Send it to the userAuthService
-    return this.userAuthService.createUser(this.user)
+    // Send it to the authService
+    return this.authService.createUser(this.user)
       .subscribe(
-        () => this.router.navigate(['/signup-congrats']),
+        this.authService.goToHome,
         err => {
           this.submitted = false;
           this.submitErrorMessage = err.message;

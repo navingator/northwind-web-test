@@ -13,10 +13,11 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { SignoutComponent } from './signout/signout.component';
 import { ForgotComponent } from './forgot/forgot.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { SignupCongratsComponent } from './signup_congrats/signup-congrats.component';
 
 /** Services **/
-import { UserAuthService } from './user-auth.service';
+import { AuthService } from './auth.service';
 
 @NgModule({
   imports: [
@@ -31,10 +32,11 @@ import { UserAuthService } from './user-auth.service';
     SignupComponent,
     SignoutComponent,
     ForgotComponent,
+    UnauthorizedComponent,
     SignupCongratsComponent
   ],
   providers: [
-    UserAuthService
+    AuthService
   ]
 })
 export class UserModule { }

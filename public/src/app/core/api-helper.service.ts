@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
-import { Router }     from '@angular/router';
 
 
 import { Observable } from 'rxjs/Observable';
@@ -9,9 +8,6 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class ApiHelperService {
 
-  constructor(
-    private router: Router
-  ) {}
   /**
    * Handles errors returned from the API. Navigates the user to the signin page,
    * if the user attempts to perform an action that requires authentication.
@@ -21,9 +17,6 @@ export class ApiHelperService {
   handleError = (error: Response) => {
     let err: any;
     if (error instanceof Response) {
-      if (error.status === 401) {
-        this.router.navigate(['/signin']);
-      }
       err = error.json() || '';
     } else {
       err = error;

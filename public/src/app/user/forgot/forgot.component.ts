@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators,
 
 import { Router }                             from '@angular/router';
 
-import { UserAuthService } from '../user-auth.service';
+import { AuthService } from '../auth.service';
 
 import { User } from '../user.class'
 
@@ -22,7 +22,7 @@ export class ForgotComponent {
 
   constructor(
       private fb: FormBuilder,
-      private userAuthService: UserAuthService,
+      private authService: AuthService,
       private router: Router
     ) {
     this.createforgotForm();
@@ -52,7 +52,7 @@ export class ForgotComponent {
     this.user.username = this.forgotForm.get('username').value;
     this.user.password = this.forgotForm.get('password').value;
 
-    return this.userAuthService.forgot(this.user)
+    return this.authService.forgot(this.user)
       .subscribe(
         () => console.log('successfully reset password!'), //TODO
         err => {

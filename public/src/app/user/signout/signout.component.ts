@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router }            from '@angular/router'
 
-import { UserAuthService } from '../user-auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   moduleId: module.id,
@@ -9,13 +8,16 @@ import { UserAuthService } from '../user-auth.service';
 })
 export class SignoutComponent implements OnInit {
 
+  signoutError = false;
   constructor(
-    private userService: UserAuthService,
-    private router: Router
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.userService.signout()
-      .subscribe(() => this.router.navigate(['/signin']));
+    this.authService.signout()
+      .subscribe(
+        this.authService.goToSignin,
+        () => this.signoutError = true
+      )
   }
 }

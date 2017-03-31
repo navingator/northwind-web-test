@@ -1,4 +1,4 @@
 <!-- Should only be shown if there was an error signing out -->
-<div class='row submit-error text-center'>
+<div *ngIf="signoutError" class="row submit-error text-center">
   There was an error signing you out. Please check your connection and try again.
 </div>

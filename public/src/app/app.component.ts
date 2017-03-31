@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserAuthService } from './user/user-auth.service';
+import { AuthService } from './user/auth.service';
 import { User } from './user/user.class';
 
 @Component({
@@ -9,20 +9,13 @@ import { User } from './user/user.class';
   selector: 'northwind-app',
 })
 export class AppComponent implements OnInit {
-  isLoggedIn = false;
   user: User;
 
   constructor(
-    private userService: UserAuthService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
-    this.userService.checkLogin()
-      .subscribe(
-        user => {
-          this.isLoggedIn = true;
-          this.user = user;
-        }
-      )
+    this.authService.auth$.subscribe(user => this.user = user);
   }
 }

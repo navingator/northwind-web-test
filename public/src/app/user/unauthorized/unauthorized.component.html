@@ -1,0 +1,14 @@
+<div *ngIf="!adminSuccess" class="submit-error text-center">
+  <div>
+    You are unauthorized to access this material.
+  </div>
+  <div id="adminButtonDiv" *ngIf="showAdminButton">
+    <button class="btn btn-primary" [disabled]="submitted" (click)="makeAdmin()">Become an admin!</button>
+  </div>
+</div>
+<div *ngIf="adminSuccess" class="submit-success text-center">
+  Congratulations, you are now an admin!
+</div>
+<div *ngIf="adminError" class="submit-error text-center">
+  There was an error making you an admin. Please check your connection and try again.
+</div>

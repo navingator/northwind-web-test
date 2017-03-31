@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router }    from '@angular/router';
 
-import { UserAuthService } from '../user-auth.service';
+import { AuthService } from '../auth.service';
 
 import { User } from '../user.class';
 
@@ -12,23 +12,21 @@ import { User } from '../user.class';
 })
 export class LoginComponent {
 
-  constructor(
-    private userAuthService: UserAuthService,
-    private router: Router
-  ) {}
-
   user = new User();
   submitted = false;
   submitErrorMessage = '';
   usernameNotFound = false;
 
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
   onSubmit() {
     this.submitted = true;
-    this.userAuthService.authenticate(this.user)
+    this.authService.authenticate(this.user)
       .subscribe(
-        () => {
-          this.router.navigate(['/signup-congrats']);
-        },
+        this.authService.goToHome,
         err => {
           this.submitted = false;
           if (err.code === 1100) {

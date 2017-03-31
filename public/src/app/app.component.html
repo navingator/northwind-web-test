@@ -1,6 +1,6 @@
 <div class="bkg-primary">
   <div class="container">
-    <nav *ngIf='!isLoggedIn' class="navbar navbar-toggleable-sm navbar-inverse">
+    <nav *ngIf='!user' class="navbar navbar-toggleable-sm navbar-inverse">
         <a class="navbar-brand" routerLink="/">Northwind</a>
 
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#public-collapsable-navbar" aria-controls="collapsable-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,7 +16,7 @@
         </div>
     </nav>
 
-    <nav *ngIf='isLoggedIn' class="navbar navbar-toggleable-sm navbar-inverse">
+    <nav *ngIf='user' class="navbar navbar-toggleable-sm navbar-inverse">
         <a class="navbar-brand" routerLink="/">Northwind</a>
 
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#main-collapsable-navbar" aria-controls="collapsable-navbar" aria-expanded="false" aria-label="Toggle navigation">
