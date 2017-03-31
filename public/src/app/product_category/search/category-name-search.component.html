@@ -1,0 +1,9 @@
+<div>
+  <input #searchBox (keyup)="search(searchBox.value)">
+  <div>
+    <div *ngFor="let prodCat of ProdCats | async"
+         (click)="searchBox.value = prodCat.name" class="search-result">
+      {{prodCat.name}}
+    </div>
+  </div>
+</div>

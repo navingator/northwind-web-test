@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Headers, Response, RequestOptions, Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Injectable }        from '@angular/core';
+import { Headers, Response,
+  RequestOptions, Http }     from '@angular/http';
+import { Observable }        from 'rxjs/Observable';
+
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -11,6 +13,8 @@ export class ProdCatService {
   private prodCatUrl = 'api/categories';
   private headers = new Headers({ 'Content-Type': 'application/json' });
   private options = new RequestOptions({ headers: this.headers });
+
+  selectedProdCat: ProdCat;
 
   constructor(
     private http: Http,
@@ -37,7 +41,6 @@ export class ProdCatService {
       .map(this.extractData)
       .catch(this.handleError)
     }
-
 
   private extractData(res: Response) {
     let body = res.json();

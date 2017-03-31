@@ -8,6 +8,7 @@ import { User } from './user/user.class';
   templateUrl: './app.component.html',
   selector: 'northwind-app',
 })
+
 export class AppComponent implements OnInit {
   user: User;
 

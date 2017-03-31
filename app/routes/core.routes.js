@@ -13,6 +13,9 @@ module.exports = function (app) {
   app.route('/signup-congrats').get(core.index);
   app.route('/category').get(core.index);
   app.route('/category/new').get(core.index);
+  app.route('/category/:categoryId/products').get(core.index);
   app.route('/product').get(core.index);
   app.route('/product/new').get(core.index);
+  app.route('/product/update/:productId').get(core.index);
+  app.route('/product/:productId').get(core.index);
 };

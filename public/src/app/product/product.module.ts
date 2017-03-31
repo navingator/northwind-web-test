@@ -14,8 +14,10 @@ import { ProductRoutingModule } from './product-routing.module';
 /** Components **/
 import { ProdListComponent } from './list/product-list.component';
 import { ProdNewComponent }  from './new/product-new.component';
+import { ProdUpdateComponent } from './update/product-update.component'
 
 /** Services **/
+import { ProductService } from './product.service';
 
 @NgModule({
   imports: [
@@ -24,12 +26,16 @@ import { ProdNewComponent }  from './new/product-new.component';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    
+
     ProductRoutingModule //Must be last
   ],
   declarations: [
     ProdListComponent,
-    ProdNewComponent
+    ProdNewComponent,
+    ProdUpdateComponent
   ],
+  providers: [
+    ProductService
+  ]
 })
 export class ProductModule { }

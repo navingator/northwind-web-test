@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit }  from '@angular/core';
 import { MdSidenav }     from '@angular/material';
-import { Observable }          from 'rxjs/Observable';
+import { Observable }    from 'rxjs/Observable';
+import { Router }        from '@angular/router';
 
 import { ProdCatService }  from '../prodcat.service';
 
@@ -14,9 +15,11 @@ import 'hammerjs';
 })
 export class CatListComponent{
   prodCats: ProdCat[];
+  emptyProdCat: ProdCat;
 
   constructor(
-    private prodCatService: ProdCatService
+    private prodCatService: ProdCatService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -28,21 +31,35 @@ export class CatListComponent{
   }
 
   @ViewChild('sidenav') sidenav: MdSidenav;
-  currentProdCat: ProdCat;
-
+  selectedProdCat: ProdCat;
 
   showProdCat(prodCat: ProdCat) {
-    this.currentProdCat = prodCat;
+    console.log(prodCat);
+    this.selectedProdCat = prodCat;
     this.sidenav.open();
   }
 
-  deleteProdCat(currentProdCat: ProdCat) {
-    if (!currentProdCat) { return; }
-    this.prodCatService.deleteCategory(currentProdCat.id)
+  deleteProdCat(selectedProdCat: ProdCat) {
+    if (!selectedProdCat) { return; }
+    this.prodCatService.deleteCategory(selectedProdCat.id)
       .subscribe(
-        () => this.prodCats = this.prodCats.filter(arrayCat => arrayCat !== currentProdCat),
+        () => this.prodCats = this.prodCats.filter(arrayCat => arrayCat !== selectedProdCat),
         (error: Error) => console.error('Error: ' + error),
       )
+  }
+
+  onSelect(prodCat: ProdCat): void {
+    if (this.selectedProdCat) {
+      this.sidenav.close()
+      setTimeout(() => this.sidenav.open(),500);
+      this.selectedProdCat = prodCat;
+      console.log('onSelect')
+    }
+  }
+
+  onDeselect(): void {
+    this.selectedProdCat = this.emptyProdCat
+    this.sidenav.close()
   }
 
 }

@@ -1,0 +1,10 @@
+<div *ngIf="selectedProduct">
+  <h2>Update {{selectedProduct.name}}</h2>
+  <div>
+    <label>name: </label>
+    <input [(ngModel)]="selectedProduct.name" placeholder="name" />
+     <label>category: </label>
+     <input [(ngModel)]="selectedProduct.categoryName" placeholder="category name"/>
+   </div>
+  <button (click)="save()">Save</button>
+</div>

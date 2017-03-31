@@ -1,7 +1,10 @@
 export class Product {
+  id?: number;
   name: string;
-  category: string;
+  categoryId?: number;
+  categoryName?: string;
+  color?: string;
   unitPrice?: string;
-  stock?: number;
+  unitsInStock?: number;
   discontinued?: boolean;
 }

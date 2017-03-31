@@ -82,7 +82,7 @@ export class AuthService {
    * Calls the users api to sign out the user
    * @return {Observable}      RxJS Observable that emits upon completion
    */
-  signout(): Observable {
+  signout() {
     return this.http.post(this.usersUrl + '/signout', null, this.options)
       .do(this.removeUser)
       .catch(this.apiHelper.handleError);
@@ -94,7 +94,7 @@ export class AuthService {
    * @param  {User}       user User object with identifiers and new password attached
    * @return {Observable}      RxJS Observable that emits new information
    */
-  forgot(user: User): Observable {
+  forgot(user: User) {
     return this.http.post(this.usersUrl + '/forgot', JSON.stringify(user), this.options)
       .do(this.removeUser)
       .catch(this.apiHelper.handleError);
@@ -106,7 +106,7 @@ export class AuthService {
    * @return {Observable<User>}      Observable that emits the user when successful
    */
   makeAdmin(user: User): Observable<User> {
-    return this.http.post(this.usersUrl + '/adminplease')
+    return this.http.post(this.usersUrl + '/adminplease', null, null)
       .map(this.apiHelper.extractData)
       .do(this.addUser)
       .catch(this.apiHelper.handleError);
@@ -141,7 +141,7 @@ export class AuthService {
    * service's user and notifies subscribers that the user was removed
    * @param  {User} user User object that was removed
    */
-  private removeUser: void = () => {
+  private removeUser = (): void => {
     delete this.user;
     this.authSource.next(null);
   }

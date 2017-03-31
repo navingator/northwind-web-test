@@ -26,6 +26,10 @@ md-sidenav-container {
   height: 100vh;
 }
 
+::-webkit-scrollbar {
+    width: 0px;
+}
+
 md-sidenav{
   width: 320px;
 }
