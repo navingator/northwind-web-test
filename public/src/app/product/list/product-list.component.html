@@ -1,0 +1,53 @@
+<div>
+  <!-- SIDENAV -->
+  <md-sidenav-container>
+    <md-sidenav mode="over" align="start" #sidenav>
+      <md-tab-group
+      *ngIf="selectedProduct">
+        <md-tab label="Details">
+          <div class="product-detail">
+            <h6>{{selectedProduct.name}} - ${{selectedProduct.unitPrice}}</h6>
+            <span>{{selectedProduct.unitsInStock}} left in stock</span>
+          </div>
+          <button md-raised-button (click)="onDeselect()" class="lg-primary text-white">Close</button>
+        </md-tab>
+        <md-tab label="Edit">
+          <button md-raised-button (click)="deleteProduct(selectedProduct); onDeselect()" class="lg-primary text-white">Delete This Product</button>
+          <button md-raised-button [routerLink]="['/product', 'update', selectedProduct.id]" class="lg-primary text-white">Update Product</button>
+          <button md-raised-button routerLink="/product/new" class="lg-primary text-white">Create New Product</button>
+          <button md-raised-button (click)="onDeselect()" class="lg-primary text-white">Close</button>
+        </md-tab>
+      </md-tab-group>
+    </md-sidenav>
+
+      <!-- Main Content -->
+    <h2 class="main-headder col-12 text-center">Products for {{categoryName}}</h2>
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4 lg-primary">
+        <div class="card product-card">
+          <button md-raised-button routerLink="/product/new" class="lg-primary text-white create-btn">Create New Product</button>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4"
+      *ngFor="let product of products"
+      (click)="onSelect(product)"
+      [class.selected]="product === selectedProduct"
+      [style.background]="product.color"> <!-- TODO add selectedProduct class -->
+        <div class="card product-card">
+          <div class="card-block">
+            <h4 class="card-title">{{product.name}}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">{{product.categoryName}}</h6>
+            <div class="button-row">
+              <button md-icon-button (click)="showProduct(product); $event.stopPropagation()">
+                <md-icon>arrow_back</md-icon>
+              </button>
+              <button md-icon-button routerLink="/category">
+                <md-icon>dehaze</md-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-sidenav-container>
+</div>

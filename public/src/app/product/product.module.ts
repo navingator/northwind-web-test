@@ -14,6 +14,7 @@ import { ProductRoutingModule } from './product-routing.module';
 /** Components **/
 import { ProdListComponent } from './list/product-list.component';
 import { ProdNewComponent }  from './new/product-new.component';
+import { ProdUpdateComponent } from './update/product-update.component'
 
 /** Services **/
 import { ProductService } from './product.service';
@@ -30,7 +31,8 @@ import { ProductService } from './product.service';
   ],
   declarations: [
     ProdListComponent,
-    ProdNewComponent
+    ProdNewComponent,
+    ProdUpdateComponent
   ],
   providers: [
     ProductService

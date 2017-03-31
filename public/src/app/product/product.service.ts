@@ -16,14 +16,14 @@ export class ProductService {
     private http: Http,
   ){}
 
-  createProduct(prodCat: Product): Observable<Product> {
+  createProduct(product: Product): Observable<Product> {
     return this.http
-      .post(this.productUrl, JSON.stringify(prodCat), this.options)
+      .post(this.productUrl, JSON.stringify(product), this.options)
       .map(this.extractData)
       .catch(this.handleError)
   }
 
-  listProducts(): Observable<Product[]> {
+  listAllProducts(): Observable<Product[]> {
     return this.http
       .get(this.productUrl)
       .map(this.extractData)
@@ -31,12 +31,34 @@ export class ProductService {
       .catch(this.handleError)
     }
 
-  deleteProduct(id: number): Observable<Product> {
+  listProductsByCat(categoryId: number): Observable<Product[]> {
     return this.http
-      .delete(this.productUrl + '/' + id)
+      .get('api/categories/' + categoryId + '/products')
+      .map(this.extractData)
+      .do(this.colorData)
+      .catch(this.handleError)
+  }
+
+  deleteProduct(productId: number): Observable<Product> {
+    return this.http
+      .delete(this.productUrl + '/' + productId)
       .map(this.extractData)
       .catch(this.handleError)
     }
+
+  getProduct(productId: number): Observable<Product> {
+    return this.http
+      .get(this.productUrl + '/' + productId)
+      .map(this.extractData)
+      .catch(this.handleError)
+  }
+
+  updateProduct(product: Product): Observable<Product> {
+    return this.http
+      .put(this.productUrl + '/' + product.id, JSON.stringify(product), this.options)
+      .map(this.extractData)
+      .catch(this.handleError)
+  }
 
   private extractData(res: Response) {
     let body = res.json();
