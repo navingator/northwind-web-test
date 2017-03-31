@@ -72,7 +72,9 @@ describe('Product Routes Unit Tests', () => {
         expect(response.body).to.have.property('id');
         product.id = response.body.id;
         for (let property in product) {
-          expect(response.body).to.have.property(property, product[property]);
+          if (property !== 'categoryName') {
+            expect(response.body).to.have.property(property, product[property]);
+          }
         }
       });
 
@@ -203,7 +205,9 @@ describe('Product Routes Unit Tests', () => {
 
       it('returns expected product', () => {
         for(let property in product) {
-          expect(response.body).to.have.property(property, product[property]);
+          if (property !== 'categoryName') {
+            expect(response.body).to.have.property(property, product[property]);
+          }
         }
       });
 
@@ -389,7 +393,9 @@ describe('Product Routes Unit Tests', () => {
 
       it('returns expected product', () => {
         for (let property in product) {
-          expect(response.body).to.have.property(property, product[property]);
+          if (property !== 'categoryName') {
+            expect(response.body).to.have.property(property, product[property]);
+          }
         }
       });
 

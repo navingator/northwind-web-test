@@ -1,14 +1,17 @@
-<!-- <div class="bg-inverse">
+<div class="bg-inverse">
   <div class="container">
-    <nav class="navbar navbar-toggleable-sm navbar-inverse"> -->
+    <nav class="navbar navbar-toggleable-sm navbar-inverse">
         <!-- Brand and toggle get grouped for better mobile display -->
-        <!-- <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsable-navbar" aria-controls="collapsable-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsable-navbar" aria-controls="collapsable-navbar" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" routerLink="/">Northwind</a> -->
+        <a class="navbar-brand" routerlink="/category">
+            <img src="http://placehold.it/30x30" alt="">
+        </a>
+        <a class="navbar-brand" routerLink="/">Northwind</a>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <!-- <div class="collapse navbar-collapse" id="collapsable-navbar">
+        <div class="collapse navbar-collapse" id="collapsable-navbar">
           <ul class="nav navbar-nav ml-auto">
             <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/signup">Sign Up</a></li>
             <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/signin">Sign In</a></li>
@@ -16,8 +19,10 @@
         </div>
     </nav>
   </div>
-</div> -->
-<div class="d-flex lg-primary text-white font30 main-nav">
+</div>
+
+
+<!-- <div class="d-flex lg-primary text-white font30 main-nav">
   <div class="p-2">
     <a routerLink="/category">
       <md-icon class="logo">all_out</md-icon>
@@ -38,12 +43,26 @@
   </div>
   <div class="ml-auto p-2 hidden-md-up">
     <span class="align-top">
-      <button md-icon-button class="nav-icon hamburger">
+      <button md-icon-button [mdMenuTriggerFor]="menu" class="nav-icon hamburger">
         <md-icon class="lg">more_vert</md-icon>
       </button>
+      <md-menu #menu="mdMenu">
+        <button md-menu-item>
+          <md-icon>dialpad</md-icon>
+          <span>Redial</span>
+        </button>
+        <button md-menu-item disabled>
+          <md-icon>voicemail</md-icon>
+          <span>Check voicemail</span>
+        </button>
+        <button md-menu-item>
+          <md-icon>notifications_off</md-icon>
+          <span>Disable alerts</span>
+        </button>
+      </md-menu>
     </span>
   </div>
-</div>
+</div> -->
 
 <div id="main-content" class="container">
   <router-outlet></router-outlet>

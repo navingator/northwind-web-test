@@ -14,6 +14,7 @@ class Product {
    *   @property {number}   categoryId    Database ID of the product's category
    *   @property {number}   unitPrice     Price per unit
    *   @property {boolean}  discontinued  Whether the unit is discontinued
+   *   @property {string}   categoryName  Name of the product category the product belogns to
    * @return {Product}    The created product object
    */
   constructor(obj) {
@@ -23,6 +24,8 @@ class Product {
     this.unitPrice = obj.unitPrice;
     this.unitsInStock = obj.unitsInStock;
     this.discontinued = obj.discontinued;
+    // Taken from categories table
+    this.categoryName = obj.categoryName;
   }
 
   /**
@@ -63,7 +66,9 @@ class Product {
       categoryId: dbProduct.categoryid,
       unitPrice: dbProduct.unitprice,
       unitsInStock: dbProduct.unitsinstock,
-      discontinued: dbProduct.discontinued
+      discontinued: dbProduct.discontinued,
+      // Taken from categories table
+      categoryName: dbProduct.categoryname
     });
   }
 
@@ -103,8 +108,11 @@ class Product {
    */
   static getByCategory(categoryId) {
     return db.any(
-      'SELECT * FROM products ' +
-      'WHERE categoryid=${categoryId}', {categoryId: categoryId})
+      'SELECT products.*, categories.categoryname ' +
+      'FROM products ' +
+      'LEFT JOIN categories ' +
+      'ON products.categoryid = categories.categoryid ' +
+      'WHERE categories.categoryid=${categoryId}', {categoryId: categoryId})
       .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
 
@@ -113,8 +121,12 @@ class Product {
    * @returns {promise} Promise object that resolves to an array of Product objects
    */
   static listAll() {
-    return db.any('SELECT * FROM products')
-      .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
+    return db.any(
+        'SELECT products.*, categories.categoryname ' +
+        'FROM products ' +
+        'LEFT JOIN categories ' +
+        'ON products.categoryid = categories.categoryid')
+        .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
 
   /**
@@ -124,8 +136,10 @@ class Product {
   */
   static search(str) {
     return db.any(
-      'SELECT * ' +
+      'SELECT products.*, categories.categoryname ' +
       'FROM products ' +
+      'LEFT JOIN categories ' +
+      'ON products.categoryid = categories.categoryid ' +
       'WHERE productname ILIKE \'${str#}%\'', {str: str})
         .then(records => {
           return records.map(record => Product.convertFromDbProduct(record));
