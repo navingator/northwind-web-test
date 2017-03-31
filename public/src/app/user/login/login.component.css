@@ -1,0 +1,8 @@
+#forgotPassword {
+  margin: -1rem 0 1rem;
+}
+
+#forgotPassword a {
+  color: gray;
+  font-size: 0.8em;
+}
