@@ -46,20 +46,16 @@ exports.update = function(req, res) {
 */
 exports.delete = function(req, res) {
   const id = req.productCat.id;
-  console.log('get category ', id);
   Product.getByCategory(id)
     .then(products => {
       if (products.length !== 0) {
-        console.log('there are products!', products, products.length !== 0);
         return ApiError.getApiError(3100)
           .then(err => Promise.reject(err));
       }
-      console.log('no prodcuts here!');
       return ProductCategory.delete(id);
     })
     .then(() => res.json(req.productCat))
     .catch(err => {
-      console.log(err);
       res.status(400).send(err);
     });
 };
