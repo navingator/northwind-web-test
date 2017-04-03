@@ -67,7 +67,7 @@ export class SignupComponent {
     // Send it to the authService
     this.authService.createUser(this.user)
       .subscribe(
-        this.authService.goToHome,
+        () => this.authService.goToHome(),
         err => {
           this.submitted = false;
           this.submitErrorMessage = err.message;

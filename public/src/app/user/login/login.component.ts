@@ -26,7 +26,7 @@ export class LoginComponent {
     this.submitted = true;
     this.authService.authenticate(this.user)
       .subscribe(
-        this.authService.goToHome,
+        () => this.authService.goToRedirect(),
         err => {
           this.submitted = false;
           if (err.code === 1100) {

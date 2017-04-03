@@ -12,8 +12,8 @@ export class AuthNGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    let url = state.url;
+  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    const url = state.url;
     return this.checkLogin(url);
   }
 
@@ -23,13 +23,13 @@ export class AuthNGuard implements CanActivate {
    * @param  {string}              url URL to redirect to, upon login success
    * @return {Observable<boolean>}     Observable that emits whether the user is logged in
    */
-  checkLogin(url: string): Observable<boolean> {
+  public checkLogin(url: string): Observable<boolean> {
     return this.authService.checkLogin()
       .do(auth => {
         if (!auth) {
-          this.authService.redirectURL = url;
+          this.authService.redirectUrl = url;
           this.router.navigate(['/signin']);
         }
-      })
+      });
   }
 }

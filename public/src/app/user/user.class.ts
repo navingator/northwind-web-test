@@ -1,7 +1,7 @@
 export class User {
-  username: string;
-  password: string;
-  firstName?: string;
-  lastName?: string;
-  isAdmin?: boolean;
+  public username: string;
+  public password: string;
+  public firstName?: string;
+  public lastName?: string;
+  public isAdmin?: boolean;
 }
