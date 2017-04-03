@@ -23,7 +23,7 @@ import { ProdCat } from '../prodcat.class';
   providers: [ProdCatSearchService]
 })
 export class ProdCatSearchComponent implements OnInit {
-  prodCats: Observable<ProdCat[]>;
+  public prodCats: Observable<ProdCat[]>;
   private searchTerms = new Subject<string>();
 
   constructor(
@@ -31,11 +31,11 @@ export class ProdCatSearchComponent implements OnInit {
     private router: Router) {}
 
   // Push a search term into the observable stream.
-  search(searchTerm: string): void {
+  public search(searchTerm: string): void {
     this.searchTerms.next(searchTerm);
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.prodCats = this.searchTerms
       .debounceTime(300)        // wait 300ms after each keystroke before considering the term
       .distinctUntilChanged()   // ignore if next search term is same as previous
@@ -45,8 +45,7 @@ export class ProdCatSearchComponent implements OnInit {
         // or the observable of empty product categories if there was no search term
         : Observable.of<ProdCat[]>([]))
       .catch(error => {
-        // TODO: add real error handling
-        console.log(error);
+        // TODO Error handling
         return Observable.of<ProdCat[]>([]);
       });
   }

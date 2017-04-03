@@ -29,10 +29,7 @@
           </div>
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Create!</button>
-        </div>
-        <div class="col-12 text-center submit-error" *ngIf="submitError && categoryForm.invalid">
-          <div>Please correct issues and try again.</div>
+          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted || categoryForm.invalid">Create!</button>
         </div>
       </div>
     </form>
