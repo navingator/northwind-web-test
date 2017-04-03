@@ -20,6 +20,7 @@ ERRORID,MESSAGE,DB_ERROR_CODE,DB_TABLE,DB_COL,DB_CONSTRAINT
 3010,Category name must be unique.,23505,categories,,categories_categoryname_key
 3020,Category name must be between 3 and 15 characters.,23514,categories,,categories_categoryname_check
 3030,Category description must be less than 100 characters.,23514,categories,,categories_description_check
+3100,Cannot delete category with existing products.,,,,
 4000,There was a database error.,,,,
 4001,No data found from the database.,,,,
 4100,ID is invalid.,,,,

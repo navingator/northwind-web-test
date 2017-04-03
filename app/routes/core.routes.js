@@ -7,6 +7,9 @@ module.exports = function (app) {
   var core = require(path.resolve('./app/controllers/core.controller'));
   app.route('/signin').get(core.index);
   app.route('/signup').get(core.index);
+  app.route('/signout').get(core.index);
+  app.route('/unauthorized').get(core.index);
+  app.route('/forgot').get(core.index);
   app.route('/signup-congrats').get(core.index);
   app.route('/category').get(core.index);
   app.route('/category/new').get(core.index);

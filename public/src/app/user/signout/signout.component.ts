@@ -1,21 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { Router }            from '@angular/router'
 
-import { UserAuthService } from '../user-auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   moduleId: module.id,
-  templateUrl: './signout.component.html',
+  templateUrl: './signout.component.html'
 })
 export class SignoutComponent implements OnInit {
 
+  public signoutError = false;
   constructor(
-    private userService: UserAuthService,
-    private router: Router
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
-    this.userService.signout()
-      .subscribe(() => this.router.navigate(['/signin']));
+  public ngOnInit() {
+    this.authService.signout()
+      .subscribe(
+        this.authService.goToSignin,
+        () => this.signoutError = true
+      );
   }
 }

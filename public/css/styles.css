@@ -37,6 +37,13 @@
   margin: 1rem 0;
 }
 
+.submit-success {
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: #def2de;
+  margin: 1rem 0;
+}
+
 
 /** Tooltips **/
 .has-tooltip {

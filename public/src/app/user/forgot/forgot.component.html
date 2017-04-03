@@ -1,5 +1,8 @@
 <section class="row">
   <h2 class="main-headder col-12 text-center">Forgot Password</h2>
+  <div id="forgot-password-text" class="offset-1 col-10 offset-lg-3 col-lg-6 text-center">
+    Been a while since you've logged in? Reset your password below.
+  </div>
   <div class="offset-1 col-10 offset-lg-3 col-lg-6">
     <form [formGroup]="forgotForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="row">
@@ -65,11 +68,14 @@
           </div>
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Sign Up!</button>
+          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Reset Password</button>
         </div>
       </div>
       <div class="text-center submit-error" *ngIf="submitErrorMessage !== ''">
         {{ submitErrorMessage }}
+      </div>
+      <div class="text-center submit-success" *ngIf="resetSuccessful">
+        You have successfully reset your password. <a routerLink="/signin">Sign in</a> to continue.
       </div>
     </form>
   </div>

@@ -1,12 +1,10 @@
 import { Component, OnChanges }               from '@angular/core';
-import { FormBuilder, FormGroup, Validators,
-  AbstractControl, FormControl }              from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl,
+  FormGroup, Validators}                      from '@angular/forms';
 
-import { Router }                             from '@angular/router';
+import { AuthService } from '../auth.service';
 
-import { UserAuthService } from '../user-auth.service';
-
-import { User } from '../user.class'
+import { User } from '../user.class';
 
 @Component({
   moduleId: module.id,
@@ -14,23 +12,22 @@ import { User } from '../user.class'
 })
 export class SignupComponent {
 
-  signupForm: FormGroup;
-  user = new User();
+  public signupForm: FormGroup;
+  public user = new User();
 
-  submitted = false;
-  submitErrorMessage = '';
+  public submitted = false;
+  public submitErrorMessage = '';
 
   private isUsernameUnique = true;
 
   constructor(
       private fb: FormBuilder,
-      private userAuthService: UserAuthService,
-      private router: Router
+      private authService: AuthService
     ) {
     this.createSignupForm();
   }
 
-  createSignupForm() {
+  public createSignupForm(): void {
     this.signupForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -45,11 +42,13 @@ export class SignupComponent {
         Validators.required,
         this.equalsValidatorFactory('password', 'passwordMismatch')
       ]]
-    })
+    });
   }
 
-  /** Called by form submission **/
-  onSubmit() {
+  /**
+   * Called by form submission. Calls the AuthService to create a user.
+   */
+  public onSubmit(): void {
     // if the form is invalid, mark all invalid fields
     if (this.signupForm.invalid) {
       this.markAllDirty(this.signupForm);
@@ -65,10 +64,10 @@ export class SignupComponent {
     this.user.username = this.signupForm.get('username').value;
     this.user.password = this.signupForm.get('password').value;
 
-    // Send it to the userAuthService
-    return this.userAuthService.createUser(this.user)
+    // Send it to the authService
+    this.authService.createUser(this.user)
       .subscribe(
-        () => this.router.navigate(['/signup-congrats']),
+        this.authService.goToHome,
         err => {
           this.submitted = false;
           this.submitErrorMessage = err.message;
@@ -79,56 +78,58 @@ export class SignupComponent {
         });
   }
 
-  private markAllDirty(control: AbstractControl) {
-    if(control.hasOwnProperty('controls')) {
-      control.markAsDirty(true) // mark group
-      let ctrl = <any>control;
-      for (let inner in ctrl.controls) {
-        this.markAllDirty(ctrl.controls[inner] as AbstractControl);
+  /**
+   * Called by keyup on password - validates that password still matches
+   */
+  public revalidateConfirm(): void {
+    this.signupForm.get('passwordConfirm').updateValueAndValidity();
+  }
+
+  private markAllDirty(control: AbstractControl): void {
+    if (control.hasOwnProperty('controls')) {
+      control.markAsDirty(true); // mark group
+      const ctrl = <any>control;
+      for (const inner in ctrl.controls) {
+        if (ctrl.controls.hasOwnProperty(inner)) {
+          this.markAllDirty(ctrl.controls[inner] as AbstractControl);
+        }
       }
-    }
-    else {
+    } else {
       (<FormControl>(control)).markAsDirty(true);
     }
   }
 
   /**
    * Returns a validator that compares the value to a sibling FormControl
-   *  Parameters:
-   *    ctrlKey: Key that will be used to retrieve the FormControl to compare to
-   *    error: Error Key to add when invalid
-   *  Returns: Validator function
-   **/
-  private equalsValidatorFactory(ctrlKey: string, error: string) {
+   * @param  {string} ctrlKey Key that will be used to retrieve the FormControl to compare to
+   * @param  {string} error   Error Key to add when invalid
+   * @return {Function}       Validator function
+   */
+  private equalsValidatorFactory(ctrlKey: string, error: string): (fc: FormControl) => {[key: string]: any} {
     return (fc: FormControl): {[key: string]: any} => {
       // If the parent doesn't exist yet, return null (no errors)
       if (!fc.parent) {
         return null;
       }
 
-      let val = fc.value;
-      let compVal = fc.parent.controls[ctrlKey].value;
+      const val = fc.value;
+      const compVal = fc.parent.controls[ctrlKey].value;
 
       if (val === compVal) {
         return null;
       } else {
         return { [error] : true };
       }
-    }
+    };
   }
 
   private usernameUniqueValidator = (fc: FormControl) => {
-    if(this.isUsernameUnique) {
+    if (this.isUsernameUnique) {
       this.submitErrorMessage = ''; // reset the submit error message
       return null;
     } else {
       this.isUsernameUnique = true; // reset it after the field has been touched
-      return { 'usernameTaken' : true };
+      return { usernameTaken : true };
     }
-  }
-
-  /** Called by keyup on password - validates that password still matches **/
-  revalidateConfirm() {
-    this.signupForm.get('passwordConfirm').updateValueAndValidity();
   }
 }

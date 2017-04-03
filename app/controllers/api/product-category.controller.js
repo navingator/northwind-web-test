@@ -45,9 +45,19 @@ exports.update = function(req, res) {
 * Deletes a ProduceCategory from the database given the product id in the request
 */
 exports.delete = function(req, res) {
-  ProductCategory.delete(req.productCat.id)
+  const id = req.productCat.id;
+  Product.getByCategory(id)
+    .then(products => {
+      if (products.length !== 0) {
+        return ApiError.getApiError(3100)
+          .then(err => Promise.reject(err));
+      }
+      return ProductCategory.delete(id);
+    })
     .then(() => res.json(req.productCat))
-    .catch(err => res.status(400).send(err));
+    .catch(err => {
+      res.status(400).send(err);
+    });
 };
 
 /**
