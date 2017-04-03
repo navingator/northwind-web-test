@@ -1,6 +1,10 @@
-import { Component }                          from '@angular/core';
+import { Component, OnInit }                          from '@angular/core';
 import { FormBuilder, FormGroup, Validators,
   AbstractControl, FormControl }              from '@angular/forms';
+import { Observable }     from 'rxjs/Observable';
+import { Router }         from '@angular/router';
+
+import { ProductService } from '../product.service';
 
 import { Product }  from '../product.class';
 
@@ -8,7 +12,7 @@ import { Product }  from '../product.class';
   moduleId: module.id,
   templateUrl: './product-new.component.html',
 })
-export class ProdNewComponent {
+export class ProdNewComponent implements OnInit {
   productForm: FormGroup;
   product = new Product();
 
@@ -16,12 +20,16 @@ export class ProdNewComponent {
   submitError = false;
 
   constructor(
-    private fb: FormBuilder
-  ) {
-    this.createCatNewForm();
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private router: Router,
+  ) {}
+
+  ngOnInit() {
+    this.createNewProductForm();
   }
 
-  createCatNewForm() {
+  createNewProductForm() {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required]
@@ -39,8 +47,12 @@ export class ProdNewComponent {
     this.submitError = false;
     //* else populate the product
     this.product.name = this.productForm.get('name').value;
-    this.product.category = this.productForm.get('category').value;
-    //TODO send it to a service to be processed
+    this.product.categoryName = this.productForm.get('category').value;
+    // send it to a service to be processed
+    this.productService.createProduct(this.product)
+      .subscribe(
+        () => this.router.navigate(['/product'])
+      )
   }
 
   private markAllDirty(control: AbstractControl) {

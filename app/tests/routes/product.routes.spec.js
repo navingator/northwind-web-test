@@ -81,8 +81,10 @@ describe('Product Routes Unit Tests', () => {
       it('is saved in database', () => {
         return Product.read(product.id)
           .then(dbProduct => {
-            for (let property in product) {
-              expect(dbProduct).to.have.property(property, product[property]);
+            for (let property in dbProduct) {
+              if (property !== 'categoryName') {
+                expect(response.body).to.have.property(property, dbProduct[property]);
+              }
             }
           });
       });

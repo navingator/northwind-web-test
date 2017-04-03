@@ -1,6 +1,6 @@
 import { Component, OnInit }     from '@angular/core';
 import { FormBuilder, FormGroup, Validators,
-  AbstractControl, FormControl }              from '@angular/forms';
+  AbstractControl, FormControl }   from '@angular/forms';
 import { Observable }          from 'rxjs/Observable';
 import { Router }              from '@angular/router';
 

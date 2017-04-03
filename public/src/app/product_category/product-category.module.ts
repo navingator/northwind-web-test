@@ -17,6 +17,7 @@ import { CatListComponent } from './list/category-list.component';
 
 /** Services **/
 import { ProdCatService } from './prodcat.service';
+import { ProdCatSearchService } from './prodcat-search.service'
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { ProdCatService } from './prodcat.service';
     CatListComponent
   ],
   providers: [
-    ProdCatService
+    ProdCatService,
+    ProdCatSearchService
   ]
 })
 export class ProdCatModule { }

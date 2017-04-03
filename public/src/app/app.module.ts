@@ -23,8 +23,8 @@ import { AppComponent } from './app.component';
     BrowserModule,
     CoreModule,
     UserModule,
-    ProductModule,
     ProdCatModule,
+    ProductModule,
     MaterialModule,
 
     AppRoutingModule // Must be last

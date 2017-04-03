@@ -1,10 +1,19 @@
-<div *ngIf="selectedProduct">
-  <h2>Update {{selectedProduct.name}}</h2>
-  <div>
-    <label>name: </label>
-    <input [(ngModel)]="selectedProduct.name" placeholder="name" />
-     <label>category: </label>
-     <input [(ngModel)]="selectedProduct.categoryName" placeholder="category name"/>
-   </div>
-  <button (click)="save()">Save</button>
+<div *ngIf="selectedProduct" class="row">
+  <div class="col-6 .offset-3">
+    <h2>Update {{selectedProduct.name}}</h2>
+    <div class="col-12">
+      <input [(ngModel)]="selectedProduct.name" placeholder="name" />
+    </div>
+    <div class="col-12">
+      <input [(ngModel)]="selectedProduct.categoryName"
+      placeholder="category name"
+      #prodCatSearchBox (keyup)="prodCatSearch(prodCatSearchBox.value)"/>
+      <div *ngIf="!hidden">
+        <div *ngFor="let prodCat of prodCats | async"
+          (click)="setValue(prodCat)" class="search-result col-12">
+          <span>{{prodCat.name}}</span>
+        </div>
+      </div>
+    <button (click)="save()">Save</button>
+  </div>
 </div>

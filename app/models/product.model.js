@@ -97,7 +97,12 @@ class Product {
    * @returns {promise}    Promise object that resolves to a Product
    */
   static read(id) {
-    return db.one('SELECT * FROM products WHERE productid=${id}', {id: id})
+    return db.one(
+      'SELECT products.*, categories.categoryname ' +
+      'FROM products ' +
+      'LEFT JOIN categories ' +
+      'ON products.categoryid = categories.categoryid ' +
+      'WHERE productid=${id}', {id: id})
       .then(data => Product.convertFromDbProduct(data));
   }
 
