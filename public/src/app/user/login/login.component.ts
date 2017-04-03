@@ -12,17 +12,17 @@ import { User } from '../user.class';
 })
 export class LoginComponent {
 
-  user = new User();
-  submitted = false;
-  submitErrorMessage = '';
-  usernameNotFound = false;
+  public user = new User();
+  public submitted = false;
+  public submitErrorMessage = '';
+  public usernameNotFound = false;
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
-  onSubmit() {
+  public onSubmit(): void {
     this.submitted = true;
     this.authService.authenticate(this.user)
       .subscribe(
@@ -32,8 +32,7 @@ export class LoginComponent {
           if (err.code === 1100) {
             this.usernameNotFound = true;
             this.submitErrorMessage = '';
-          }
-          else {
+          } else {
             this.usernameNotFound = false;
             this.submitErrorMessage = err.message;
           }

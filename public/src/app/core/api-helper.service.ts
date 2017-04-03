@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 
-
 import { Observable } from 'rxjs/Observable';
+
 import 'rxjs/add/observable/throw';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class ApiHelperService {
    * @param  {Response}   error Error as a Response object (from API)
    * @return {Observable}       Observable that immediately errors with an error object
    */
-  handleError = (error: Response) => {
+  public handleError = (error: Response) => {
     let err: any;
     if (error instanceof Response) {
       err = error.json() || '';
@@ -31,8 +31,8 @@ export class ApiHelperService {
    * @param  {Response} res Response object from the API
    * @return {Body}
    */
-  extractData(res: Response) {
-    let body = res.json();
+  public extractData(res: Response): any {
+    const body = res.json();
     return body || { };
   }
 }

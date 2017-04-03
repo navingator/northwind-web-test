@@ -10,13 +10,13 @@ import { User } from './user/user.class';
 })
 
 export class AppComponent implements OnInit {
-  user: User;
+  public user: User;
 
   constructor(
     private authService: AuthService,
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.authService.auth$.subscribe(user => this.user = user);
   }
 }

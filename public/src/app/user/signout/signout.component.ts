@@ -4,20 +4,20 @@ import { AuthService } from '../auth.service';
 
 @Component({
   moduleId: module.id,
-  templateUrl: './signout.component.html',
+  templateUrl: './signout.component.html'
 })
 export class SignoutComponent implements OnInit {
 
-  signoutError = false;
+  public signoutError = false;
   constructor(
     private authService: AuthService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.authService.signout()
       .subscribe(
         this.authService.goToSignin,
         () => this.signoutError = true
-      )
+      );
   }
 }
