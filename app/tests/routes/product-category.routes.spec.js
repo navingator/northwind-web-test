@@ -25,6 +25,14 @@ let categoryTemplate = new ProductCategory({
   picture: './somewhere-out-there'
 });
 
+/* Requires category before insertion */
+let productTemplate = new Product({
+  name: 'zzUnitTestProduct',
+  unitPrice: 12.50,
+  unitsInStock: 4,
+  discontinued: false
+});
+
 describe('Product Category unit test', () => {
 
   let user;
@@ -330,13 +338,8 @@ describe('Product Category unit test', () => {
     let category;
 
     before(() => {
-      let product1 = new Product({
-        name: 'zzUnitTestProduct',
-        unitPrice: 12.50,
-        unitsInStock: 4,
-        discontinued: false
-      });
-      let product2 = new Product(product1);
+      let product1 = new Product(productTemplate);
+      let product2 = new Product(productTemplate);
       product2.name = product1.name + '2';
       category = new ProductCategory(categoryTemplate);
       return categoryApi.create(category)
@@ -549,7 +552,7 @@ describe('Product Category unit test', () => {
   }); //authorized update request with
   describe('authorized delete request with', () => {
 
-    describe('valid category id', () => {
+    describe('valid category id without products', () => {
       let productCategory = new ProductCategory(categoryTemplate);
       let response;
 
@@ -571,6 +574,42 @@ describe('Product Category unit test', () => {
         return categoryApi.get(productCategory.id)
           .then(res => expect(res.status).to.equal(404));
       }); //is deleted from database
+
+    }); //valid category id
+
+    describe('valid category id with products', () => {
+      let productCategory;
+      let product1;
+      let product2;
+      let response;
+
+      before(() => {
+        productCategory = new ProductCategory(categoryTemplate);
+        product1 = new Product(productTemplate);
+        product2 = new Product(productTemplate);
+        product2.name = product1.name + '2';
+        return categoryApi.create(productCategory)
+          .then(() => {
+            product1.categoryId = productCategory.id;
+            product2.categoryId = productCategory.id;
+            return productApi.create(product1);
+          })
+          .then(() => productApi.create(product2))
+          .then(() => categoryApi.delete(productCategory.id))
+          .then(res => response = res);
+      });
+
+      after(() => {
+        return productApi.cleanup()
+          .then(() => categoryApi.cleanup());
+      });
+
+      it('returns invalid status', () => expect(response.status).to.equal(400));
+
+      it('returns validation message', () => {
+        expect(response.body).to.have.property('code', 3100);
+        expect(response.body).to.have.property('message', 'Cannot delete category with existing products.');
+      }); //returns validation message
 
     }); //valid category id
 
