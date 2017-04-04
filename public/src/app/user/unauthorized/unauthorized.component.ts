@@ -9,29 +9,29 @@ import { AuthService } from '../auth.service';
 })
 export class UnauthorizedComponent implements OnInit {
 
-  signoutError = false;
-  adminError = false;
-  adminSuccess = false;
-  showAdminButton = false;
-  submitted = false;
+  public signoutError = false;
+  public adminError = false;
+  public adminSuccess = false;
+  public showAdminButton = false;
+  public submitted = false;
 
   constructor(
     private authService: AuthService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.authService.checkLogin()
       .subscribe(
         auth => {
           if (auth) {
-            let user = this.authService.user;
+            const user = this.authService.user;
             this.showAdminButton = !user.isAdmin; // show the button if the user is not an admin
           }
         }
-      )
+      );
   }
 
-  makeAdmin = function() {
+  public makeAdmin(): void {
     this.submitted = true;
     this.authService.makeAdmin()
       .subscribe(
@@ -44,7 +44,7 @@ export class UnauthorizedComponent implements OnInit {
           this.adminError = true;
           this.submitted = false;
         }
-      )
+      );
   }
 
 }

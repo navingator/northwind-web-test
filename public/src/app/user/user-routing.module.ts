@@ -1,15 +1,16 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-/** Components **/
-import { LoginComponent } from './login/login.component'
-import { SignupComponent } from './signup/signup.component';
-import { SignoutComponent } from './signout/signout.component';
+/* Components */
 import { ForgotComponent } from './forgot/forgot.component';
+import { LoginComponent } from './login/login.component';
+import { SignoutComponent } from './signout/signout.component';
+import { SignupComponent } from './signup/signup.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+
 import { SignupCongratsComponent } from './signup_congrats/signup-congrats.component';
 
-/** Guards **/
+/* Guards */
 import { AuthNGuard } from './authn-guard.service';
 import { AuthZGuard } from './authz-guard.service';
 import { UnAuthNGuard } from './unauthn-guard.service';
@@ -21,7 +22,7 @@ const routes: Routes = [
   { path: 'forgot', canActivate: [UnAuthNGuard], component: ForgotComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'signup-congrats', canActivate: [AuthNGuard], component: SignupCongratsComponent}
-]
+];
 
 @NgModule ({
   imports: [ RouterModule.forChild(routes) ],

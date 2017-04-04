@@ -12,7 +12,7 @@ export class UnAuthNGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
+  public canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     return this.checkNotLoggedIn();
   }
 
@@ -20,7 +20,7 @@ export class UnAuthNGuard implements CanActivate {
    * Checks whether a user is not authenticated, redirecting if they are authenticated
    * @return {Observable<boolean>} Observable that emits to whether the user is NOT logged in
    */
-  checkNotLoggedIn(): Observable<boolean> {
+  public checkNotLoggedIn(): Observable<boolean> {
     return this.authService.checkLogin()
       .do(auth => {
         if (auth) {

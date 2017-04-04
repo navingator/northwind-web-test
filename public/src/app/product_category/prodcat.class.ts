@@ -1,7 +1,7 @@
 export class ProdCat {
-  id?: number;
-  name: string;
-  description: string;
-  color?: string;
-  picture?: string;
+  public id?: number;
+  public name: string;
+  public description: string;
+  public color?: string;
+  public picture?: string;
 }

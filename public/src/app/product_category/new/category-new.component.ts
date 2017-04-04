@@ -1,8 +1,9 @@
-import { Component, OnInit }     from '@angular/core';
-import { FormBuilder, FormGroup, Validators,
-  AbstractControl, FormControl }   from '@angular/forms';
-import { Observable }          from 'rxjs/Observable';
+import { Component, OnInit }   from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl,
+  FormGroup, Validators}       from '@angular/forms';
 import { Router }              from '@angular/router';
+
+import { Observable }          from 'rxjs/Observable';
 
 import { ProdCatService }  from '../prodcat.service';
 
@@ -13,11 +14,10 @@ import { ProdCat }  from '../prodcat.class';
   templateUrl: './category-new.component.html',
 })
 export class CatNewComponent implements OnInit  {
-  categoryForm: FormGroup;
-  prodCat = new ProdCat();
+  public categoryForm: FormGroup;
+  public prodCat = new ProdCat();
 
-  submitted = false;
-  submitError = false;
+  public submitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,47 +25,28 @@ export class CatNewComponent implements OnInit  {
     private router: Router,
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.createCatNewForm();
   }
 
-  createCatNewForm() {
+  public createCatNewForm(): void {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required]
-    })
+    });
   }
 
-  onSubmit() {
-    //* if the form is invalid, mark all invalid feilds
-    if (this.categoryForm.invalid) {
-      this.markAllDirty(this.categoryForm);
-      this.submitError = true;
-      return;
-    }
+  public onSubmit(): void {
     this.submitted = true;
-    this.submitError = false;
-    //* else populate the product category
+    // else populate the product category
     this.prodCat.name = this.categoryForm.get('name').value;
     this.prodCat.description = this.categoryForm.get('description').value;
-    //TODO send it to a service to be processed
+
+    // TODO send it to a service to be processed
     this.prodCatService.createCategory(this.prodCat)
       .subscribe(
         () => this.router.navigate(['/category'])
-      )
-  }
-
-  private markAllDirty(control: AbstractControl) {
-    if(control.hasOwnProperty('controls')) {
-      control.markAsDirty(true) // mark group
-      let ctrl = <any>control;
-      for (let inner in ctrl.controls) {
-        this.markAllDirty(ctrl.controls[inner] as AbstractControl);
-      }
-    }
-    else {
-      (<FormControl>(control)).markAsDirty(true);
-    }
+      );
   }
 
 }

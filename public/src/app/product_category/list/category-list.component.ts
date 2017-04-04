@@ -1,7 +1,8 @@
-import { Component, ViewChild, OnInit }  from '@angular/core';
-import { MdSidenav }     from '@angular/material';
+import { Component, OnInit, ViewChild }  from '@angular/core';
+import { MdSidenav }                     from '@angular/material';
+import { Router }                        from '@angular/router';
+
 import { Observable }    from 'rxjs/Observable';
-import { Router }        from '@angular/router';
 
 import { ProdCatService }  from '../prodcat.service';
 
@@ -13,16 +14,19 @@ import 'hammerjs';
   moduleId: module.id,
   templateUrl: './category-list.component.html',
 })
-export class CatListComponent{
-  prodCats: ProdCat[];
-  emptyProdCat: ProdCat;
+export class CatListComponent {
+  public prodCats: ProdCat[];
+  public emptyProdCat: ProdCat;
+
+  @ViewChild('sidenav') public sidenav: MdSidenav;
+  public selectedProdCat: ProdCat;
 
   constructor(
     private prodCatService: ProdCatService,
     private router: Router
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.prodCatService.listCategories()
       .subscribe(
         prodCats => this.prodCats = prodCats,
@@ -30,36 +34,31 @@ export class CatListComponent{
       );
   }
 
-  @ViewChild('sidenav') sidenav: MdSidenav;
-  selectedProdCat: ProdCat;
-
-  showProdCat(prodCat: ProdCat) {
-    console.log(prodCat);
+  public showProdCat(prodCat: ProdCat): void {
     this.selectedProdCat = prodCat;
     this.sidenav.open();
   }
 
-  deleteProdCat(selectedProdCat: ProdCat) {
+  public deleteProdCat(selectedProdCat: ProdCat): void {
     if (!selectedProdCat) { return; }
     this.prodCatService.deleteCategory(selectedProdCat.id)
       .subscribe(
         () => this.prodCats = this.prodCats.filter(arrayCat => arrayCat !== selectedProdCat),
         (error: Error) => console.error('Error: ' + error),
-      )
+      );
   }
 
-  onSelect(prodCat: ProdCat): void {
+  public onSelect(prodCat: ProdCat): void {
     if (this.selectedProdCat) {
-      this.sidenav.close()
-      setTimeout(() => this.sidenav.open(),500);
+      this.sidenav.close();
+      setTimeout(() => this.sidenav.open(), 500);
       this.selectedProdCat = prodCat;
-      console.log('onSelect')
     }
   }
 
-  onDeselect(): void {
-    this.selectedProdCat = this.emptyProdCat
-    this.sidenav.close()
+  public onDeselect(): void {
+    this.selectedProdCat = this.emptyProdCat;
+    this.sidenav.close();
   }
 
 }

@@ -13,10 +13,10 @@ export class SignoutComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.authService.signout()
       .subscribe(
-        this.authService.goToSignin,
+        () => this.authService.goToSignin(),
         () => this.signoutError = true
       );
   }
