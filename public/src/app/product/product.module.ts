@@ -1,6 +1,6 @@
-/** Angular Modules **/
-import { NgModule }            from '@angular/core';
+// Angular Modules
 import { CommonModule }        from '@angular/common';
+import { NgModule }            from '@angular/core';
 import { FormsModule }         from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule }          from '@angular/http';
@@ -8,19 +8,19 @@ import { MaterialModule }      from '@angular/material';
 
 import 'hammerjs';
 
-/** Dependency Modules **/
-import { UserModule }    from '../user/user.module'
-import { ProdCatModule } from '../product_category/product-category.module'
+// Dependency Modules
+import { ProdCatModule } from '../product_category/product-category.module';
+import { UserModule }    from '../user/user.module';
 
-/** Routing Module **/
+// Routing Module
 import { ProductRoutingModule } from './product-routing.module';
 
-/** Components **/
-import { ProdListComponent } from './list/product-list.component';
-import { ProdNewComponent }  from './new/product-new.component';
-import { ProdUpdateComponent } from './update/product-update.component'
+// Components
+import { ProdListComponent }       from './list/product-list.component';
+import { ProdNewComponent }        from './new/product-new.component';
+import { ProdUpdateComponent }     from './update/product-update.component';
 
-/** Services **/
+// Services
 import { ProductService } from './product.service';
 
 @NgModule({
@@ -33,7 +33,7 @@ import { ProductService } from './product.service';
     UserModule,
     ProdCatModule,
 
-    ProductRoutingModule //Must be last
+    ProductRoutingModule // must be last
   ],
   declarations: [
     ProdListComponent,

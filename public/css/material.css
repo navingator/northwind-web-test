@@ -21,15 +21,6 @@ p {
   background-color: #3f51b5;
 }
 
-/* sidenav styling */
-md-sidenav-container {
-  height: 100vh;
-}
-
-::-webkit-scrollbar {
-    width: 0px;
-}
-
 md-sidenav{
   width: 320px;
 }
@@ -63,12 +54,8 @@ md-sidenav{
 }
 
 /*title and nav styling */
-.main-headder {
+.main-header {
   padding-bottom: 5px;
-}
-
-.main-nav {
-  height: 62px;
 }
 
 md-icon.logo {

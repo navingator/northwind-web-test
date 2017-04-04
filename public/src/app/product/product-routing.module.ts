@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'product',     component: ProdListComponent },
   { path: 'product/new', component: ProdNewComponent },
   { path: 'product/update/:id', component: ProdUpdateComponent }
-]
+];
 
 @NgModule ({
   imports: [ RouterModule.forChild(routes) ],

@@ -1,23 +1,28 @@
-import { Component, ViewChild, OnInit }  from '@angular/core';
-import { MdSidenav }     from '@angular/material';
-import { Observable }    from 'rxjs/Observable';
-import { Router, ActivatedRoute, Params }  from '@angular/router';
+import { Component, OnInit, ViewChild }    from '@angular/core';
+import { MdSidenav }                       from '@angular/material';
+import { ActivatedRoute, Params, Router }  from '@angular/router';
+
+import { Observable }                      from 'rxjs/Observable';
+
 import 'rxjs/add/operator/switchMap';
 
 import { ProductService }  from '../product.service';
 
 import { Product } from '../../product/product.class';
 
-import 'hammerjs';
-
 @Component({
   moduleId: module.id,
   templateUrl: './product-list.component.html',
 })
-export class ProdListComponent implements OnInit{
-  categoryName: string;
-  products: Product[];
-  emptyProduct: Product;
+export class ProdListComponent implements OnInit {
+  public categoryName: string;
+  public products: Product[];
+  public emptyProduct: Product;
+
+  @ViewChild('sidenav') public sidenav: MdSidenav;
+  public selectedProduct: Product;
+
+  private catList: boolean;
 
   constructor(
     private productService: ProductService,
@@ -25,55 +30,53 @@ export class ProdListComponent implements OnInit{
     private router: Router
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.route.params
       .switchMap((params: Params): Observable<Product[]> => {
         if (+params.id) {
-          return this.productService.listProductsByCat(+params.id)
+          this.catList = true;
+          return this.productService.listProductsByCat(+params.id);
         } else {
-          return this.productService.listAllProducts()
+          this.catList = false;
+          return this.productService.listAllProducts();
         }
       })
       .subscribe(
         (products: Product[]) => {
-          this.products = products,
-          this.categoryName = products[0].categoryName
+          this.products = products;
+          if (this.catList) {
+            this.categoryName = products[0].categoryName;
+          }
         },
         (error: Error) => console.error('Error: ' + error),
       );
   }
 
-  @ViewChild('sidenav') sidenav: MdSidenav;
-  selectedProduct: Product;
-
-  showProduct(product: Product) {
-    console.log(product);
-    this.selectedProduct = product
-    this.sidenav.open()
+  public showProduct(product: Product): void {
+    this.selectedProduct = product;
+    this.sidenav.open();
   }
 
-  deleteProduct(selectedProduct: Product) {
+  public deleteProduct(selectedProduct: Product): void {
     if (!selectedProduct) { return; }
     this.productService.deleteProduct(selectedProduct.id)
       .subscribe(
         () => this.products = this.products.filter(arrayProd => arrayProd !== selectedProduct),
         (error: Error) => console.error('Error: ' + error),
-      )
+      );
   }
 
-
-  onSelect(product: Product): void {
+  public onSelect(product: Product): void {
     if (this.selectedProduct) {
-      this.sidenav.close()
-      setTimeout(() => this.sidenav.open(),500);
+      this.sidenav.close();
+      setTimeout(() => this.sidenav.open(), 500);
       this.selectedProduct = product;
-      console.log('onSelect')
     }
   }
 
-  onDeselect(): void {
-    this.selectedProduct = this.emptyProduct
-    this.sidenav.close()
+  public onDeselect(): void {
+    this.selectedProduct = this.emptyProduct;
+    this.sidenav.close();
   }
 
 }

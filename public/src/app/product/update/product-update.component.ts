@@ -1,21 +1,22 @@
-import 'rxjs/add/operator/switchMap';
-import { Component, OnInit }      from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Observable }        from 'rxjs/Observable';
-import { Subject }           from 'rxjs/Subject';
-import { Location }               from '@angular/common';
+import { Location }                     from '@angular/common';
+import { Component, OnInit }            from '@angular/core';
+import { AbstractControl, FormBuilder,
+  FormControl, FormGroup, Validators }  from '@angular/forms';
+import { ActivatedRoute, Params }       from '@angular/router';
+import { Observable }                   from 'rxjs/Observable';
+import { Subject }                      from 'rxjs/Subject';
 
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/switchMap';
 
-import { ProductService }       from '../product.service';
 import { ProdCatSearchService } from '../../product_category/prodcat-search.service';
+import { ProductService }       from '../product.service';
 
-import { Product } from '../product.class';
 import { ProdCat } from '../../product_category/prodcat.class';
+import { Product } from '../product.class';
 
 @Component({
   moduleId: module.id,
@@ -23,26 +24,29 @@ import { ProdCat } from '../../product_category/prodcat.class';
   styleUrls: [ '../searchbox.css' ],
 })
 export class ProdUpdateComponent implements OnInit {
-  selectedProduct = new Product();
-  prodCatSelected = 0;
-  prodCats: Observable<ProdCat[]>;
-  hidden = true;
+  public productForm: FormGroup;
+  public submitted = false;
+  public selectedProduct = new Product();
+  public prodCats: Observable<ProdCat[]>;
   private searchTerms = new Subject<string>();
 
   constructor(
+    private fb: FormBuilder,
     private productService: ProductService,
     private prodCatSearchService: ProdCatSearchService,
     private route: ActivatedRoute,
     private location: Location
   ) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.route.params
       .switchMap((params: Params) => this.productService.getProduct(+params.id))
       .subscribe(selectedProduct => this.selectedProduct = selectedProduct);
 
+    this.createUpdateProductForm();
+
     this.prodCats = this.searchTerms
-      .debounceTime(200)        // wait 300ms after each keystroke before considering the term
+      .debounceTime(100)        // wait 300ms after each keystroke before considering the term
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(searchTerm => {   // switch to new observable each time the term changes
         if (searchTerm) {
@@ -53,32 +57,32 @@ export class ProdUpdateComponent implements OnInit {
       })
       .catch(error => {
         // TODO: add real error handling
-        console.log(error);
         return Observable.of<ProdCat[]>([]);
       });
   }
 
-  prodCatSearch(searchTerm: string): void {
+  public prodCatSearch(searchTerm: string): void {
     this.searchTerms.next(searchTerm);
-    this.hidden = false;
   }
 
-  setValue(prodCat: ProdCat) {
+  public createUpdateProductForm(): void {
+    this.productForm = this.fb.group({
+      name: ['', Validators.required],
+      category: ['', Validators.required]
+    });
+  }
+
+  public setValue(prodCat: ProdCat): void {
     this.selectedProduct.categoryName = prodCat.name;
     this.selectedProduct.categoryId = prodCat.id;
-    this.hidden = true
     this.prodCatSearch('');
   }
 
-  save(): void {
+  public save(): void {
+    this.submitted = true;
+    this.selectedProduct.name = this.productForm.get('name').value;
+    this.selectedProduct.categoryName = this.productForm.get('category').value;
     this.productService.updateProduct(this.selectedProduct)
-      .subscribe(() => this.location.back())
+      .subscribe(() => this.location.back());
   }
 }
-
-
-/*
-Copyright 2017 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/
