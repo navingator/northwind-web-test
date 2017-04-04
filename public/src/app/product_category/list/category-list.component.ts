@@ -32,6 +32,9 @@ export class CatListComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute
   ) {}
 
+  /**
+   * Initialize the listing component by getting categories from the database
+   */
   public ngOnInit(): void {
     this.categoryService.listCategories()
       .subscribe(
@@ -42,31 +45,42 @@ export class CatListComponent implements OnInit, AfterViewInit {
     this.isAdmin = this.authService.user.isAdmin;
   }
 
+  /**
+   * Open the sidenav after it has been initialized, if there are any children
+   */
   public ngAfterViewInit(): void {
     // Open the sidenav if there are any children (which are all displayed in the sidenav)
     if (this.route.children.length > 0) {
       this.sidenav.open();
     } else {
+      console.log('closing sidenav');
       this.sidenav.close();
     }
   }
 
+  /**
+   * Listener for sidenav closing
+   */
   public onSidenavClose(): void {
     this.router.navigate(['category']);
   }
 
-  public showCategory(category: ProdCat): void {
-    this.router.navigate(['detail', category.id], { relativeTo: this.route });
-    this.sidenav.open();
-  }
-
+  /**
+   * Request confirmation before deleting a product
+   * @param {ProdCat} category Category to be deleted
+   */
   public confirmDelete(category: ProdCat): void {
     this.dialog.confirm(`Are you sure you want to delete ${category.name}?`)
       .then(confirmed => {
-        if (confirmed) { this.deleteCategory(category); }
+        if (confirmed) { return this.deleteCategory(category); }
       });
   }
 
+  /**
+   * TODO Show error for deleting populated category
+   * Calls CategoryService to delete a category
+   * @param {ProdCat} category Category to be deleted
+   */
   public deleteCategory(category: ProdCat): void {
     if (!category) { return; }
     this.categoryService.deleteCategory(category.id)
@@ -76,8 +90,28 @@ export class CatListComponent implements OnInit, AfterViewInit {
       );
   }
 
+  /**
+   * Opens the category detail page for the given category
+   * @param {ProdCat} category Category to be shown
+   */
+  public openCategoryDetails(category: ProdCat): void {
+    this.router.navigate(['detail', category.id], { relativeTo: this.route });
+    this.sidenav.open();
+  }
+
+  /**
+   * Called by the category create button. Navigates to the create sidenav
+   */
   public openCreateCategory(): void {
     this.router.navigate(['new'], { relativeTo: this.route });
+    this.sidenav.open();
+  }
+
+  /**
+   * Called by the category edit button. Navigates to the edit sidenav
+   */
+  public openEditCategory(category: ProdCat): void {
+    this.router.navigate(['edit', category.id], { relativeTo: this.route });
     this.sidenav.open();
   }
 

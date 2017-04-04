@@ -15,7 +15,7 @@ import { ProdCatRoutingModule } from './product-category-routing.module';
 /* Components */
 import { CategoryDetailComponent } from './detail/category-detail.component';
 import { CatListComponent } from './list/category-list.component';
-import { CatNewComponent } from './new/category-new.component';
+import { CatEditComponent } from './edit/category-edit.component';
 
 /* Services */
 import { ProdCatSearchService } from './prodcat-search.service';
@@ -32,7 +32,7 @@ import { ProdCatService } from './prodcat.service';
     ProdCatRoutingModule // Must be last
   ],
   declarations: [
-    CatNewComponent,
+    CatEditComponent,
     CatListComponent,
     CategoryDetailComponent
   ],

@@ -15,7 +15,7 @@ module.exports = function (app) {
   app.route('/category/new').get(core.index);
   app.route('/category/:categoryId/products').get(core.index);
   app.route('/category/detail/:categoryId').get(core.index);
-  app.route('/category/:categoryId/edit').get(core.index);
+  app.route('/category/edit/:categoryId').get(core.index);
   app.route('/product').get(core.index);
   app.route('/product/new').get(core.index);
   app.route('/product/update/:productId').get(core.index);

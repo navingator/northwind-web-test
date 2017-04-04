@@ -6,16 +6,22 @@ import { AuthZGuard } from '../user/authz-guard.service';
 
 import { CategoryDetailComponent } from './detail/category-detail.component';
 import { CatListComponent} from './list/category-list.component';
-import { CatNewComponent } from './new/category-new.component';
+import { CatEditComponent } from './edit/category-edit.component';
 
 import { ProdListComponent } from '../product/list/product-list.component';
 
+// TODO handle invalid category ID
 const routes: Routes = [
   { path: 'category', canActivate: [AuthNGuard], component: CatListComponent, children: [
     {
       path: 'new',
       canActivate: [AuthZGuard],
-      component: CatNewComponent
+      component: CatEditComponent
+    },
+    {
+      path: 'edit/:categoryId',
+      canActivate: [AuthZGuard],
+      component: CatEditComponent
     },
     {
       path: 'detail/:categoryId',

@@ -1,5 +1,5 @@
 <div class="row">
-  <h2 class="main-headder col-12 text-center">New Category</h2>
+  <h2 class="main-headder col-12 text-center">{{ title }}</h2>
   <div class="col-12">
     <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="row">
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="col-12">
-          <button md-raised-button type="submit" class="lg-primary text-white" [disabled]="submitted || categoryForm.invalid">Create!</button>
+          <button md-raised-button type="submit" class="lg-primary text-white" [disabled]="submitted || categoryForm.invalid">{{ submitBtnTitle}}</button>
         </div>
         <div class="submit-error" *ngIf="submitError">
           {{ submitError }}

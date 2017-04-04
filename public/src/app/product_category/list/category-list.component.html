@@ -34,11 +34,11 @@
                 <md-icon class="delete-btn">delete_outline</md-icon>
               </button>
               <button md-icon-button
-                *ngIf="isAdmin">
+                (click)="openEditCategory(category)" *ngIf="isAdmin">
                 <md-icon>edit</md-icon>
               </button>
               <button md-icon-button
-                (click)="showCategory(category)">
+                (click)="openCategoryDetails(category)">
                 <md-icon>info_outline</md-icon>
               </button>
             </div>

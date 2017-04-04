@@ -45,6 +45,13 @@ export class ProdCatService {
       .catch(this.apiHelperService.handleError);
   }
 
+  public updateCategory(prodCat: ProdCat): Observable<ProdCat> {
+    return this.http.put(this.prodCatUrl + '/' + prodCat.id,
+      JSON.stringify(prodCat), this.options)
+      .map(this.apiHelperService.extractData)
+      .catch(this.apiHelperService.handleError);
+  }
+
   public deleteCategory(id: number): Observable<ProdCat> {
     return this.http
       .delete(this.prodCatUrl + '/' + id)
