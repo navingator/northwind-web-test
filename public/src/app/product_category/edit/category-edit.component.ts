@@ -6,6 +6,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
+import { CategoryChangeService } from '../category-change.service';
 import { ProdCatService } from '../prodcat.service';
 
 import { ProdCat } from '../prodcat.class';
@@ -26,6 +27,7 @@ export class CatEditComponent implements OnInit  {
 
   constructor(
     private fb: FormBuilder,
+    private changeService: CategoryChangeService,
     private categoryService: ProdCatService,
     private router: Router,
     private route: ActivatedRoute
@@ -100,6 +102,7 @@ export class CatEditComponent implements OnInit  {
    * Helper function to handle successful submissions
    */
   private onSubmitSuccess(): void {
+    this.changeService.notifyCategoryChange();
     this.router.navigate(['/category']);
   }
 

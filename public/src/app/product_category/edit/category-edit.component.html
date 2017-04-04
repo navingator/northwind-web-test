@@ -31,7 +31,7 @@
         <div class="col-12">
           <button md-raised-button type="submit" class="lg-primary text-white" [disabled]="submitted || categoryForm.invalid">{{ submitBtnTitle}}</button>
         </div>
-        <div class="submit-error" *ngIf="submitError">
+        <div class="submit-error col-12" *ngIf="submitError">
           {{ submitError }}
         </div>
       </div>

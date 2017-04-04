@@ -1,11 +1,13 @@
-import { AfterViewInit, Component, OnInit
-  , ViewChild }                           from '@angular/core';
+import { AfterViewInit, Component, OnDestroy,
+  OnInit, ViewChild }                           from '@angular/core';
 import { MdSidenav }                      from '@angular/material';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Observable }    from 'rxjs/Observable';
+import { Observable }   from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { AuthService } from '../../user/auth.service';
+import { CategoryChangeService } from '../category-change.service';
 import { DialogService } from '../../core/dialog.service';
 import { ProdCatService }  from '../prodcat.service';
 
@@ -18,15 +20,18 @@ import 'hammerjs';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css']
 })
-export class CatListComponent implements OnInit, AfterViewInit {
+export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
   public categories: ProdCat[];
   public isAdmin: boolean;
 
   @ViewChild('sidenav') public sidenav: MdSidenav;
 
+  private changeSubscription: Subscription;
+
   constructor(
     private authService: AuthService,
     private categoryService: ProdCatService,
+    private changeService: CategoryChangeService,
     private dialog: DialogService,
     private router: Router,
     private route: ActivatedRoute
@@ -36,13 +41,19 @@ export class CatListComponent implements OnInit, AfterViewInit {
    * Initialize the listing component by getting categories from the database
    */
   public ngOnInit(): void {
-    this.categoryService.listCategories()
-      .subscribe(
-        categories => this.categories = categories,
-        (error: Error) => console.error('Error: ' + error),
-      );
+    this.getCategories();
+
+    this.changeService.catChange$
+      .subscribe(() => {
+        this.getCategories();
+        this.sidenav.close();
+      });
 
     this.isAdmin = this.authService.user.isAdmin;
+  }
+
+  public ngOnDestroy(): void {
+    this.changeSubscription.unsubscribe();
   }
 
   /**
@@ -52,9 +63,6 @@ export class CatListComponent implements OnInit, AfterViewInit {
     // Open the sidenav if there are any children (which are all displayed in the sidenav)
     if (this.route.children.length > 0) {
       this.sidenav.open();
-    } else {
-      console.log('closing sidenav');
-      this.sidenav.close();
     }
   }
 
@@ -113,6 +121,17 @@ export class CatListComponent implements OnInit, AfterViewInit {
   public openEditCategory(category: ProdCat): void {
     this.router.navigate(['edit', category.id], { relativeTo: this.route });
     this.sidenav.open();
+  }
+
+  /**
+   * Get categories when initializing and refreshing component
+   */
+  private getCategories(): void {
+    this.categoryService.listCategories()
+      .subscribe(
+        categories => this.categories = categories,
+        (error: Error) => console.error('Error: ' + error),
+      );
   }
 
 }

@@ -18,6 +18,7 @@ import { CatListComponent } from './list/category-list.component';
 import { CatEditComponent } from './edit/category-edit.component';
 
 /* Services */
+import { CategoryChangeService } from './category-change.service';
 import { ProdCatSearchService } from './prodcat-search.service';
 import { ProdCatService } from './prodcat.service';
 
@@ -38,7 +39,8 @@ import { ProdCatService } from './prodcat.service';
   ],
   providers: [
     ProdCatService,
-    ProdCatSearchService
+    ProdCatSearchService,
+    CategoryChangeService
   ]
 })
 export class ProdCatModule { }
