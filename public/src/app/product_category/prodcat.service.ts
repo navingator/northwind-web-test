@@ -39,6 +39,12 @@ export class ProdCatService {
       .catch(this.apiHelperService.handleError);
     }
 
+  public getCategory(id: number): Observable<ProdCat> {
+    return this.http.get(this.prodCatUrl + '/' + id)
+      .map(this.apiHelperService.extractData)
+      .catch(this.apiHelperService.handleError);
+  }
+
   public deleteCategory(id: number): Observable<ProdCat> {
     return this.http
       .delete(this.prodCatUrl + '/' + id)

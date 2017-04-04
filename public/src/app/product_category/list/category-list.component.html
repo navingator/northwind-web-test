@@ -1,51 +1,45 @@
 <div>
   <!-- SIDENAV -->
   <md-sidenav-container>
-    <md-sidenav mode="over" align="start" #sidenav>
-      <md-tab-group>
-        <md-tab label="Details">
-          <div class="product-detail"
-          *ngIf="selectedProdCat">
-            <h6>{{selectedProdCat.name}}</h6>
-            <p>{{selectedProdCat.description}}</p>
-          </div>
-          <button md-raised-button (click)="onDeselect()" class="lg-primary text-white">Close</button>
-        </md-tab>
-        <md-tab label="Edit">
-          <button md-raised-button (click)="deleteProdCat(selectedProdCat); onDeselect()" class="lg-primary text-white">Delete This Category</button>
-          <button md-raised-button routerLink="/category/new" class="lg-primary text-white">Create New Category</button>
-          <button md-raised-button (click)="onDeselect()" class="lg-primary text-white">Close</button>
-        </md-tab>
-      </md-tab-group>
+    <md-sidenav mode="over" align="start" (close-start)="onSidenavClose()" #sidenav>
+      <section class="container-fluid">
+        <router-outlet></router-outlet>
+        <button id="closeSidenavButton" class="lg-primary text-white" md-raised-button
+          (click)="sidenav.close()">Close</button>
+      </section>
     </md-sidenav>
 
     <!-- Main Content -->
-    <h2 class="main-headder col-12 text-center">Categories</h2>
-    <div class="row">
-      <div class="col-12 col-md-6 col-lg-4 lg-primary">
-        <div class="card product-card">
-          <button md-raised-button routerLink="/category/new" class="lg-primary text-white create-btn">Create New Category</button>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 col-lg-4"
-      *ngFor="let prodCat of prodCats"
-      (click)="onSelect(prodCat)"
-      [class.selected]="prodCat === selectedProdCat"
-      [style.background]="prodCat.color"> <!-- TODO add selectedProdcat class -->
-        <div class="card product-card">
-          <img class="card-img" src="http://lorempixel.com/500/240/food" class="img-fluid rounded float-left card-image" alt="Card image cap">
-          <div class="card-img-overlay row">
-            <div class="card-content row">
-              <h4 class="card-title strokeshadow col-12">{{prodCat.name}}</h4>
-            </div>
+    <div class="container-fluid">
+      <h2 class="main-headder col-12 text-center">Categories</h2>
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 card-container">
+          <div class="card product-card">
+            <button class="lg-primary text-white create-btn" md-raised-button
+              (click)="openCreateCategory()">Create New Category</button>
           </div>
-          <div class="footer">
-            <div class="button-row">
-              <button md-icon-button (click)="showProdCat(prodCat); $event.stopPropagation()">
-                <md-icon>arrow_back</md-icon>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 card-container"
+        *ngFor="let category of categories">
+          <div class="card card-inverse product-card">
+            <h4 class="card-title strokeshadow">{{category.name}}</h4>
+            <a [routerLink]="['/category', category.id, 'products']">
+              <img class="card-img" src="http://lorempixel.com/500/240/food"
+                class="img-fluid rounded float-left card-image" alt="Card image cap">
+            </a>
+            <div class="card-footer button-row" [style.background]="category.color">
+              <button md-icon-button
+                (click)="confirmDelete(category)" *ngIf="isAdmin">
+                <md-icon class="delete-btn">delete_outline</md-icon>
               </button>
-              <button md-mini-fab [routerLink]="['/category', prodCat.id, 'products']" [style.background]="prodCat.color">
-                <md-icon>dehaze</md-icon>
+              <button md-icon-button
+                *ngIf="isAdmin">
+                <md-icon>edit</md-icon>
+              </button>
+              <button md-icon-button
+                (click)="showCategory(category)">
+                <md-icon>info_outline</md-icon>
               </button>
             </div>
           </div>

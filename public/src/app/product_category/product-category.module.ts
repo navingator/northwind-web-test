@@ -13,6 +13,7 @@ import 'hammerjs';
 import { ProdCatRoutingModule } from './product-category-routing.module';
 
 /* Components */
+import { CategoryDetailComponent } from './detail/category-detail.component';
 import { CatListComponent } from './list/category-list.component';
 import { CatNewComponent } from './new/category-new.component';
 
@@ -32,7 +33,8 @@ import { ProdCatService } from './prodcat.service';
   ],
   declarations: [
     CatNewComponent,
-    CatListComponent
+    CatListComponent,
+    CategoryDetailComponent
   ],
   providers: [
     ProdCatService,

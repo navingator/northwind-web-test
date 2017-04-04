@@ -18,6 +18,7 @@ export class CatNewComponent implements OnInit  {
   public prodCat = new ProdCat();
 
   public submitted = false;
+  public submitError = '';
 
   constructor(
     private fb: FormBuilder,
@@ -42,10 +43,13 @@ export class CatNewComponent implements OnInit  {
     this.prodCat.name = this.categoryForm.get('name').value;
     this.prodCat.description = this.categoryForm.get('description').value;
 
-    // TODO send it to a service to be processed
     this.prodCatService.createCategory(this.prodCat)
       .subscribe(
-        () => this.router.navigate(['/category'])
+        () => this.router.navigate(['/category']),
+        err => {
+          this.submitError = err.message;
+          this.submitted = false;
+        }
       );
   }
 
