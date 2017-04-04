@@ -1,0 +1,17 @@
+<div>
+  <label class="form-control-label" for="category">Category</label>
+  <div class="has-tooltip">
+    <input type="text" formControlName="category" required
+      placeholder="category name"
+      class="form-control form-control-success form-control-danger"
+      [(ngModel)]="selectedProdCat.name"
+      #prodCatSearchBox (keyup)="prodCatSearch(prodCatSearchBox.value)"/>
+    <div class="tooltip">Required</div>
+  </div>
+  <div>
+    <div *ngFor="let prodCat of prodCats | async"
+      (click)="setValue(prodCat)" class="search-result col-12">
+      <span>{{prodCat.name}}</span>
+    </div>
+  </div>
+</div>

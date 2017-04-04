@@ -1,5 +1,5 @@
 <section class="row">
-  <h2 class="main-headder col-12 text-center">New Product</h2>
+  <h2 class="main-header col-12 text-center">New Product</h2>
   <div class="offset-1 col-10 offset-lg-3 col-lg-6">
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="row">
@@ -28,10 +28,7 @@
           </div>
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted">Create!</button>
-        </div>
-        <div class="col-12 text-center submit-error" *ngIf="submitError && productForm.invalid">
-          <div>Please correct issues and try again.</div>
+          <button type="submit" class="btn btn-primary text-center" [disabled]="submitted || productForm.invalid">Create!</button>
         </div>
       </div>
     </form>

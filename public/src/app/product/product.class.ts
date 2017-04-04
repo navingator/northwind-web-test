@@ -1,10 +1,10 @@
 export class Product {
-  id?: number;
-  name: string;
-  categoryId?: number;
-  categoryName?: string;
-  color?: string;
-  unitPrice?: string;
-  unitsInStock?: number;
-  discontinued?: boolean;
+  public id?: number;
+  public name: string;
+  public categoryId?: number;
+  public categoryName?: string;
+  public color?: string;
+  public unitPrice?: string;
+  public unitsInStock?: number;
+  public discontinued?: boolean;
 }
