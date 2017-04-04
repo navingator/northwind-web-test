@@ -5,6 +5,11 @@
     "import-spacing": "false",
     "no-angle-bracket-type-assertion": false,
     "object-literal-sort-keys": "false",
+    "ordered-imports": [true,
+      {
+        "import-sources-order": "any",
+        "named-imports-order": "case-insensitive"
+      }],
     "quotemark": [true, "single", "avoid-escape"],
     "trailing-comma": "false",
     "typedef": [true, "call-signature", "parameter"],
