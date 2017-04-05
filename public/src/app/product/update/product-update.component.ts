@@ -11,6 +11,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/first';
 
 import { ProdCatSearchService } from '../../product_category/prodcat-search.service';
 import { ProductService }       from '../product.service';
@@ -43,8 +44,6 @@ export class ProdUpdateComponent implements OnInit {
       .switchMap((params: Params) => this.productService.getProduct(+params.id))
       .subscribe(selectedProduct => this.selectedProduct = selectedProduct);
 
-    this.createUpdateProductForm();
-
     this.prodCats = this.searchTerms
       .debounceTime(100)        // wait 300ms after each keystroke before considering the term
       .distinctUntilChanged()   // ignore if next search term is same as previous
@@ -59,6 +58,7 @@ export class ProdUpdateComponent implements OnInit {
         // TODO: add real error handling
         return Observable.of<ProdCat[]>([]);
       });
+    this.createUpdateProductForm();
   }
 
   public prodCatSearch(searchTerm: string): void {
@@ -68,7 +68,7 @@ export class ProdUpdateComponent implements OnInit {
   public createUpdateProductForm(): void {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
-      category: ['', Validators.required]
+      category: ['', Validators.required, this.prodCatValidator]
     });
   }
 
@@ -84,5 +84,19 @@ export class ProdUpdateComponent implements OnInit {
     this.selectedProduct.categoryName = this.productForm.get('category').value;
     this.productService.updateProduct(this.selectedProduct)
       .subscribe(() => this.location.back());
+  }
+
+  private prodCatValidator = (fc: FormControl): Observable<{[key: string]: any}> => {
+    const err = {'Invalid Category': true};
+    return this.prodCats
+      .switchMap(prodCats => {
+        for (const prodCat of prodCats) {
+          if (prodCat.name === fc.value) {
+            return Observable.of(null);
+          }
+        }
+        return Observable.of(err);
+      })
+      .first();
   }
 }
