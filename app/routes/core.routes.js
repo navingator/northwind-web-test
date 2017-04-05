@@ -5,12 +5,13 @@
 var path = require('path');
 module.exports = function (app) {
   var core = require(path.resolve('./app/controllers/core.controller'));
+  app.route('/').get(core.index);
   app.route('/signin').get(core.index);
   app.route('/signup').get(core.index);
   app.route('/signout').get(core.index);
   app.route('/unauthorized').get(core.index);
   app.route('/forgot').get(core.index);
-  app.route('/signup-congrats').get(core.index);
+  app.route('/home').get(core.index);
   app.route('/categories').get(core.index);
   app.route('/categories/new').get(core.index);
   app.route('/categories/:categoryId/products').get(core.index);
