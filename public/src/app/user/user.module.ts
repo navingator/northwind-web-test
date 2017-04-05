@@ -16,7 +16,7 @@ import { SignoutComponent } from './signout/signout.component';
 import { SignupComponent } from './signup/signup.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
-import { SignupCongratsComponent } from './signup_congrats/signup-congrats.component';
+import { HomeComponent } from './home/home.component';
 
 /* Services */
 import { AuthService } from './auth.service';
@@ -35,7 +35,7 @@ import { AuthService } from './auth.service';
     SignoutComponent,
     ForgotComponent,
     UnauthorizedComponent,
-    SignupCongratsComponent
+    HomeComponent
   ],
   providers: [
     AuthService

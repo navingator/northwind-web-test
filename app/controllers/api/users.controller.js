@@ -96,7 +96,7 @@ exports.forgot = function(req, res) {
  * Function that returns the current session user
  */
 exports.me = function(req, res) {
-  res.json(req.user);
+  res.json(req.user || {});
 };
 
 /**

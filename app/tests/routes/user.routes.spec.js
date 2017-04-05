@@ -194,7 +194,8 @@ describe('User API Routes Unit Test', () => {
 
     before(() => {
       user = new User(userTemplate);
-      return api.create(user);
+      return api.create(user)
+        .then(() => api.signout());
     });
 
     after(() => cleanupUser(user.username));
@@ -219,14 +220,6 @@ describe('User API Routes Unit Test', () => {
           }
           expect(response.body).to.have.property(prop, user[prop]);
         }
-      });
-
-      it('allows users to access protected routes', () => {
-        return api.me()
-          .then(res => {
-            expect(res.status).to.equal(200);
-            expect(res.body).to.deep.equal.user;
-          });
       });
     });
 
@@ -283,7 +276,7 @@ describe('User API Routes Unit Test', () => {
 
       it('returns success status', () => expect(response.status).to.equal(200));
       it('cannot access protected routes', () => {
-        return api.me()
+        return api.makeAdmin()
           .then(res => {
             expect(res.status).to.equal(401);
             expect(res.body).to.have.property('code', 1200);
@@ -302,6 +295,47 @@ describe('User API Routes Unit Test', () => {
 
       it('returns success status', () => expect(response.status).to.equal(200));
     });
+  });
+
+  describe('get user request with', () => {
+
+    let user;
+    before(() => {
+      user = new User(userTemplate);
+      return api.create(user)
+        .then(() => api.signout());
+    });
+
+    after(() => cleanupUser(user.username));
+
+    describe('signed in user', () => {
+
+      let response;
+      before(() => {
+        return api.signin(user)
+          .then(() => api.me())
+          .then(res => response = res);
+      });
+
+      after(() => api.signout());
+
+      it('returns success status', () => expect(response.status).to.equal(200));
+
+      it('returns the user', () => expect(response.body).to.have.property('username', user.username));
+    });
+
+    describe('signed out user', () => {
+
+      let response;
+      before(() => {
+        return api.me()
+          .then(res => response = res);
+      });
+
+      it('returns success status', () => expect(response.status).to.equal(200));
+      it('returns an empty user', () => expect(response.body).to.be.empty);
+    });
+
   });
 
   describe('forgot password request', () => {
