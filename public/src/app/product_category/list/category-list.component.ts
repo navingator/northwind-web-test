@@ -43,7 +43,7 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
   public ngOnInit(): void {
     this.getCategories();
 
-    this.changeService.catChange$
+    this.changeSubscription = this.changeService.catChange$
       .subscribe(() => {
         this.getCategories();
         this.sidenav.close();
