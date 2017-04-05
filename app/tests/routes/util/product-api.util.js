@@ -40,12 +40,14 @@ module.exports = function(app, agent) {
   };
 
   /**
-   * Searches for products that begin with the searchStr
-   * @param  {string}  searchStr String to search
-   * @return {Promise}           Promise that resolves to an express response
+   * Seacrches the database for a given search string
+   * @param  {Object}  query  Query object with search parameters
+   * @return {Promise}        Resolves to the express response which contains
+   *                          an array of product objects
    */
-  let search = function(searchStr) {
-    return agent.get('/api/products/search/' + searchStr);
+  let search = function(query) {
+    return agent.post('/api/products/search')
+      .send(query);
   };
 
   /**
@@ -71,7 +73,7 @@ module.exports = function(app, agent) {
    * Deletes products that start with zzUnitTest from the database
    */
   let cleanup = function() {
-    return search('zzUnitTest')
+    return search({term: 'zzUnitTest'})
       .then(res => {
         // Quit if nothing was found
         if(res.status === 404) {

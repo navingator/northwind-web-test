@@ -52,15 +52,9 @@ exports.delete = function(req, res) {
  * Find Product by a search string in the request. If successful, send the array
  * of results back to the caller. If nothing found, it sends a 404.
  */
-exports.search = function(req,res) {
-  Product.search(req.params.productSearchStr)
-    .then(products => {
-      if (products.length === 0) {
-        res.status(404).end();
-        return;
-      }
-      res.json(products);
-    })
+exports.search = function(req, res) {
+  Product.search(req.body.term)
+    .then(products => res.json(products))
     .catch(err => res.status(400).send(err));
 };
 

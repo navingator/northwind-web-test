@@ -33,12 +33,13 @@ module.exports = function(app, agent) {
 
   /**
    * Seacrches the database for a given search string
-   * @param  {string}  searchStr  String to be searched on
-   * @return {Promise}            Resolves to the express response which contains
-   *                              an array of product category objects
+   * @param  {Object}  query  Query object with search parameters
+   * @return {Promise}        Resolves to the express response which contains
+   *                          an array of product category objects
    */
-  let search = function(searchStr) {
-    return agent.get('/api/categories/search/' + searchStr);
+  let search = function(query) {
+    return agent.post('/api/categories/search')
+      .send(query);
   };
 
   /**
@@ -46,7 +47,7 @@ module.exports = function(app, agent) {
    * @param  {Function} cb               Callback function - likely mocha's done function
    */
   let cleanup = function() {
-    return search('zzUnit')
+    return search({term: 'zzUnit'})
       .then(res => {
         // Quit if nothing was found
         if(res.status === 404) {

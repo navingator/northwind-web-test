@@ -288,7 +288,7 @@ describe('Product Category unit test', () => {
             productCategory2.name += '2';
             return categoryApi.create(productCategory2);
           })
-          .then(() => categoryApi.search(categoryTemplate.name))
+          .then(() => categoryApi.search({term: categoryTemplate.name}))
           .then(res => response = res);
       });
 
@@ -312,7 +312,7 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return categoryApi.search('')
+        return categoryApi.search({term: ''})
           .then(res => response = res);
       });
 
@@ -324,11 +324,12 @@ describe('Product Category unit test', () => {
       let response;
 
       before(() => {
-        return categoryApi.search(namePrefix)
+        return categoryApi.search({term: namePrefix})
           .then(res => response = res);
       });
 
-      it('returns not found status', () => expect(response.status).to.equal(404));
+      it('returns success status', () => expect(response.status).to.equal(200));
+      it('returns an empty array', () => expect(response.body).to.have.property('length', 0));
 
     }); //invalid search string
 
@@ -676,7 +677,7 @@ describe('Product Category unit test', () => {
         .then(res => expect(res.status).to.equal(401));
     });
     it('search categories should return unauthenticated status', () => {
-      return categoryApi.search('zzUnit')
+      return categoryApi.search({term: 'zzUnit'})
         .then(res => expect(res.status).to.equal(401));
     });
   });
@@ -741,7 +742,7 @@ describe('Product Category unit test', () => {
         .then(res => expect(res.status).to.equal(403));
     });
     it('search categories should return expected product categories', () => {
-      return categoryApi.search('zzUnit')
+      return categoryApi.search({term: 'zzUnit'})
         .then(res => {
           expect(res.status).to.equal(200);
           expect(res.body).to.have.property('length', 1);

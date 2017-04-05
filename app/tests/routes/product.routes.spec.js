@@ -433,7 +433,7 @@ describe('Product Routes Unit Tests', () => {
 
       let response;
       before(() => {
-        return productApi.search(productTemplate.name)
+        return productApi.search({term: productTemplate.name})
           .then(res => response = res);
       });
 
@@ -446,11 +446,12 @@ describe('Product Routes Unit Tests', () => {
 
       let response;
       before(() => {
-        return productApi.search(productTemplate.name + 'invalid')
+        return productApi.search({term: productTemplate.name + 'invalid'})
           .then(res => response = res);
       });
 
-      it('returns not found status', () => expect(response.status).to.equal(404));
+      it('returns success status', () => expect(response.status).to.equal(200));
+      it('returns an empty array', () => expect(response.body).to.have.property('length', 0));
     });
   });
 
@@ -483,7 +484,7 @@ describe('Product Routes Unit Tests', () => {
         .then(res => expect(res.status).to.equal(401));
     });
     it('search products should return unauthenticated status', () => {
-      return productApi.search('zzUnit')
+      return productApi.search({term: 'zzUnit'})
         .then(res => expect(res.status).to.equal(401));
     });
   });

@@ -114,11 +114,9 @@ exports.checkLogin = function(req, res, next) {
 
 /**
  * Function to check if the user is authorized to modify product categories.
+ * Only call this check after an authentication check.
  */
-exports.checkCategoryAuthorization = function(req, res, next) {
-  if (req.method === 'GET') {
-    return next();
-  }
+exports.checkAdmin = function(req, res, next) {
   let user = req.user;
   if (user.isAdmin) {
     return next();

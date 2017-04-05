@@ -13,8 +13,8 @@ module.exports = function (router) {
     .get(products.get)
     .put(products.update)
     .delete(products.delete);
-  router.route('/products/search/:productSearchStr')
-    .get(products.search);
+  router.route('/products/search')
+    .post(products.search);
 
   router.param('productId', products.getById);
 };
