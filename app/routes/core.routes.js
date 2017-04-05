@@ -10,7 +10,7 @@ module.exports = function (app) {
   app.route('/signout').get(core.index);
   app.route('/unauthorized').get(core.index);
   app.route('/forgot').get(core.index);
-  app.route('/signup-congrats').get(core.index);
+  app.route('/home').get(core.index);
   app.route('/category').get(core.index);
   app.route('/category/new').get(core.index);
   app.route('/category/:categoryId/products').get(core.index);

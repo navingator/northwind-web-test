@@ -24,7 +24,7 @@ export class UnAuthNGuard implements CanActivate {
     return this.authService.checkLogin()
       .do(auth => {
         if (auth) {
-          this.router.navigate(['/signup-congrats']);
+          this.router.navigate(['/home']);
         }
       })
       .map(auth => !auth); // returns false to the route if the user is logged in

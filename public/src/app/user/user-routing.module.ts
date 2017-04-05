@@ -8,7 +8,7 @@ import { SignoutComponent } from './signout/signout.component';
 import { SignupComponent } from './signup/signup.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
-import { SignupCongratsComponent } from './signup_congrats/signup-congrats.component';
+import { HomeComponent } from './home/home.component';
 
 /* Guards */
 import { AuthNGuard } from './authn-guard.service';
@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'signout', component: SignoutComponent },
   { path: 'forgot', canActivate: [UnAuthNGuard], component: ForgotComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: 'signup-congrats', canActivate: [AuthNGuard], component: SignupCongratsComponent}
+  { path: 'home', canActivate: [AuthNGuard], component: HomeComponent}
 ];
 
 @NgModule ({

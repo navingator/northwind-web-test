@@ -45,7 +45,7 @@ export class AuthService {
   public createUser(user: User): Observable<User> {
     return this.http.post(this.usersUrl, JSON.stringify(user), this.options)
       .map(this.apiHelper.extractData)
-      .do(this.addUser)
+      .do(apiUser => this.addUser(apiUser))
       .catch(this.apiHelper.handleError);
 
   }
@@ -58,12 +58,16 @@ export class AuthService {
   public checkLogin(): Observable<boolean> {
     return this.http.get(this.usersUrl + '/me')
       .map(this.apiHelper.extractData)
-      .do(this.addUser)
-      .map(() => true)
-      .catch(() => {
-        this.removeUser();
-        return Observable.of(false);
-      });
+      .map(user => {
+        if (user.hasOwnProperty('username')) {
+          this.addUser(user);
+          return true;
+        } else {
+          this.removeUser();
+          return false;
+        }
+      })
+      .catch(this.apiHelper.handleError);
   }
 
   /**
@@ -75,7 +79,7 @@ export class AuthService {
   public authenticate(user: User): Observable<User> {
     return this.http.post(this.usersUrl + '/signin', JSON.stringify(user), this.options)
       .map(this.apiHelper.extractData)
-      .do(this.addUser)
+      .do(apiUser => this.addUser(apiUser))
       .catch(this.apiHelper.handleError);
   }
 
@@ -85,7 +89,7 @@ export class AuthService {
    */
   public signout(): Observable<Response> {
     return this.http.post(this.usersUrl + '/signout', null, this.options)
-      .do(this.removeUser)
+      .do(() => this.removeUser())
       .catch(this.apiHelper.handleError);
   }
 
@@ -97,7 +101,7 @@ export class AuthService {
    */
   public forgot(user: User): Observable<Response> {
     return this.http.post(this.usersUrl + '/forgot', JSON.stringify(user), this.options)
-      .do(this.removeUser)
+      .do(() => this.removeUser())
       .catch(this.apiHelper.handleError);
   }
 
@@ -109,7 +113,7 @@ export class AuthService {
   public makeAdmin(): Observable<User> {
     return this.http.post(this.usersUrl + '/adminplease', null, null)
       .map(this.apiHelper.extractData)
-      .do(this.addUser)
+      .do(user => this.addUser(user))
       .catch(this.apiHelper.handleError);
   }
 
@@ -117,7 +121,7 @@ export class AuthService {
    * Helper function using the router to navigate to the home page when authenticated
    */
   public goToHome(): void {
-    this.router.navigate(['/signup-congrats']);
+    this.router.navigate(['/home']);
   }
 
   /**
@@ -128,7 +132,7 @@ export class AuthService {
   }
 
   public goToRedirect(): void {
-    const redirect = this.redirectUrl ? this.redirectUrl : '/signup-congrats';
+    const redirect = this.redirectUrl ? this.redirectUrl : '/home';
 
     // Set our navigation extras object
     // that passes on our global query params and fragment
@@ -147,7 +151,7 @@ export class AuthService {
    * service's user and notifies subscribers that the user was added
    * @param  {User} user User object that was added
    */
-  private addUser = (user: User): void => {
+  private addUser(user: User): void {
     this.user = user;
     this.authSource.next(user);
   }
@@ -157,7 +161,7 @@ export class AuthService {
    * service's user and notifies subscribers that the user was removed
    * @param  {User} user User object that was removed
    */
-  private removeUser = (): void => {
+  private removeUser(): void {
     delete this.user;
     this.authSource.next(null);
   }

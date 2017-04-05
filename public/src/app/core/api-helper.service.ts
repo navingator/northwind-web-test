@@ -32,7 +32,7 @@ export class ApiHelperService {
    * @return {Body}
    */
   public extractData(res: Response): any {
-    const body = res.json();
-    return body || { };
+    const body = res ? res.json() : { };
+    return body;
   }
 }
