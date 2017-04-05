@@ -5,7 +5,6 @@ import { ProdCat } from '../prodcat.class';
 import { ProdCatService } from '../prodcat.service';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './category-detail.component.html'
 })
 export class CategoryDetailComponent implements OnInit {

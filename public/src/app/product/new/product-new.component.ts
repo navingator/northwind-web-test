@@ -10,7 +10,6 @@ import { ProductService } from '../product.service';
 import { Product }  from '../product.class';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './product-new.component.html',
 })
 export class ProdNewComponent implements OnInit {

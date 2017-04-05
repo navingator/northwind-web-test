@@ -12,7 +12,6 @@ import { ProdCatService } from '../prodcat.service';
 import { ProdCat } from '../prodcat.class';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './category-edit.component.html',
 })
 export class CatEditComponent implements OnInit  {

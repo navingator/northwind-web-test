@@ -18,3 +18,6 @@ jspm_packages
 *.js.map
 !public/src/systemjs.config.extras.js
 !public/src/systemjs.config.js
+
+# Angular Ahead of Time Compilation Files
+/public/aot

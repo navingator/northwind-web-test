@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "tsc -p ./public/src/",
+    "build:aot": "ngc -p public/tsconfig-aot.json && rollup -c public/rollup-config.js",
     "build:watch": "tsc -p ./public/src/ -w",
     "test": "npm run test:server",
     "test:server": "mocha ./app/tests --recursive --timeout 5000 --reporter mochawesome",
@@ -46,6 +47,10 @@
   },
   "devDependencies": {
     "@types/node": "~7.0.5",
+    "rollup": "^0.41.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^1.0.1",
     "jasmine": "~2.5.3",
     "typescript": "~2.2.1",
     "browser-sync": "~2.18.8",

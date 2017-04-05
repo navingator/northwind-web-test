@@ -21,7 +21,6 @@ import { ProdCat } from '../../product_category/prodcat.class';
 import { Product } from '../product.class';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './product-update.component.html',
   styleUrls: [ '../searchbox.css' ],
 })

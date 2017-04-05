@@ -9,7 +9,6 @@ import { AuthService } from '../auth.service';
 import { User } from '../user.class';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './forgot.component.html',
   styleUrls: ['./forgot.component.css']
 })

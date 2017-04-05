@@ -16,7 +16,6 @@ import { ProdCat } from '../prodcat.class';
 import 'hammerjs';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css']
 })
