@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Http, Response }       from '@angular/http';
+import { Headers, Http, RequestOptions, Response }   from '@angular/http';
 
 import { Observable }     from 'rxjs/Observable';
 
 import { ApiHelperService } from '../core/api-helper.service';
 
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { ProdCat }           from './prodcat.class';
+import { ProdCat } from './prodcat.class';
 
 @Injectable()
 export class ProdCatSearchService {
+
+  private headers = new Headers({ 'Content-Type': 'application/json' });
+  private options = new RequestOptions({ headers: this.headers });
 
   constructor(
     private http: Http,
@@ -19,9 +23,10 @@ export class ProdCatSearchService {
   ) {}
 
   public search(searchTerm: string): Observable<ProdCat[]> {
+    const search = {term: searchTerm};
     return this.http
-     .get('api/categories/search/' + searchTerm)
-     .map(this.apiHelperService.extractData)
-     .catch(this.apiHelperService.handleError);
+      .post('api/categories/search/', JSON.stringify(search), this.options)
+      .map(this.apiHelperService.extractData)
+      .catch(this.apiHelperService.handleError);
   }
 }

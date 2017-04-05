@@ -8,11 +8,14 @@ import { CategoryDetailComponent } from './detail/category-detail.component';
 import { CatListComponent} from './list/category-list.component';
 import { CatEditComponent } from './edit/category-edit.component';
 
-import { ProdListComponent } from '../product/list/product-list.component';
+import { ProdListComponent }   from '../product/list/product-list.component';
+import { ProdNewComponent }    from '../product/new/product-new.component';
+import { ProdUpdateComponent } from '../product/update/product-update.component';
+import { ProdDetailComponent } from '../product/detail/product-detail.component';
 
 // TODO handle invalid category ID
 const routes: Routes = [
-  { path: 'category', canActivate: [AuthNGuard], component: CatListComponent, children: [
+  { path: 'categories', canActivate: [AuthNGuard], component: CatListComponent, children: [
     {
       path: 'new',
       canActivate: [AuthZGuard],
@@ -28,7 +31,20 @@ const routes: Routes = [
       component: CategoryDetailComponent
     }
   ]},
-  { path: 'category/:id/products', canActivate: [AuthNGuard], component: ProdListComponent }
+  { path: 'categories/:id/products', canActivate: [AuthNGuard], component: ProdListComponent, children: [
+    {
+      path: 'new',
+      component: ProdNewComponent
+    },
+    {
+      path: 'edit/:productId',
+      component: ProdUpdateComponent
+    },
+    {
+      path: 'detail/:productId',
+      component: ProdDetailComponent
+    }
+  ]},
 ];
 
 @NgModule ({

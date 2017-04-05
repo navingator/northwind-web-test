@@ -9,6 +9,9 @@ import { MaterialModule }      from '@angular/material';
 
 import 'hammerjs';
 
+/* Dependency modules */
+import { UserModule }    from '../user/user.module';
+
 /* Routing Module */
 import { ProdCatRoutingModule } from './product-category-routing.module';
 
@@ -29,6 +32,7 @@ import { ProdCatService } from './prodcat.service';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    UserModule,
 
     ProdCatRoutingModule // Must be last
   ],

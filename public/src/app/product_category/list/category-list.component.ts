@@ -70,7 +70,7 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
    * Listener for sidenav closing
    */
   public onSidenavClose(): void {
-    this.router.navigate(['category']);
+    this.router.navigate(['categories']);
   }
 
   /**

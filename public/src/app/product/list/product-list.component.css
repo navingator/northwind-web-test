@@ -1,0 +1,15 @@
+#closeSidenavButton {
+  margin-top: 0.5rem;
+}
+
+/* Card Styling */
+.card-container {
+  margin-bottom: 0.5rem;
+}
+
+.product-card .card-title {
+  position: absolute;
+  left: 0.5rem;
+  top: 0.25rem;
+  z-index: 1;
+}

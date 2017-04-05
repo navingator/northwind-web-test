@@ -1,43 +1,41 @@
-<section *ngIf="selectedProduct" class="row">
-  <h2 class="main-header col-12 text-center">Update {{selectedProduct.name}}</h2>
-  <div class="offset-1 col-10 offset-lg-3 col-lg-6">
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
-      <div class="row">
-        <div class="form-group col-12"
-          [ngClass]="{
-            'has-danger':(productForm.get('name').invalid && productForm.get('name').dirty),
-            'has-success':(productForm.get('name').valid)
-          }">
-          <label class="form-control-label" for="name">Name</label>
-          <div>
-            <input type="text" formControlName="name" placeholder="name" required
-            [(ngModel)]="selectedProduct.name"
-            class="form-control form-control-success form-control-danger">
-            <div class="tooltip">Required</div>
-          </div>
+<div class="container">
+  <div [hidden]="submitted">
+    <h2 class="main-header">Update {{selectedProduct.name}}</h2>
+    <form [formGroup]="productForm" *ngIf="active" (ngSubmit)="onSubmit()">
+      <div class="form-group" [ngClass]="{
+        'has-success': (productForm.get('name').valid && productForm.get('name').touched),
+        'has-danger': (productForm.get('name').invalid && productForm.get('name').touched)
+      }">
+        <label for="name">Name</label>
+
+        <input type="text" id="name" class="form-control form-control-success form-control-danger" formControlName="name" required
+        [(ngModel)]="selectedProduct.name">
+
+        <div *ngIf="formErrors.name" class="alert alert-danger">
+          {{ formErrors.name }}
         </div>
-        <div class="form-group col-12"
-          [ngClass]="{
-            'has-danger':(productForm.get('category').invalid && productForm.get('category').dirty),
-            'has-success':(productForm.get('category').valid)
-          }">
-          <label class="form-control-label" for="category">Category</label>
-          <div class="has-tooltip">
-            <input type="text" formControlName="category" placeholder="category name" required
-              class="form-control form-control-success form-control-danger"
-              [(ngModel)]="selectedProduct.categoryName"
-              #prodCatSearchBox (keyup)="prodCatSearch(prodCatSearchBox.value)"/>
-            <div class="tooltip">Required</div>
-          </div>
-          <div>
-            <div *ngFor="let prodCat of prodCats | async"
-              (click)="setValue(prodCat)" class="search-result col-12">
-              <span>{{prodCat.name}}</span>
-            </div>
-          </div>
-        </div>
-        <button (click)="save()" [disabled]="submitted || productForm.invalid">Save</button>
       </div>
+
+      <div class="form-group" [ngClass]="{
+        'has-success': (productForm.get('category').valid),
+        'has-danger': (productForm.get('category').invalid && productForm.get('category').touched)
+      }">
+        <label for="category">Category</label>
+
+        <input type="text" id="category" class="form-control form-control-success form-control-danger" formControlName="category" required
+        [(ngModel)]="selectedProduct.categoryName" asyncValidator autocomplete="off"
+        #prodCatSearchBox (keyup)="prodCatSearch(prodCatSearchBox.value)">
+        <div *ngFor="let prodCat of prodCats | async"
+          (click)="setValue(prodCat)" class="search-result col-12">
+          <span *ngIf="prodCat != prodCatSearchBox.value">{{prodCat.name}}</span>
+        </div>
+
+        <div *ngIf="productForm.get('category').invalid" class="alert alert-danger">
+          {{ validationMessages.category.uniqueName }}
+        </div>
+      </div>
+
+      <button type="submit" class="lg-primary text-white" md-raised-button [disabled]="!productForm.valid">Submit</button>
     </form>
   </div>
-</section>
+</div>
