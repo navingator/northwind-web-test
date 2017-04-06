@@ -189,8 +189,7 @@ export class ProdUpdateComponent implements OnInit {
    */
   private onSubmitSuccess(): void {
     this.changeService.notifyProductChange();
-    console.log(this.route.snapshot.url.join('/'));
-    this.router.navigate([this.route.snapshot.url.join('/')]);
+    this.router.navigate([]);
   }
 
   /**
