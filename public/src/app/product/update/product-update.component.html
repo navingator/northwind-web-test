@@ -1,41 +1,56 @@
-<div class="container">
-  <div [hidden]="submitted">
-    <h2 class="main-header">Update {{selectedProduct.name}}</h2>
-    <form [formGroup]="productForm" *ngIf="active" (ngSubmit)="onSubmit()">
-      <div class="form-group" [ngClass]="{
-        'has-success': (productForm.get('name').valid && productForm.get('name').touched),
-        'has-danger': (productForm.get('name').invalid && productForm.get('name').touched)
-      }">
-        <label for="name">Name</label>
+<div class="row">
+  <h2 class="main-header col-12 text-center">{{ title }}</h2>
+  <div class="col-12">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="row">
+        <div class="form-group col-12"
+          [ngClass]="{
+            'has-danger': (productForm.get('name').invalid && productForm.get('name').dirty),
+            'has-success': (productForm.get('name').valid && productForm.get('name').dirty)
+          }">
+          <label class="form-control-label" for="name">Name</label>
 
-        <input type="text" id="name" class="form-control form-control-success form-control-danger" formControlName="name" required
-        [(ngModel)]="selectedProduct.name">
+          <input type="text" formControlName="name" required
+            class="form-control form-control-success form-control-danger">
 
-        <div *ngIf="formErrors.name" class="alert alert-danger">
-          {{ formErrors.name }}
+          <div *ngIf="formErrors.name" class="alert alert-danger">
+            {{ formErrors.name }}
+          </div>
+        </div>
+
+        <div class="form-group col-12"
+          [ngClass]="{
+            'has-success': (productForm.get('category').valid || selected),
+            'has-danger': (productForm.get('category').invalid && productForm.get('category').dirty)
+          }">
+          <label class="form-control-label" for="category">Category</label>
+
+          <input type="text" class="form-control form-control-success form-control-danger"
+            formControlName="category" required autocomplete="off" asyncValidator
+            #prodCatSearchBox (keyup)="prodCatSearch(prodCatSearchBox.value)">
+          <div *ngFor="let prodCat of prodCats | async"
+            (click)="setValue(prodCat)" class="search-result col-12">
+            <span *ngIf="productForm.invalid">{{prodCat.name}}</span>
+          </div>
+
+          <div *ngIf="formErrors.category" class="alert alert-danger">
+            {{ formErrors.category }}
+          </div>
+          <div *ngIf="productForm.get('category').invalid && prodCatSearchBox.value"
+            class="alert alert-danger">
+            {{ validationMessages.category.uniqueName }}
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button md-raised-button type="submit" class="lg-primary text-white"
+            [disabled]="submitted || productForm.invalid">{{submitBtnTitle}}
+          </button>
+        </div>
+        <div class="submit-error col-12" *ngIf="submitError">
+          {{ submitError }}
         </div>
       </div>
-
-      <div class="form-group" [ngClass]="{
-        'has-success': (productForm.get('category').valid),
-        'has-danger': (productForm.get('category').invalid && productForm.get('category').touched)
-      }">
-        <label for="category">Category</label>
-
-        <input type="text" id="category" class="form-control form-control-success form-control-danger" formControlName="category" required
-        [(ngModel)]="selectedProduct.categoryName" asyncValidator autocomplete="off"
-        #prodCatSearchBox (keyup)="prodCatSearch(prodCatSearchBox.value)">
-        <div *ngFor="let prodCat of prodCats | async"
-          (click)="setValue(prodCat)" class="search-result col-12">
-          <span *ngIf="prodCat != prodCatSearchBox.value">{{prodCat.name}}</span>
-        </div>
-
-        <div *ngIf="productForm.get('category').invalid" class="alert alert-danger">
-          {{ validationMessages.category.uniqueName }}
-        </div>
-      </div>
-
-      <button type="submit" class="lg-primary text-white" md-raised-button [disabled]="!productForm.valid">Submit</button>
     </form>
   </div>
 </div>

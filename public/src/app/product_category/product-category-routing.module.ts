@@ -9,7 +9,6 @@ import { CatListComponent} from './list/category-list.component';
 import { CatEditComponent } from './edit/category-edit.component';
 
 import { ProdListComponent }   from '../product/list/product-list.component';
-import { ProdNewComponent }    from '../product/new/product-new.component';
 import { ProdUpdateComponent } from '../product/update/product-update.component';
 import { ProdDetailComponent } from '../product/detail/product-detail.component';
 
@@ -34,7 +33,7 @@ const routes: Routes = [
   { path: 'categories/:id/products', canActivate: [AuthNGuard], component: ProdListComponent, children: [
     {
       path: 'new',
-      component: ProdNewComponent
+      component: ProdUpdateComponent
     },
     {
       path: 'edit/:productId',

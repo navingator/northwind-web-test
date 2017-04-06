@@ -1,0 +1,8 @@
+#stock {
+  text-align: right;
+  font-size: 12px;
+}
+
+.discontinued {
+  color: red;
+}

@@ -1,13 +1,16 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MdSidenav }                                   from '@angular/material';
+import { AfterViewInit, Component, OnDestroy,
+  OnInit, ViewChild }                     from '@angular/core';
+import { MdSidenav }                      from '@angular/material';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Observable }                      from 'rxjs/Observable';
+import { Observable }   from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 
-import { AuthService } from '../../user/auth.service';
-import { DialogService } from '../../core/dialog.service';
-import { ProductService }  from '../product.service';
+import { AuthService }          from '../../user/auth.service';
+import { DialogService }        from '../../core/dialog.service';
+import { ProductChangeService } from '../product-change.service';
+import { ProductService }       from '../product.service';
 
 import { Product } from '../../product/product.class';
 
@@ -17,43 +20,42 @@ import 'hammerjs';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProdListComponent implements OnInit, AfterViewInit {
+export class ProdListComponent implements OnInit, AfterViewInit, OnDestroy {
   public categoryName: string;
   public products: Product[];
 
   @ViewChild('sidenav') public sidenav: MdSidenav;
   public selectedProduct: Product;
 
-  private catList: boolean;
+  private changeSubscription: Subscription;
+  private categoryId: number;
 
   constructor(
     private authService: AuthService,
     private productService: ProductService,
+    private changeService: ProductChangeService,
     private route: ActivatedRoute,
     private dialog: DialogService,
     private router: Router
   ) {}
 
   public ngOnInit(): void {
-    this.route.params
-      .switchMap((params: Params): Observable<Product[]> => {
-        if (+params.id) {
-          this.catList = true;
-          return this.productService.listProductsByCat(+params.id);
-        } else {
-          this.catList = false;
-          return this.productService.listAllProducts();
-        }
-      })
-      .subscribe(
-        (products: Product[]) => {
-          this.products = products;
-          if (this.catList) {
-            this.categoryName = products[0].categoryName;
-          }
-        },
-        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
-      );
+    const paramsObs = this.route.params
+      .do((params: Params) => {
+        this.categoryId = +params.id;
+        if (isNaN(this.categoryId)) { this.categoryId = null; } // TODO make this better (route to 404)
+      });
+    this.getProductSub(paramsObs);
+
+    const changeObs = this.changeService.prodChange$
+      .do(() => {
+        this.sidenav.close();
+      });
+    this.changeSubscription = this.getProductSub(changeObs);
+  }
+
+  public ngOnDestroy(): void {
+    this.changeSubscription.unsubscribe();
   }
 
   /**
@@ -120,5 +122,26 @@ export class ProdListComponent implements OnInit, AfterViewInit {
   public openProductDetails(product: Product): void {
     this.router.navigate(['detail', product.id], { relativeTo: this.route });
     this.sidenav.open();
+  }
+
+  private getProductSub(obs: Observable<null>): Subscription {
+    return obs
+      .switchMap((): Observable<Product[]> => {
+        if (this.categoryId) {
+          return this.productService.listProductsByCat(this.categoryId);
+        } else {
+          return this.productService.listAllProducts();
+        }
+      })
+      .subscribe(
+        (products: Product[]) => {
+          this.products = products;
+          if (this.categoryId) {
+            this.categoryName = products[0].categoryName;
+          }
+        },
+        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
+      );
+
   }
 }

@@ -1,8 +1,7 @@
-import { Location }                     from '@angular/common';
-import { Component, Input, OnInit, }    from '@angular/core';
+import { Component, Input, OnInit, }        from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl,
-  FormGroup, ValidatorFn, Validators}   from '@angular/forms';
-import { ActivatedRoute, Params }       from '@angular/router';
+  FormGroup, ValidatorFn, Validators}       from '@angular/forms';
+import { ActivatedRoute, Params, Router }   from '@angular/router';
 
 import { Observable }                   from 'rxjs/Observable';
 import { Subject }                      from 'rxjs/Subject';
@@ -14,6 +13,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/first';
 
+import { ProductChangeService } from '../product-change.service';
 import { ProdCatSearchService } from '../../product_category/prodcat-search.service';
 import { ProductService }       from '../product.service';
 
@@ -25,15 +25,19 @@ import { Product } from '../product.class';
   styleUrls: [ '../searchbox.css' ],
 })
 export class ProdUpdateComponent implements OnInit {
-
-  // Setting up variables
   public productForm: FormGroup;
-  public submitted = false;
   public selectedProduct = new Product();
-  public prodCats: Observable<ProdCat[]>;
-  public active = true;
 
+  public submitted = false;
+  public selected = false;
+  public submitError = '';
+
+  public title = '';
+  public submitBtnTitle = '';
+
+  public prodCats: Observable<ProdCat[]>;
   private searchTerms = new Subject<string>();
+
   private formErrors = {
     name: '',
     category: ''
@@ -41,11 +45,12 @@ export class ProdUpdateComponent implements OnInit {
   private validationMessages = {
     name: {
       required:      'Name is required.',
-      minlength:     'Name must be at least 3 characters long.',
-      maxlength:     'Name cannot be more than 40 characters long.',
+      minlength:     'Must be at least 3 characters.',
+      maxlength:     'Must be less than 40 characters.'
     },
     category: {
-      uniqueName:    'Product category must already exist.'
+      required:      'Category is required.',
+      uniqueName:    'Category must already exist.'
     }
   };
 
@@ -54,22 +59,41 @@ export class ProdUpdateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
+    private changeService: ProductChangeService,
     private prodCatSearchService: ProdCatSearchService,
+    private router: Router,
     private route: ActivatedRoute,
-    private location: Location
   ) {}
 
   // ngOnInit
 
   public ngOnInit(): void {
     this.route.params
-      .switchMap((params: Params) => this.productService.getProduct(+params.productId))
-      .subscribe(selectedProduct => this.selectedProduct = selectedProduct);
+      .switchMap((params: Params) => {
+        if (+params.productId) {
+          return this.productService.getProduct(+params.productId);
+        }
+        return Observable.of<Product>(null);
+      })
+      .subscribe(selectedProduct => {
+        if (selectedProduct) {
+          this.title = 'Edit Product';
+          this.submitBtnTitle = 'Save';
+          this.selectedProduct = selectedProduct;
+          this.productForm.reset({
+            name: selectedProduct.name,
+            category: selectedProduct.categoryName
+          });
+        } else {
+          this.title = 'New Product';
+          this.submitBtnTitle = 'Create';
+        }
+      });
 
     this.prodCats = this.searchTerms
-      .debounceTime(100)        // wait 100ms after each keystroke before considering the term
-      .distinctUntilChanged()   // ignore if next search term is same as previous
-      .switchMap(searchTerm => {   // switch to new observable each time the term changes
+      .debounceTime(150)
+      .distinctUntilChanged()
+      .switchMap(searchTerm => {
         if (searchTerm) {
           return this.prodCatSearchService.search(searchTerm);
         } else {
@@ -86,7 +110,7 @@ export class ProdUpdateComponent implements OnInit {
     this.productForm.valueChanges
       .subscribe((data: any) => this.onValueChanged(data));
 
-    this.onValueChanged(); // (re)set validation messages now
+    this.onValueChanged(); // (re)set validation messages
   }
 
   // Creating the new form
@@ -95,11 +119,11 @@ export class ProdUpdateComponent implements OnInit {
     this.productForm = this.fb.group({
       name: ['', [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(3), // TODO figure out a way to delay min length until after they start
         Validators.maxLength(40)
         ]
       ],
-      category: ['', null, this.prodCatValidator]
+      category: ['', Validators.required, this.prodCatValidator]
     });
   }
 
@@ -107,6 +131,7 @@ export class ProdUpdateComponent implements OnInit {
 
    public onValueChanged(data?: any): void {
     if (!this.productForm) { return; }
+    this.selected = false;
     const form = this.productForm;
     for (const field in this.formErrors) {
       if (this.formErrors.hasOwnProperty(field)) {
@@ -132,19 +157,47 @@ export class ProdUpdateComponent implements OnInit {
   }
 
   public setValue(prodCat: ProdCat): void {
-    this.selectedProduct.categoryName = prodCat.name;
-    this.selectedProduct.categoryId = prodCat.id;
-    this.searchTerms.next('');
+    this.productForm.controls.category.setValue(prodCat.name, {emitEvent: true});
+    this.selected = true;
   }
 
   // Saving the product result
 
   public onSubmit(): void {
     this.submitted = true;
+
     this.selectedProduct.name = this.productForm.get('name').value;
     this.selectedProduct.categoryName = this.productForm.get('category').value;
-    this.productService.updateProduct(this.selectedProduct)
-      .subscribe(() => this.location.back());
+    if (this.selectedProduct.id) {
+      this.productService.updateProduct(this.selectedProduct)
+        .subscribe(
+          () => this.onSubmitSuccess(),
+          err => this.onSubmitError(err)
+        );
+    } else {
+      this.productService.createProduct(this.selectedProduct)
+        .subscribe(
+          () => this.onSubmitSuccess(),
+          err => this.onSubmitError(err)
+        );
+    }
+  }
+
+  /**
+   * Helper function to handle successful submissions
+   */
+  private onSubmitSuccess(): void {
+    this.changeService.notifyProductChange();
+    this.router.navigate([]);
+  }
+
+  /**
+   * Helper function to handle failed submissions
+   * @param {any} err Error returned from CategoryService
+   */
+  private onSubmitError(err: any): void {
+    this.submitError = err.message;
+    this.submitted = false;
   }
 
   private prodCatValidator = (fc: FormControl): Observable<{[key: string]: any}> => {
