@@ -24,6 +24,7 @@ export class ProductService {
   public createProduct(product: Product): Observable<Product> {
     return this.http
       .post(this.productUrl, JSON.stringify(product), this.options)
+      .do(() => console.log(product))
       .map(this.apiHelperService.extractData)
       .catch(this.apiHelperService.handleError);
   }

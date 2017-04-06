@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, }        from '@angular/core';
+import { Component, Input, OnInit }       from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl,
-  FormGroup, ValidatorFn, Validators}       from '@angular/forms';
-import { ActivatedRoute, Params, Router }   from '@angular/router';
+  FormGroup, ValidatorFn, Validators }    from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Observable }                   from 'rxjs/Observable';
-import { Subject }                      from 'rxjs/Subject';
+import { Observable }  from 'rxjs/Observable';
+import { Subject }     from 'rxjs/Subject';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
@@ -36,6 +36,7 @@ export class ProdUpdateComponent implements OnInit {
   public submitBtnTitle = '';
 
   public prodCats: Observable<ProdCat[]>;
+  private lastProdCat: ProdCat;
   private searchTerms = new Subject<string>();
 
   private formErrors = {
@@ -117,13 +118,13 @@ export class ProdUpdateComponent implements OnInit {
 
   public createUpdateProductForm(): void {
     this.productForm = this.fb.group({
-      name: ['', [
+      name: [this.selectedProduct.name, [
         Validators.required,
         Validators.minLength(3), // TODO figure out a way to delay min length until after they start
         Validators.maxLength(40)
         ]
       ],
-      category: ['', Validators.required, this.prodCatValidator]
+      category: [this.selectedProduct.categoryName, Validators.required, this.prodCatValidator]
     });
   }
 
@@ -158,6 +159,7 @@ export class ProdUpdateComponent implements OnInit {
 
   public setValue(prodCat: ProdCat): void {
     this.productForm.controls.category.setValue(prodCat.name, {emitEvent: true});
+    this.selectedProduct.categoryId = prodCat.id;
     this.selected = true;
   }
 
@@ -168,6 +170,8 @@ export class ProdUpdateComponent implements OnInit {
 
     this.selectedProduct.name = this.productForm.get('name').value;
     this.selectedProduct.categoryName = this.productForm.get('category').value;
+    this.selectedProduct.discontinued = false;
+    if (!this.selectedProduct.categoryId) { this.selectedProduct.categoryId = this.lastProdCat.id; };
     if (this.selectedProduct.id) {
       this.productService.updateProduct(this.selectedProduct)
         .subscribe(
@@ -188,7 +192,7 @@ export class ProdUpdateComponent implements OnInit {
    */
   private onSubmitSuccess(): void {
     this.changeService.notifyProductChange();
-    this.router.navigate([]);
+    // this.router.navigate([]);
   }
 
   /**
@@ -204,6 +208,7 @@ export class ProdUpdateComponent implements OnInit {
     const err = {invalidCategory: true};
     return this.prodCats
       .switchMap(prodCats => {
+        this.lastProdCat = prodCats[0];
         for (const prodCat of prodCats) {
           if (prodCat.name === fc.value) {
             return Observable.of(null);
