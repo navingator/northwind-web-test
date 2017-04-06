@@ -6,6 +6,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable }   from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/do';
 
 import { AuthService }          from '../../user/auth.service';
 import { DialogService }        from '../../core/dialog.service';
@@ -79,7 +80,7 @@ export class ProdListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Called by the product create button. Navigates to the create sidenav
    */
-  public openCreateCategory(): void {
+  public openCreateProduct(): void {
     this.router.navigate(['new'], { relativeTo: this.route });
     this.sidenav.open();
   }

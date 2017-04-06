@@ -25,7 +25,7 @@ const routes: Routes = [
       component: ProdDetailComponent
     }
   ]},
-  { path: 'categories', component: CatListComponent },
+  { path: 'categories', component: CatListComponent }, // TODO actually have this do something
 ];
 
 @NgModule ({

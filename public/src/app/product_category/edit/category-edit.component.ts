@@ -103,7 +103,7 @@ export class CatEditComponent implements OnInit  {
    */
   private onSubmitSuccess(): void {
     this.changeService.notifyCategoryChange();
-    this.router.navigate(['/category']);
+    this.router.navigate(['/categories']);
   }
 
   /**
