@@ -17,12 +17,12 @@ import { ProductRoutingModule } from './product-routing.module';
 
 // Components
 import { ProdListComponent }       from './list/product-list.component';
-import { ProdNewComponent }        from './new/product-new.component';
 import { ProdUpdateComponent }     from './update/product-update.component';
 import { ProdDetailComponent }     from './detail/product-detail.component';
 
 // Services
-import { ProductService } from './product.service';
+import { ProductService }       from './product.service';
+import { ProductChangeService } from './product-change.service';
 
 @NgModule({
   imports: [
@@ -38,12 +38,12 @@ import { ProductService } from './product.service';
   ],
   declarations: [
     ProdListComponent,
-    ProdNewComponent,
     ProdUpdateComponent,
     ProdDetailComponent
   ],
   providers: [
-    ProductService
+    ProductService,
+    ProductChangeService
   ]
 })
 export class ProductModule { }

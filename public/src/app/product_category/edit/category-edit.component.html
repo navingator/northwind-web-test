@@ -10,7 +10,7 @@
           }">
           <label class="form-control-label" for="name">Name</label>
           <div class="has-tooltip">
-            <input type="text" formControlName="name"
+            <input type="text" formControlName="name" required
               class="form-control form-control-success form-control-danger">
             <div class="tooltip">Required</div>
           </div>
@@ -22,14 +22,14 @@
           }">
           <label class="form-control-label" for="description">Description</label>
           <div class="has-tooltip">
-            <textarea rows="4" formControlName="description"
+            <textarea rows="4" formControlName="description" required
               class="form-control form-control-success form-control-danger">
             </textarea>
             <div class="tooltip">Required</div>
           </div>
         </div>
         <div class="col-12">
-          <button md-raised-button type="submit" class="lg-primary text-white" [disabled]="submitted || categoryForm.invalid">{{ submitBtnTitle}}</button>
+          <button md-raised-button type="submit" class="lg-primary text-white" [disabled]="submitted || categoryForm.invalid">{{submitBtnTitle}}</button>
         </div>
         <div class="submit-error col-12" *ngIf="submitError">
           {{ submitError }}

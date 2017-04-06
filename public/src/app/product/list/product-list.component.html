@@ -22,20 +22,20 @@
 
         <div class="col-12 col-md-6 col-lg-4 card-container"
         *ngFor="let product of products">
-          <div class="card card-inverse product-card">
-            <div class="card-block">
-              <h4 class="card-title">{{product.name}}</h4>
+          <div class="card product-card">
+            <div class="card-block" >
+              <h4>{{product.name}}</h4>
               <h6 class="mb-2 text-muted">{{product.categoryName}}</h6>
-              <div class="card footer button-row" [style.background]="product.color">
+              <div class="card-footer button-row" [style.border-color]="product.color">
                 <button md-icon-button
                   (click)="confirmDelete(product)">
                   <md-icon class="delete-btn">delete_outline</md-icon>
                 </button>
-                <button md-icon-button
+                <button md-icon-button [style.color]="product.color"
                   (click)="openEditProduct(product)">
                   <md-icon>edit</md-icon>
                 </button>
-                <button md-icon-button
+                <button md-icon-button [style.color]="product.color"
                   (click)="openProductDetails(product)">
                   <md-icon>info_outline</md-icon>
                 </button>

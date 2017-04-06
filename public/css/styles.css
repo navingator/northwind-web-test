@@ -124,10 +124,7 @@ md-icon.lg {
   align-items: center;
   justify-content: flex-end;
 }
-.button-row button {
-  margin-left: 0.5rem;
-  color: white;
-}
+
 .delete-btn {
   color: red;
 }

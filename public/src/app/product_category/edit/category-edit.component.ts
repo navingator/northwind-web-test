@@ -106,10 +106,10 @@ export class CatEditComponent implements OnInit  {
     this.router.navigate(['/category']);
   }
 
-/**
- * Helper function to handle failed submissions
- * @param {any} err Error returned from CategoryService
- */
+  /**
+   * Helper function to handle failed submissions
+   * @param {any} err Error returned from CategoryService
+   */
   private onSubmitError(err: any): void {
     this.submitError = err.message;
     this.submitted = false;

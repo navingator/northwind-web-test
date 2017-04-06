@@ -21,6 +21,10 @@ p {
   background-color: #3f51b5;
 }
 
+.lg-primary-text{
+  color: #3f51b5;
+}
+
 /* sidenav styling */
 md-sidenav{
   width: 320px;

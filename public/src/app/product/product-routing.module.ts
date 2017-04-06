@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthNGuard } from '../user/authn-guard.service';
 
 import { ProdListComponent }   from './list/product-list.component';
-import { ProdNewComponent }    from './new/product-new.component';
 import { ProdUpdateComponent } from './update/product-update.component';
 import { ProdDetailComponent } from './detail/product-detail.component';
 
@@ -15,7 +14,7 @@ const routes: Routes = [
   { path: 'products', canActivate: [AuthNGuard], component: ProdListComponent, children: [
     {
       path: 'new',
-      component: ProdNewComponent
+      component: ProdUpdateComponent
     },
     {
       path: 'edit/:productId',
