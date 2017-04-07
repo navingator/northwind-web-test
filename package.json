@@ -10,9 +10,9 @@
     "test:server": "mocha ./app/tests --recursive --timeout 5000 --reporter mochawesome",
     "serve": "nodemon server.js",
     "serve:dist": "node server.js",
-    "serve:release": "NODE_ENV=release npm run serve:dist",
+    "serve:rel": "NODE_ENV=release npm run serve:dist",
     "start": "concurrently \"npm run build:watch\" \"npm run serve\"",
-    "start:release": "NODE_ENV=release npm run start:dist",
+    "start:rel": "NODE_ENV=release npm run start:dist",
     "start:dist": "npm run build:dist && npm run serve:dist"
   },
   "dependencies": {
