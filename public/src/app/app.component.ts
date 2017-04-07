@@ -4,7 +4,6 @@ import { AuthService } from './user/auth.service';
 import { User } from './user/user.class';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './app.component.html',
   selector: 'northwind-app',
 })

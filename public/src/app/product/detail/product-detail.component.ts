@@ -5,7 +5,6 @@ import { Product } from '../product.class';
 import { ProductService } from '../product.service';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })

@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './unauthorized.component.html',
   styleUrls: ['./unauthorized.component.css']
 })

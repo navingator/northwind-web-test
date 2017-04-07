@@ -7,7 +7,6 @@ import { AuthService } from '../auth.service';
 import { User } from '../user.class';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './signup.component.html',
 })
 export class SignupComponent {

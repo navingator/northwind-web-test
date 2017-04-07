@@ -4,11 +4,16 @@
   "private": true,
   "scripts": {
     "build": "tsc -p ./public/src/",
+    "build:dist": "ngc -p public/tsconfig-dist.json && rollup -c public/rollup-config.js",
     "build:watch": "tsc -p ./public/src/ -w",
     "test": "npm run test:server",
     "test:server": "mocha ./app/tests --recursive --timeout 5000 --reporter mochawesome",
     "serve": "nodemon server.js",
-    "start": "concurrently \"npm run build:watch\" \"npm run serve\""
+    "serve:dist": "node server.js",
+    "serve:release": "NODE_ENV=release npm run serve:dist",
+    "start": "concurrently \"npm run build:watch\" \"npm run serve\"",
+    "start:release": "NODE_ENV=release npm run start:dist",
+    "start:dist": "npm run build:dist && npm run serve:dist"
   },
   "dependencies": {
     "@angular/common": "^2.4.10",
@@ -46,6 +51,10 @@
   },
   "devDependencies": {
     "@types/node": "~7.0.5",
+    "rollup": "^0.41.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^1.0.1",
     "jasmine": "~2.5.3",
     "typescript": "~2.2.1",
     "browser-sync": "~2.18.8",

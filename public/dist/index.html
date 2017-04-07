@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Northwind Demo Application</title>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="icon" href="icons/favicon.ico">
+    <!-- Polyfill(s) for older browsers -->
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <!-- TODO use minified versions of files -->
+    <!-- Angular Dependencies-->
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/material.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <northwind-app>Loading...</northwind-app>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="node_modules/tether/dist/js/tether.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+  </body>
+  <!-- This script must remain below the body tag -->
+  <script src="dist/build.js"></script>
+</html>

@@ -18,7 +18,6 @@ import { Product } from '../../product/product.class';
 import 'hammerjs';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })

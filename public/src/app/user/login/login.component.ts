@@ -6,7 +6,6 @@ import { AuthService } from '../auth.service';
 import { User } from '../user.class';
 
 @Component({
-  moduleId: module.id,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
