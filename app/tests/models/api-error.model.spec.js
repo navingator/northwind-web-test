@@ -2,12 +2,12 @@
 
 process.env.NODE_ENV='test';
 
-let path = require('path');
+let appRoot = require('app-root-path');
 let chai = require('chai');
 let expect = chai.expect;
 
-require(path.resolve('./server'));
-let ApiError = require(path.resolve('./app/models/api-error.model.js'));
+require(appRoot + '/server');
+let ApiError = require(appRoot + '/app/models/api-error.model.js');
 
 describe('API Error Unit Tests', () => {
   describe('Get postgres error', () => {

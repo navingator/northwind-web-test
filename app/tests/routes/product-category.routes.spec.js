@@ -4,13 +4,13 @@
 process.env.NODE_ENV='test';
 
 /* Import dependencies */
-let path = require('path');
+let appRoot = require('app-root-path');
 let chai = require('chai');
 let expect = chai.expect;
-let app = require(path.resolve('./server'));
-let User = require(path.resolve('./app/models/user.model.js'));
-let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
-let Product = require(path.resolve('./app/models/product.model.js'));
+let app = require(appRoot + '/server');
+let User = require(appRoot + '/app/models/user.model');
+let ProductCategory = require(appRoot + '/app/models/product-category.model');
+let Product = require(appRoot + '/app/models/product.model');
 let userApi = require('./util/user-api.util')(app);
 let agent = userApi.agent;
 let categoryApi = require('./util/product-category-api.util')(app, agent);

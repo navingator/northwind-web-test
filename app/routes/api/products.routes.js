@@ -1,10 +1,10 @@
 'use strict';
 
-let path = require('path');
+let appRoot = require('app-root-path');
 
 module.exports = function (router) {
-  let products = require(path.resolve('./app/controllers/api/products.controller'));
-  let users = require(path.resolve('./app/controllers/api/users.controller'));
+  let products = require(appRoot + '/app/controllers/api/products.controller');
+  let users = require(appRoot + '/app/controllers/api/users.controller');
   router.all('/products*', users.checkLogin);
   router.route('/products')
     .get(products.list)

@@ -2,13 +2,13 @@
 
 process.env.NODE_ENV='test';
 
-let path = require('path');
+let appRoot = require('app-root-path');
 let chai = require('chai');
 let expect = chai.expect;
 let rewire = require('rewire');
 
-require(path.resolve('./server'));
-let db = rewire(path.resolve('./app/models/db.model'));
+require(appRoot + '/server');
+let db = rewire(appRoot + '/app/models/db.model');
 
 describe('Database Model Unit Tests', () => {
   describe('trim values from database with', () => {

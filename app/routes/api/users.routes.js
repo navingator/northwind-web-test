@@ -1,9 +1,9 @@
 'use strict';
 
-let path = require('path');
+let appRoot = require('app-root-path');
 
 module.exports = function (router) {
-  let users = require(path.resolve('./app/controllers/api/users.controller'));
+  let users = require(appRoot + '/app/controllers/api/users.controller');
   router.route('/users').post(users.create);
   router.route('/users/me').get(users.me);
 

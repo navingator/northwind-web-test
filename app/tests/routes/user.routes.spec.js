@@ -3,11 +3,11 @@
 process.env.NODE_ENV='test';
 //TODO suppress stdout for these tests (result from HTTP calls)
 
-let path = require('path');
+let appRoot = require('app-root-path');
 let chai = require('chai');
 let expect = chai.expect;
-let app = require(path.resolve('./server'));
-let User = require(path.resolve('./app/models/user.model.js'));
+let app = require(appRoot + '/server');
+let User = require(appRoot + '/app/models/user.model');
 let api = require('./util/user-api.util')(app);
 
 let userTemplate = new User({

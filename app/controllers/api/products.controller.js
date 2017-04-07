@@ -1,8 +1,8 @@
 'use strict';
 
-let path = require('path');
-let Product = require(path.resolve('./app/models/product.model.js'));
-let ApiError = require(path.resolve('./app/models/api-error.model.js'));
+let appRoot = require('app-root-path');
+let Product = require(appRoot + '/app/models/product.model.js');
+let ApiError = require(appRoot + '/app/models/api-error.model.js');
 
 exports.list = function(req, res) {
   Product.listAll()
