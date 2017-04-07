@@ -5,8 +5,8 @@ import commonjs    from 'rollup-plugin-commonjs';
 import uglify      from 'rollup-plugin-uglify';
 
 export default {
-  entry: 'public/src/main.js',
-  dest: 'public/src/build.js', // output a single application bundle
+  entry: 'public/src/main-dist.js',
+  dest: 'public/dist/build.js', // output a single application bundle
   sourceMap: false,
   format: 'iife',
   onwarn: function(warning) {

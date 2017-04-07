@@ -21,8 +21,7 @@ import { ProdCat } from '../../product_category/prodcat.class';
 import { Product } from '../product.class';
 
 @Component({
-  templateUrl: './product-update.component.html',
-  styleUrls: [ '../searchbox.css' ],
+  templateUrl: './product-update.component.html'
 })
 export class ProdUpdateComponent implements OnInit {
   public productForm: FormGroup;
@@ -34,16 +33,11 @@ export class ProdUpdateComponent implements OnInit {
 
   public title = '';
   public submitBtnTitle = '';
-
-  public prodCats: Observable<ProdCat[]>;
-  private lastProdCat: ProdCat;
-  private searchTerms = new Subject<string>();
-
-  private formErrors = {
+  public formErrors = {
     name: '',
     category: ''
   };
-  private validationMessages = {
+  public validationMessages = {
     name: {
       required:      'Name is required.',
       minlength:     'Must be at least 3 characters.',
@@ -54,6 +48,10 @@ export class ProdUpdateComponent implements OnInit {
       uniqueName:    'Category must already exist.'
     }
   };
+
+  public prodCats: Observable<ProdCat[]>;
+  private lastProdCat: ProdCat;
+  private searchTerms = new Subject<string>();
 
   // Constructor
 
@@ -192,7 +190,6 @@ export class ProdUpdateComponent implements OnInit {
    */
   private onSubmitSuccess(): void {
     this.changeService.notifyProductChange();
-    // this.router.navigate([]);
   }
 
   /**

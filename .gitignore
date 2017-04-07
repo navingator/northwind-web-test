@@ -20,4 +20,5 @@ jspm_packages
 !public/src/systemjs.config.js
 
 # Angular Ahead of Time Compilation Files
-/public/aot
+/public/dist/**/*
+!public/dist/index.html

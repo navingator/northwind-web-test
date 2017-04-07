@@ -13,11 +13,11 @@
 
   "files": [
     "src/app/app.module.ts",
-    "src/main.ts"
+    "src/main-dist.ts"
   ],
 
   "angularCompilerOptions": {
-   "genDir": "aot",
+   "genDir": "dist",
    "skipMetadataEmit" : true
  }
 }
