@@ -9,7 +9,7 @@ import { MaterialModule }      from '@angular/material';
 import 'hammerjs';
 
 // Dependency Modules
-import { ProdCatModule } from '../product_category/product-category.module';
+import { CategoryModule } from '../category/category.module';
 import { UserModule }    from '../user/user.module';
 
 // Routing Module
@@ -32,7 +32,7 @@ import { ProductChangeService } from './product-change.service';
     FormsModule,
     ReactiveFormsModule,
     UserModule,
-    ProdCatModule,
+    CategoryModule,
 
     ProductRoutingModule // must be last
   ],

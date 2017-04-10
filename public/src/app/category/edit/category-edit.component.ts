@@ -7,16 +7,16 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
 import { CategoryChangeService } from '../category-change.service';
-import { ProdCatService } from '../prodcat.service';
+import { CategoryService } from '../category.service';
 
-import { ProdCat } from '../prodcat.class';
+import { Category } from '../category.class';
 
 @Component({
   templateUrl: './category-edit.component.html',
 })
-export class CatEditComponent implements OnInit  {
+export class CategoryEditComponent implements OnInit  {
   public categoryForm: FormGroup;
-  public category = new ProdCat();
+  public category = new Category();
 
   public submitted = false;
   public submitError = '';
@@ -27,7 +27,7 @@ export class CatEditComponent implements OnInit  {
   constructor(
     private fb: FormBuilder,
     private changeService: CategoryChangeService,
-    private categoryService: ProdCatService,
+    private categoryService: CategoryService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -44,7 +44,7 @@ export class CatEditComponent implements OnInit  {
         if (params.categoryId) {
           return this.categoryService.getCategory(+params.categoryId);
         }
-        return Observable.of<ProdCat>(null);
+        return Observable.of<Category>(null);
       })
       .subscribe(category => {
         if (category) {

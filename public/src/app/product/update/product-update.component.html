@@ -27,16 +27,16 @@
 
           <input type="text" class="form-control form-control-success form-control-danger"
             formControlName="category" required autocomplete="off" asyncValidator
-            #prodCatSearchBox (keyup)="prodCatSearch(prodCatSearchBox.value)">
-          <div *ngFor="let prodCat of prodCats | async"
-            (click)="setValue(prodCat)" class="search-result col-12">
-            <span *ngIf="productForm.invalid">{{prodCat.name}}</span>
+            #categorySearchBox (keyup)="categorySearch(categorySearchBox.value)">
+          <div *ngFor="let category of categorys | async"
+            (click)="setValue(category)" class="search-result col-12">
+            <span *ngIf="productForm.invalid">{{category.name}}</span>
           </div>
 
           <div *ngIf="formErrors.category" class="alert alert-danger">
             {{ formErrors.category }}
           </div>
-          <div *ngIf="productForm.get('category').invalid && prodCatSearchBox.value"
+          <div *ngIf="productForm.get('category').invalid && categorySearchBox.value"
             class="alert alert-danger">
             {{ validationMessages.category.uniqueName }}
           </div>

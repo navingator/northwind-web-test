@@ -9,9 +9,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../../user/auth.service';
 import { CategoryChangeService } from '../category-change.service';
 import { DialogService } from '../../core/dialog.service';
-import { ProdCatService }  from '../prodcat.service';
+import { CategoryService }  from '../category.service';
 
-import { ProdCat } from '../prodcat.class';
+import { Category } from '../category.class';
 
 import 'hammerjs';
 
@@ -19,8 +19,8 @@ import 'hammerjs';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css']
 })
-export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
-  public categories: ProdCat[];
+export class CategoryListComponent implements OnInit, AfterViewInit, OnDestroy {
+  public categories: Category[];
   public isAdmin: boolean;
 
   @ViewChild('sidenav') public sidenav: MdSidenav;
@@ -29,7 +29,7 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private categoryService: ProdCatService,
+    private categoryService: CategoryService,
     private changeService: CategoryChangeService,
     private dialog: DialogService,
     private router: Router,
@@ -42,7 +42,7 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
   public ngOnInit(): void {
     this.getCategories();
 
-    this.changeSubscription = this.changeService.catChange$
+    this.changeSubscription = this.changeService.categoryChange$
       .subscribe(() => {
         this.getCategories();
         this.sidenav.close();
@@ -74,9 +74,9 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Request confirmation before deleting a product
-   * @param {ProdCat} category Category to be deleted
+   * @param {Category} category Category to be deleted
    */
-  public confirmDelete(category: ProdCat): void {
+  public confirmDelete(category: Category): void {
     this.dialog.confirm(`Are you sure you want to delete ${category.name}?`)
       .then(confirmed => {
         if (confirmed) { return this.deleteCategory(category); }
@@ -86,9 +86,9 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * TODO Show error for deleting populated category
    * Calls CategoryService to delete a category
-   * @param {ProdCat} category Category to be deleted
+   * @param {Category} category Category to be deleted
    */
-  public deleteCategory(category: ProdCat): void {
+  public deleteCategory(category: Category): void {
     if (!category) { return; }
     this.categoryService.deleteCategory(category.id)
       .subscribe(
@@ -99,9 +99,9 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Opens the category detail page for the given category
-   * @param {ProdCat} category Category to be shown
+   * @param {Category} category Category to be shown
    */
-  public openCategoryDetails(category: ProdCat): void {
+  public openCategoryDetails(category: Category): void {
     this.router.navigate(['detail', category.id], { relativeTo: this.route });
     this.sidenav.open();
   }
@@ -117,7 +117,7 @@ export class CatListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Called by the category edit button. Navigates to the edit sidenav
    */
-  public openEditCategory(category: ProdCat): void {
+  public openEditCategory(category: Category): void {
     this.router.navigate(['edit', category.id], { relativeTo: this.route });
     this.sidenav.open();
   }

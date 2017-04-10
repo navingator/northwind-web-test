@@ -5,8 +5,8 @@ import { AuthNGuard } from '../user/authn-guard.service';
 import { AuthZGuard } from '../user/authz-guard.service';
 
 import { CategoryDetailComponent } from './detail/category-detail.component';
-import { CatListComponent} from './list/category-list.component';
-import { CatEditComponent } from './edit/category-edit.component';
+import { CategoryListComponent} from './list/category-list.component';
+import { CategoryEditComponent } from './edit/category-edit.component';
 
 import { ProdListComponent }   from '../product/list/product-list.component';
 import { ProdUpdateComponent } from '../product/update/product-update.component';
@@ -14,16 +14,16 @@ import { ProdDetailComponent } from '../product/detail/product-detail.component'
 
 // TODO handle invalid category ID
 const routes: Routes = [
-  { path: 'categories', canActivate: [AuthNGuard], component: CatListComponent, children: [
+  { path: 'categories', canActivate: [AuthNGuard], component: CategoryListComponent, children: [
     {
       path: 'new',
       canActivate: [AuthZGuard],
-      component: CatEditComponent
+      component: CategoryEditComponent
     },
     {
       path: 'edit/:categoryId',
       canActivate: [AuthZGuard],
-      component: CatEditComponent
+      component: CategoryEditComponent
     },
     {
       path: 'detail/:categoryId',
@@ -50,4 +50,4 @@ const routes: Routes = [
   imports: [ RouterModule.forChild(routes) ],
   exports: [ RouterModule ]
 })
-export class ProdCatRoutingModule {}
+export class CategoryRoutingModule {}

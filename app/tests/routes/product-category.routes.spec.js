@@ -212,8 +212,8 @@ describe('Product Category unit test', () => {
       });
 
       it('lists all categories in the database', () => {
-        let firstProdCat = response.body[0];
-        for (let property in firstProdCat) {
+        let firstCategory = response.body[0];
+        for (let property in firstCategory) {
           expect(productCategory).to.have.property(property);
         }
         ProductCategory.tableCount()
@@ -294,8 +294,8 @@ describe('Product Category unit test', () => {
 
       it('returns a list of categories', () => {
         //TODO
-        let firstProdCat = response.body[0];
-        for (let property in firstProdCat) {
+        let firstCategory = response.body[0];
+        for (let property in firstCategory) {
           expect(productCategory).to.have.property(property);
         }
         for (let i=0; i < response.body.length; i++) {

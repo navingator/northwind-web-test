@@ -6,16 +6,16 @@ import { Observable }        from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { ProdCat } from './prodcat.class';
+import { Category } from './category.class';
 
 import { ApiHelperService } from '../core/api-helper.service';
 
 @Injectable()
-export class ProdCatService {
+export class CategoryService {
 
-  public selectedProdCat: ProdCat;
+  public selectedCategory: Category;
 
-  private prodCatUrl = 'api/categories';
+  private categoryUrl = 'api/categories';
   private headers = new Headers({ 'Content-Type': 'application/json' });
   private options = new RequestOptions({ headers: this.headers });
 
@@ -24,37 +24,37 @@ export class ProdCatService {
     private apiHelperService: ApiHelperService
   ) {}
 
-  public createCategory(prodCat: ProdCat): Observable<ProdCat> {
+  public createCategory(category: Category): Observable<Category> {
     return this.http
-      .post(this.prodCatUrl, JSON.stringify(prodCat), this.options)
+      .post(this.categoryUrl, JSON.stringify(category), this.options)
       .map(this.apiHelperService.extractData)
       .catch(this.apiHelperService.handleError);
   }
 
-  public listCategories(): Observable<ProdCat[]> {
+  public listCategories(): Observable<Category[]> {
     return this.http
-      .get(this.prodCatUrl)
+      .get(this.categoryUrl)
       .map(this.apiHelperService.extractData)
       .do(this.colorData)
       .catch(this.apiHelperService.handleError);
     }
 
-  public getCategory(id: number): Observable<ProdCat> {
-    return this.http.get(this.prodCatUrl + '/' + id)
+  public getCategory(id: number): Observable<Category> {
+    return this.http.get(this.categoryUrl + '/' + id)
       .map(this.apiHelperService.extractData)
       .catch(this.apiHelperService.handleError);
   }
 
-  public updateCategory(prodCat: ProdCat): Observable<ProdCat> {
-    return this.http.put(this.prodCatUrl + '/' + prodCat.id,
-      JSON.stringify(prodCat), this.options)
+  public updateCategory(category: Category): Observable<Category> {
+    return this.http.put(this.categoryUrl + '/' + category.id,
+      JSON.stringify(category), this.options)
       .map(this.apiHelperService.extractData)
       .catch(this.apiHelperService.handleError);
   }
 
-  public deleteCategory(id: number): Observable<ProdCat> {
+  public deleteCategory(id: number): Observable<Category> {
     return this.http
-      .delete(this.prodCatUrl + '/' + id)
+      .delete(this.categoryUrl + '/' + id)
       .map(this.apiHelperService.extractData)
       .catch(this.apiHelperService.handleError);
     }

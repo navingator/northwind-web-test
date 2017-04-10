@@ -7,7 +7,7 @@ import { ProdListComponent }   from './list/product-list.component';
 import { ProdUpdateComponent } from './update/product-update.component';
 import { ProdDetailComponent } from './detail/product-detail.component';
 
-import { CatListComponent} from '../product_category/list/category-list.component';
+import { CategoryListComponent} from '../category/list/category-list.component';
 
 // TODO handle invalid product ID
 const routes: Routes = [
@@ -25,7 +25,7 @@ const routes: Routes = [
       component: ProdDetailComponent
     }
   ]},
-  { path: 'categories', component: CatListComponent }, // TODO actually have this do something
+  { path: 'categories', component: CategoryListComponent }, // TODO actually have this do something
 ];
 
 @NgModule ({

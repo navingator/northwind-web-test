@@ -9,10 +9,10 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { ProdCat } from './prodcat.class';
+import { Category } from './category.class';
 
 @Injectable()
-export class ProdCatSearchService {
+export class CategorySearchService {
 
   private headers = new Headers({ 'Content-Type': 'application/json' });
   private options = new RequestOptions({ headers: this.headers });
@@ -22,7 +22,7 @@ export class ProdCatSearchService {
     private apiHelperService: ApiHelperService
   ) {}
 
-  public search(searchTerm: string): Observable<ProdCat[]> {
+  public search(searchTerm: string): Observable<Category[]> {
     const search = {term: searchTerm};
     return this.http
       .post('api/categories/search/', JSON.stringify(search), this.options)

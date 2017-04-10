@@ -1,17 +1,17 @@
 import { Component, OnInit }      from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { ProdCat } from '../prodcat.class';
-import { ProdCatService } from '../prodcat.service';
+import { Category } from '../category.class';
+import { CategoryService } from '../category.service';
 
 @Component({
   templateUrl: './category-detail.component.html'
 })
 export class CategoryDetailComponent implements OnInit {
-  public category: ProdCat;
+  public category: Category;
 
   constructor(
-    private categoryService: ProdCatService,
+    private categoryService: CategoryService,
     private route: ActivatedRoute,
   ) {}
 

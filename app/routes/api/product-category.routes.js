@@ -13,14 +13,14 @@ module.exports = function (router) {
   router.route('/categories')
     .get(category.fullList)
     .post(users.checkAdmin, category.create);
-  router.route('/categories/:prodCatId')
+  router.route('/categories/:categoryId')
     .get(category.get)
     .put(users.checkAdmin, category.update)
     .delete(users.checkAdmin, category.delete);
-  router.route('/categories/:prodCatId/products')
+  router.route('/categories/:categoryId/products')
     .get(category.getProducts);
   router.route('/categories/search/')
     .post(category.search);
 
-  router.param('prodCatId', category.getById);
+  router.param('categoryId', category.getById);
 };

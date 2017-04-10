@@ -14,10 +14,10 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/first';
 
 import { ProductChangeService } from '../product-change.service';
-import { ProdCatSearchService } from '../../product_category/prodcat-search.service';
+import { CategorySearchService } from '../../category/category-search.service';
 import { ProductService }       from '../product.service';
 
-import { ProdCat } from '../../product_category/prodcat.class';
+import { Category } from '../../category/category.class';
 import { Product } from '../product.class';
 
 @Component({
@@ -49,8 +49,8 @@ export class ProdUpdateComponent implements OnInit {
     }
   };
 
-  public prodCats: Observable<ProdCat[]>;
-  private lastProdCat: ProdCat;
+  public categorys: Observable<Category[]>;
+  private lastCategory: Category;
   private searchTerms = new Subject<string>();
 
   // Constructor
@@ -59,7 +59,7 @@ export class ProdUpdateComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductService,
     private changeService: ProductChangeService,
-    private prodCatSearchService: ProdCatSearchService,
+    private categorySearchService: CategorySearchService,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
@@ -89,19 +89,19 @@ export class ProdUpdateComponent implements OnInit {
         }
       });
 
-    this.prodCats = this.searchTerms
+    this.categorys = this.searchTerms
       .debounceTime(150)
       .distinctUntilChanged()
       .switchMap(searchTerm => {
         if (searchTerm) {
-          return this.prodCatSearchService.search(searchTerm);
+          return this.categorySearchService.search(searchTerm);
         } else {
-          return Observable.of<ProdCat[]>([]);
+          return Observable.of<Category[]>([]);
         }
       })
       .catch(error => {
         // TODO: add real error handling
-        return Observable.of<ProdCat[]>([]);
+        return Observable.of<Category[]>([]);
       });
 
     this.createUpdateProductForm();
@@ -122,7 +122,7 @@ export class ProdUpdateComponent implements OnInit {
         Validators.maxLength(40)
         ]
       ],
-      category: [this.selectedProduct.categoryName, Validators.required, this.prodCatValidator]
+      category: [this.selectedProduct.categoryName, Validators.required, this.categoryValidator]
     });
   }
 
@@ -149,15 +149,15 @@ export class ProdUpdateComponent implements OnInit {
     }
   }
 
-  // Tools for prodCatSearch
+  // Tools for categorySearch
 
-  public prodCatSearch(searchTerm: string): void {
+  public categorySearch(searchTerm: string): void {
     this.searchTerms.next(searchTerm);
   }
 
-  public setValue(prodCat: ProdCat): void {
-    this.productForm.controls.category.setValue(prodCat.name, {emitEvent: true});
-    this.selectedProduct.categoryId = prodCat.id;
+  public setValue(category: Category): void {
+    this.productForm.controls.category.setValue(category.name, {emitEvent: true});
+    this.selectedProduct.categoryId = category.id;
     this.selected = true;
   }
 
@@ -169,7 +169,7 @@ export class ProdUpdateComponent implements OnInit {
     this.selectedProduct.name = this.productForm.get('name').value;
     this.selectedProduct.categoryName = this.productForm.get('category').value;
     this.selectedProduct.discontinued = false;
-    if (!this.selectedProduct.categoryId) { this.selectedProduct.categoryId = this.lastProdCat.id; };
+    if (!this.selectedProduct.categoryId) { this.selectedProduct.categoryId = this.lastCategory.id; };
     if (this.selectedProduct.id) {
       this.productService.updateProduct(this.selectedProduct)
         .subscribe(
@@ -201,13 +201,13 @@ export class ProdUpdateComponent implements OnInit {
     this.submitted = false;
   }
 
-  private prodCatValidator = (fc: FormControl): Observable<{[key: string]: any}> => {
+  private categoryValidator = (fc: FormControl): Observable<{[key: string]: any}> => {
     const err = {invalidCategory: true};
-    return this.prodCats
-      .switchMap(prodCats => {
-        this.lastProdCat = prodCats[0];
-        for (const prodCat of prodCats) {
-          if (prodCat.name === fc.value) {
+    return this.categorys
+      .switchMap(categorys => {
+        this.lastCategory = categorys[0];
+        for (const category of categorys) {
+          if (category.name === fc.value) {
             return Observable.of(null);
           }
         }

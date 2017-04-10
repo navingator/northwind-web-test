@@ -11,7 +11,7 @@ import { AppRoutingModule }  from './app-routing.module';
 
 /** Feature Modules */
 import { ProductModule }    from './product/product.module';
-import { ProdCatModule }  from './product_category/product-category.module';
+import { CategoryModule }  from './category/category.module';
 import { UserModule }    from './user/user.module';
 
 /** Components */
@@ -22,7 +22,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     CoreModule,
     UserModule,
-    ProdCatModule,
+    CategoryModule,
     ProductModule,
     MaterialModule,
 

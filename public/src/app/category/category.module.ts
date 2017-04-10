@@ -13,17 +13,17 @@ import 'hammerjs';
 import { UserModule }    from '../user/user.module';
 
 /* Routing Module */
-import { ProdCatRoutingModule } from './product-category-routing.module';
+import { CategoryRoutingModule } from './category-routing.module';
 
 /* Components */
 import { CategoryDetailComponent } from './detail/category-detail.component';
-import { CatListComponent } from './list/category-list.component';
-import { CatEditComponent } from './edit/category-edit.component';
+import { CategoryListComponent } from './list/category-list.component';
+import { CategoryEditComponent } from './edit/category-edit.component';
 
 /* Services */
 import { CategoryChangeService } from './category-change.service';
-import { ProdCatSearchService } from './prodcat-search.service';
-import { ProdCatService } from './prodcat.service';
+import { CategorySearchService } from './category-search.service';
+import { CategoryService } from './category.service';
 
 @NgModule({
   imports: [
@@ -34,17 +34,17 @@ import { ProdCatService } from './prodcat.service';
     MaterialModule,
     UserModule,
 
-    ProdCatRoutingModule // Must be last
+    CategoryRoutingModule // Must be last
   ],
   declarations: [
-    CatEditComponent,
-    CatListComponent,
+    CategoryEditComponent,
+    CategoryListComponent,
     CategoryDetailComponent
   ],
   providers: [
-    ProdCatService,
-    ProdCatSearchService,
+    CategoryService,
+    CategorySearchService,
     CategoryChangeService
   ]
 })
-export class ProdCatModule { }
+export class CategoryModule { }

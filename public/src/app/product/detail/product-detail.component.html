@@ -1,6 +1,6 @@
 <div class="product-detail" *ngIf="product">
-  <h4>{{product.name}} - ${{product.unitPrice}}</h4>
+  <h4>{{product.name}}<span *ngIf="product.unitPrice">&nbsp;- ${{product.unitPrice}}</span></h4>
   <span class="mb-2 text-muted">{{product.categoryName}}</span>
-  <h6 id="stock" class="text-muted">Stock:{{product.unitsInStock}}</h6>
+  <h6 id="stock" class="text-muted" *ngIf="product.unitsInStock">Stock:{{product.unitsInStock}}</h6>
   <p *ngIf="product.discontinued" class="discontinued">This product has been discontinued.</p>
 </div>
