@@ -1,7 +1,5 @@
 'use strict';
 
-let browserSync = require('browser-sync');
-
 // configure port
 let port = (process.env.NODE_ENV === 'test') ?
   process.env.TEST_PORT : // use test port in test environment
@@ -11,6 +9,7 @@ exports.port = port;
 
 exports.startBrowserSync = function () {
   if (process.env.NODE_ENV === 'development') {
+    let browserSync = require('browser-sync'); // Should not be outside loop as browser-sync is a dev dependency
     browserSync({
       proxy: 'localhost:' + exports.port,
       port: process.env.BROWSER_SYNC_PORT || 3000,
