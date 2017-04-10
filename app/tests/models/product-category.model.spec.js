@@ -2,12 +2,12 @@
 process.env.NODE_ENV='test';
 
 /* dependencies for the test */
-let path = require('path');
+let appRoot = require('app-root-path');
 let chai = require('chai');
 let expect = chai.expect;
 
-require(path.resolve('./server'));
-let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
+require(appRoot + '/server');
+let ProductCategory = require(appRoot + '/app/models/product-category.model.js');
 
 /**
  * Unit Tests

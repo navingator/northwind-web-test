@@ -1,11 +1,11 @@
 'use strict';
 
 /* Import dependencies */
-let path = require('path');
+let appRoot = require('app-root-path');
 
 module.exports = function (router) {
-  let category = require(path.resolve('./app/controllers/api/product-category.controller'));
-  let users = require(path.resolve('./app/controllers/api/users.controller'));
+  let category = require(appRoot + '/app/controllers/api/product-category.controller');
+  let users = require(appRoot + '/app/controllers/api/users.controller');
 
   // Check authentication and authorization for routes
   router.all('/categories*', users.checkLogin);

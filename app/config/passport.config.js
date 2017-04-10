@@ -1,8 +1,8 @@
 'use strict';
 
 let passport = require('passport');
-let path = require('path');
-let User = require(path.resolve('./app/models/user.model.js'));
+let appRoot = require('app-root-path');
+let User = require(appRoot + '/app/models/user.model.js');
 
 module.exports = function() {
 

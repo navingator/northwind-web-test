@@ -1,12 +1,12 @@
 'use strict';
 process.env.NODE_ENV='test';
 
-let path = require('path');
+let appRoot = require('app-root-path');
 let chai = require('chai');
 let expect = chai.expect;
 
-require(path.resolve('./server'));
-let User = require(path.resolve('./app/models/user.model.js'));
+require(appRoot + '/server');
+let User = require(appRoot + '/app/models/user.model.js');
 
 let userTemplate = new User({
   firstName: 'Unit',

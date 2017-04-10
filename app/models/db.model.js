@@ -1,8 +1,8 @@
 'use strict';
 
 /* Import dependencies */
-let path = require('path');
-let dbConfig = require(path.resolve('./app/config/db.config'));
+let appRoot = require('app-root-path');
+let dbConfig = require(appRoot + '/app/config/db.config');
 let db = dbConfig.db;
 let pgp = dbConfig.pgp;
 let ApiError = require('./api-error.model');

@@ -1,9 +1,9 @@
 'use strict';
 
 let passport = require('passport');
-let path = require('path');
-let User = require(path.resolve('./app/models/user.model'));
-let ApiError = require(path.resolve('./app/models/api-error.model'));
+let appRoot = require('app-root-path');
+let User = require(appRoot + '/app/models/user.model');
+let ApiError = require(appRoot + '/app/models/api-error.model');
 
 /**
  * Helper function for req.login that handles login requests

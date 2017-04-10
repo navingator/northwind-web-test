@@ -1,10 +1,10 @@
 'use strict';
 
 /* Import dependencies */
-let path = require('path');
-let ProductCategory = require(path.resolve('./app/models/product-category.model.js'));
-let Product = require(path.resolve('./app/models/product.model.js'));
-let ApiError = require(path.resolve('./app/models/api-error.model.js'));
+let appRoot = require('app-root-path');
+let ProductCategory = require(appRoot + '/app/models/product-category.model.js');
+let Product = require(appRoot + '/app/models/product.model.js');
+let ApiError = require(appRoot + '/app/models/api-error.model.js');
 
 /**
 * Creates a ProductCategory object and stores it in the database. Sends the

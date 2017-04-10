@@ -1,7 +1,7 @@
 'use strict';
 
 let express = require('express');
-let path = require('path');
+let appRoot = require('app-root-path');
 let bodyParser = require('body-parser');
 let methodOverride = require('method-override');
 let morgan = require('morgan');
@@ -9,8 +9,8 @@ let passport = require('passport');
 let session = require('express-session');
 let pgStore = require('connect-pg-simple')(session);
 
-let api = require(path.resolve('./app/routes/api.routes'));
-let coreRouter = require(path.resolve('./app/routes/core.routes'));
+let api = require(appRoot + '/app/routes/api.routes');
+let coreRouter = require(appRoot + '/app/routes/core.routes');
 
 module.exports = function () {
   // Initialize the express application
@@ -39,10 +39,10 @@ module.exports = function () {
   app.use(passport.session());
 
   // Static Files ==========================================
-  app.use(express.static(path.resolve('./public'))); // set the static files location, example: /public/img will be /img for client
-  app.use('/node_modules', express.static(path.resolve('./node_modules')));
+  app.use(express.static(appRoot + '/public')); // set the static files location, example: /public/img will be /img for client
+  app.use('/node_modules', express.static(appRoot + '/node_modules')); // TODO allow this only for development
   if(process.env.NODE_ENV === 'development') {
-    app.use(express.static(path.resolve('./mochawesome-reports'))); // exposes mochawesome.html
+    app.use(express.static(appRoot + '/mochawesome-reports')); // exposes mochawesome.html
   }
 
   // Routes ================================================
