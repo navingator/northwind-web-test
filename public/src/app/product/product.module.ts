@@ -16,9 +16,9 @@ import { UserModule }    from '../user/user.module';
 import { ProductRoutingModule } from './product-routing.module';
 
 // Components
-import { ProdListComponent }       from './list/product-list.component';
-import { ProdUpdateComponent }     from './update/product-update.component';
-import { ProdDetailComponent }     from './detail/product-detail.component';
+import { ProductListComponent }       from './list/product-list.component';
+import { ProductEditComponent }     from './edit/product-edit.component';
+import { ProductDetailComponent }     from './detail/product-detail.component';
 
 // Services
 import { ProductService }       from './product.service';
@@ -37,9 +37,9 @@ import { ProductChangeService } from './product-change.service';
     ProductRoutingModule // must be last
   ],
   declarations: [
-    ProdListComponent,
-    ProdUpdateComponent,
-    ProdDetailComponent
+    ProductListComponent,
+    ProductEditComponent,
+    ProductDetailComponent
   ],
   providers: [
     ProductService,

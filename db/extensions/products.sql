@@ -2,6 +2,12 @@
 -- Create a sequence to generate product IDs
 CREATE SEQUENCE products_id_seq START WITH 100;
 
+-- Add necessary columns
+ALTER TABLE products ADD createdby text;
+
+-- Add foreign keys
+ALTER TABLE products ADD FOREIGN KEY (createdby) REFERENCES users;
+
 -- Set Column properties
 ALTER TABLE products ALTER COLUMN productid SET DEFAULT nextval('products_id_seq'::regclass);
 ALTER TABLE products ALTER COLUMN categoryid SET NOT NULL;
@@ -15,6 +21,7 @@ ALTER TABLE products ADD CONSTRAINT products_productname_check CHECK (length(pro
 
 -- Indexes
 CREATE INDEX products_catid_index ON products(categoryid);
+CREATE INDEX products_createdBy_index ON products(createdBy);
 
 -- Drop unused columns
 ALTER TABLE products DROP COLUMN supplierid;

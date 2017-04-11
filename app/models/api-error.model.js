@@ -17,7 +17,6 @@ class ApiError extends Error {
   /**
    * Function that allows JSON.stringify() to access the message property of the
    * error prototype.
-   * NOTE If this object grows substantially, consider adding toJSON to the Error prototype
    */
   toJSON() {
     return {

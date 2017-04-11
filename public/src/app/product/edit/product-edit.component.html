@@ -5,22 +5,22 @@
       <div class="row">
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger': (productForm.get('name').invalid && productForm.get('name').dirty),
-            'has-success': (productForm.get('name').valid && productForm.get('name').dirty)
+            'has-success': (productForm.get('name').valid && productForm.get('name').dirty),
+            'has-danger': (productForm.get('name').invalid && productForm.get('name').touched)
           }">
           <label class="form-control-label" for="name">Name</label>
 
           <input type="text" formControlName="name" required
             class="form-control form-control-success form-control-danger">
 
-          <div *ngIf="formErrors.name" class="alert alert-danger">
+          <div class="alert alert-danger">
             {{ formErrors.name }}
           </div>
         </div>
 
         <div class="form-group col-12"
           [ngClass]="{
-            'has-success': (productForm.get('category').valid || selected),
+            'has-success': (productForm.get('category').valid && productForm.get('category').dirty),
             'has-danger': (productForm.get('category').invalid && productForm.get('category').dirty)
           }">
           <label class="form-control-label" for="category">Category</label>
@@ -28,7 +28,7 @@
           <input type="text" class="form-control form-control-success form-control-danger"
             formControlName="category" required autocomplete="off" asyncValidator
             #categorySearchBox (keyup)="categorySearch(categorySearchBox.value)">
-          <div *ngFor="let category of categorys | async"
+          <div *ngFor="let category of categories | async"
             (click)="setValue(category)" class="search-result col-12">
             <span *ngIf="productForm.invalid">{{category.name}}</span>
           </div>
@@ -44,11 +44,13 @@
 
         <div class="col-12">
           <button md-raised-button type="submit" class="lg-primary text-white"
-            [disabled]="submitted || productForm.invalid">{{submitBtnTitle}}
+            [disabled]="submitted || !productForm.valid">{{submitBtnTitle}}
           </button>
         </div>
-        <div class="submit-error col-12" *ngIf="submitError">
-          {{ submitError }}
+        <div class="col-12">
+          <div class="alert alert-danger" *ngIf="submitError">
+            {{ submitError }}
+          </div>
         </div>
       </div>
     </form>

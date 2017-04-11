@@ -7,4 +7,5 @@ export class Product {
   public unitPrice?: string;
   public unitsInStock?: number;
   public discontinued?: boolean;
+  public createdBy?: number;
 }

@@ -8,7 +8,7 @@ import { ProductService } from '../product.service';
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
-export class ProdDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit {
   public product: Product;
 
   constructor(

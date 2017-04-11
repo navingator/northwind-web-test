@@ -18,6 +18,13 @@
   border-color: #3f51b5;
 }
 
+.form-group .alert-danger {
+  display: none;
+}
+.has-danger .alert-danger {
+  display: block;
+}
+
 .form-group .tooltip {
   display: none;
 }

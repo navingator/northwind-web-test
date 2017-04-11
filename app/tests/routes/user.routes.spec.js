@@ -1,7 +1,6 @@
 'use strict';
 /*jshint expr: true*/
 process.env.NODE_ENV='test';
-//TODO suppress stdout for these tests (result from HTTP calls)
 
 let appRoot = require('app-root-path');
 let chai = require('chai');

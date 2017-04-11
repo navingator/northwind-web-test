@@ -11,9 +11,10 @@ class Product {
    * @param {object}  obj The object that will be used to create the product
    *   @property {number}   id            Product database ID
    *   @property {string}   name          Product name
-   *   @property {number}   categoryId    Database ID of the product's category
+   *   @property {number}   categoryId    Foreign key to category id this product belongs to
    *   @property {number}   unitPrice     Price per unit
    *   @property {boolean}  discontinued  Whether the unit is discontinued
+   *   @property {number}   createdBy     Foreign key to user id - stores user who created product
    *   @property {string}   categoryName  Name of the product category the product belogns to
    * @return {Product}    The created product object
    */
@@ -24,6 +25,7 @@ class Product {
     this.unitPrice = obj.unitPrice;
     this.unitsInStock = obj.unitsInStock;
     this.discontinued = obj.discontinued;
+    this.createdBy = obj.createdBy;
     // Taken from categories table
     this.categoryName = obj.categoryName;
   }

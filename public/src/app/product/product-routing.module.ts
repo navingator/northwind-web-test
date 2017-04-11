@@ -3,29 +3,26 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AuthNGuard } from '../user/authn-guard.service';
 
-import { ProdListComponent }   from './list/product-list.component';
-import { ProdUpdateComponent } from './update/product-update.component';
-import { ProdDetailComponent } from './detail/product-detail.component';
-
-import { CategoryListComponent} from '../category/list/category-list.component';
+import { ProductListComponent }   from './list/product-list.component';
+import { ProductEditComponent } from './edit/product-edit.component';
+import { ProductDetailComponent } from './detail/product-detail.component';
 
 // TODO handle invalid product ID
 const routes: Routes = [
-  { path: 'products', canActivate: [AuthNGuard], component: ProdListComponent, children: [
+  { path: 'products', canActivate: [AuthNGuard], component: ProductListComponent, children: [
     {
       path: 'new',
-      component: ProdUpdateComponent
+      component: ProductEditComponent
     },
     {
       path: 'edit/:productId',
-      component: ProdUpdateComponent
+      component: ProductEditComponent
     },
     {
       path: 'detail/:productId',
-      component: ProdDetailComponent
+      component: ProductDetailComponent
     }
-  ]},
-  { path: 'categories', component: CategoryListComponent }, // TODO actually have this do something
+  ]}
 ];
 
 @NgModule ({
