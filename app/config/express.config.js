@@ -40,8 +40,8 @@ module.exports = function () {
 
   // Static Files ==========================================
   app.use(express.static(appRoot + '/public')); // set the static files location, example: /public/img will be /img for client
-  app.use('/node_modules', express.static(appRoot + '/node_modules')); // TODO allow this only for development
   if(process.env.NODE_ENV === 'development') {
+    app.use('/node_modules', express.static(appRoot + '/node_modules')); // exposes node_modules
     app.use(express.static(appRoot + '/mochawesome-reports')); // exposes mochawesome.html
   }
 

@@ -6,6 +6,7 @@
     "build": "tsc -p ./public/src/",
     "build:dist": "ngc -p public/tsconfig-dist.json && rollup -c public/rollup-config.js",
     "build:watch": "tsc -p ./public/src/ -w",
+    "prep": "npm install && npm upgrade && npm prune && node scripts/copy-dist-files.js",
     "test": "npm run test:server",
     "test:server": "mocha ./app/tests --recursive --timeout 5000 --reporter mochawesome",
     "serve": "nodemon server.js",
@@ -64,6 +65,7 @@
     "mocha": "~3.2.0",
     "mochawesome": "~2.0.3",
     "nodemon": "~1.11.0",
-    "rewire": "2.5.2"
+    "rewire": "^2.5.2",
+    "rimraf": "^2.6.1"
   }
 }
