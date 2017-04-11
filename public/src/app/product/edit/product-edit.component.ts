@@ -21,14 +21,13 @@ import { Category } from '../../category/category.class';
 import { Product } from '../product.class';
 
 @Component({
-  templateUrl: './product-update.component.html'
+  templateUrl: './product-edit.component.html'
 })
-export class ProdUpdateComponent implements OnInit {
+export class ProductEditComponent implements OnInit {
   public productForm: FormGroup;
   public selectedProduct = new Product();
 
   public submitted = false;
-  public selected = false;
   public submitError = '';
 
   public title = '';
@@ -49,7 +48,7 @@ export class ProdUpdateComponent implements OnInit {
     }
   };
 
-  public categorys: Observable<Category[]>;
+  public categories: Observable<Category[]>;
   private lastCategory: Category;
   private searchTerms = new Subject<string>();
 
@@ -83,14 +82,15 @@ export class ProdUpdateComponent implements OnInit {
             name: selectedProduct.name,
             category: selectedProduct.categoryName
           });
+          this.categorySearch(selectedProduct.categoryName);
         } else {
           this.title = 'New Product';
           this.submitBtnTitle = 'Create';
         }
       });
 
-    this.categorys = this.searchTerms
-      .debounceTime(150)
+    this.categories = this.searchTerms
+      .debounceTime(100)
       .distinctUntilChanged()
       .switchMap(searchTerm => {
         if (searchTerm) {
@@ -100,7 +100,6 @@ export class ProdUpdateComponent implements OnInit {
         }
       })
       .catch(error => {
-        // TODO: add real error handling
         return Observable.of<Category[]>([]);
       });
 
@@ -118,10 +117,9 @@ export class ProdUpdateComponent implements OnInit {
     this.productForm = this.fb.group({
       name: [this.selectedProduct.name, [
         Validators.required,
-        Validators.minLength(3), // TODO figure out a way to delay min length until after they start
+        Validators.minLength(3),
         Validators.maxLength(40)
-        ]
-      ],
+      ]],
       category: [this.selectedProduct.categoryName, Validators.required, this.categoryValidator]
     });
   }
@@ -130,14 +128,13 @@ export class ProdUpdateComponent implements OnInit {
 
    public onValueChanged(data?: any): void {
     if (!this.productForm) { return; }
-    this.selected = false;
     const form = this.productForm;
     for (const field in this.formErrors) {
       if (this.formErrors.hasOwnProperty(field)) {
         // clear previous error message (if any)
         this.formErrors[field] = '';
         const control = form.get(field);
-        if (control && control.dirty && !control.valid) {
+        if (control && !control.valid) {
           const messages = this.validationMessages[field];
           for (const key in control.errors) {
             if (this.formErrors.hasOwnProperty(field)) {
@@ -156,9 +153,9 @@ export class ProdUpdateComponent implements OnInit {
   }
 
   public setValue(category: Category): void {
-    this.productForm.controls.category.setValue(category.name, {emitEvent: true});
+    this.productForm.controls.category.setValue(category.name);
     this.selectedProduct.categoryId = category.id;
-    this.selected = true;
+    this.categorySearch(category.name);
   }
 
   // Saving the product result
@@ -168,7 +165,7 @@ export class ProdUpdateComponent implements OnInit {
 
     this.selectedProduct.name = this.productForm.get('name').value;
     this.selectedProduct.categoryName = this.productForm.get('category').value;
-    this.selectedProduct.discontinued = false;
+    this.selectedProduct.discontinued = false; // if it is newly created, it will not be discontinued.
     if (!this.selectedProduct.categoryId) { this.selectedProduct.categoryId = this.lastCategory.id; };
     if (this.selectedProduct.id) {
       this.productService.updateProduct(this.selectedProduct)
@@ -203,10 +200,10 @@ export class ProdUpdateComponent implements OnInit {
 
   private categoryValidator = (fc: FormControl): Observable<{[key: string]: any}> => {
     const err = {invalidCategory: true};
-    return this.categorys
-      .switchMap(categorys => {
-        this.lastCategory = categorys[0];
-        for (const category of categorys) {
+    return this.categories
+      .switchMap(categories => {
+        this.lastCategory = categories[0];  // TODO run through all search terms
+        for (const category of categories) {
           if (category.name === fc.value) {
             return Observable.of(null);
           }

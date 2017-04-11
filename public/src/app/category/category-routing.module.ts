@@ -8,9 +8,9 @@ import { CategoryDetailComponent } from './detail/category-detail.component';
 import { CategoryListComponent} from './list/category-list.component';
 import { CategoryEditComponent } from './edit/category-edit.component';
 
-import { ProdListComponent }   from '../product/list/product-list.component';
-import { ProdUpdateComponent } from '../product/update/product-update.component';
-import { ProdDetailComponent } from '../product/detail/product-detail.component';
+import { ProductListComponent }   from '../product/list/product-list.component';
+import { ProductEditComponent } from '../product/edit/product-edit.component';
+import { ProductDetailComponent } from '../product/detail/product-detail.component';
 
 // TODO handle invalid category ID
 const routes: Routes = [
@@ -30,18 +30,18 @@ const routes: Routes = [
       component: CategoryDetailComponent
     }
   ]},
-  { path: 'categories/:id/products', canActivate: [AuthNGuard], component: ProdListComponent, children: [
+  { path: 'categories/:id/products', canActivate: [AuthNGuard], component: ProductListComponent, children: [
     {
       path: 'new',
-      component: ProdUpdateComponent
+      component: ProductEditComponent
     },
     {
       path: 'edit/:productId',
-      component: ProdUpdateComponent
+      component: ProductEditComponent
     },
     {
       path: 'detail/:productId',
-      component: ProdDetailComponent
+      component: ProductDetailComponent
     }
   ]},
 ];

@@ -293,7 +293,6 @@ describe('Product Category unit test', () => {
       });
 
       it('returns a list of categories', () => {
-        //TODO
         let firstCategory = response.body[0];
         for (let property in firstCategory) {
           expect(productCategory).to.have.property(property);

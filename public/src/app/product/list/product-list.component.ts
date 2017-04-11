@@ -21,9 +21,11 @@ import 'hammerjs';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProdListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   public categoryName: string;
   public products: Product[];
+  public isAdmin: boolean;
+  public currentUser = this.authService.user.id;
 
   @ViewChild('sidenav') public sidenav: MdSidenav;
   public selectedProduct: Product;
@@ -53,6 +55,8 @@ export class ProdListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sidenav.close();
       });
     this.changeSubscription = this.getProductSub(changeObs);
+
+    this.isAdmin = this.authService.user.isAdmin;
   }
 
   public ngOnDestroy(): void {
@@ -91,7 +95,7 @@ export class ProdListComponent implements OnInit, AfterViewInit, OnDestroy {
   public confirmDelete(product: Product): void {
     this.dialog.confirm(`Are you sure you want to delete ${product.name}?`)
       .then(confirmed => {
-        if (confirmed) { return this.deleteCategory(product); }
+        if (confirmed) { return this.deleteProduct(product); }
       });
   }
 
@@ -99,12 +103,12 @@ export class ProdListComponent implements OnInit, AfterViewInit, OnDestroy {
    * Calls productService to delete a product
    * @param {Product} product Product to be deleted
    */
-  public deleteCategory(product: Product): void {
+  public deleteProduct(product: Product): void {
     if (!product) { return; }
     this.productService.deleteProduct(product.id)
       .subscribe(
         () => this.products = this.products.filter(arrayPrd => arrayPrd !== product),
-        (error: Error) => console.error('Error: ' + error), // TODO do better error handling.
+        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
       );
   }
 

@@ -93,7 +93,7 @@ export class CategoryListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.categoryService.deleteCategory(category.id)
       .subscribe(
         () => this.categories = this.categories.filter(arrayCat => arrayCat !== category),
-        (error: Error) => console.error('Error: ' + error),
+        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
       );
   }
 
@@ -129,7 +129,7 @@ export class CategoryListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.categoryService.listCategories()
       .subscribe(
         categories => this.categories = categories,
-        (error: Error) => console.error('Error: ' + error),
+        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
       );
   }
 
