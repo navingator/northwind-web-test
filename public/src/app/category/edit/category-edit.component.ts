@@ -8,6 +8,7 @@ import 'rxjs/add/observable/of';
 
 import { CategoryChangeService } from '../category-change.service';
 import { CategoryService } from '../category.service';
+import { FormHelperService } from '../../core/form-helper.service';
 
 import { Category } from '../category.class';
 
@@ -24,10 +25,27 @@ export class CategoryEditComponent implements OnInit  {
   public title = '';
   public submitBtnTitle = '';
 
+  public formErrors = {
+    name: '',
+    description: ''
+  };
+  public validationMessages = {
+    name: {
+      required:      'Name is required.',
+      minlength:     'Must be at least 3 characters.',
+      maxlength:     'Must be less than 15 characters.'
+    },
+    description: {
+      required:      'Description is required.',
+      maxlength:     'Description must be less than 100 characters.'
+    }
+  };
+
   constructor(
     private fb: FormBuilder,
     private changeService: CategoryChangeService,
     private categoryService: CategoryService,
+    private formHelperService: FormHelperService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -60,6 +78,12 @@ export class CategoryEditComponent implements OnInit  {
           this.submitBtnTitle = 'Create';
         }
       });
+
+    // subscribe to form value changes to update error object
+    this.categoryForm.valueChanges
+      .subscribe((data: any) => this.onValueChanged(data));
+
+    this.onValueChanged(); // (re)set validation messages
   }
 
   /**
@@ -67,8 +91,15 @@ export class CategoryEditComponent implements OnInit  {
    */
   public createCatForm(): void {
     this.categoryForm = this.fb.group({
-      name: [this.category.name, Validators.required],
-      description: [this.category.description, Validators.required]
+      name: [this.category.name, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15)
+      ]],
+      description: [this.category.description, [
+        Validators.required,
+        Validators.maxLength(100)
+      ]]
     });
   }
 
@@ -111,6 +142,12 @@ export class CategoryEditComponent implements OnInit  {
   private onSubmitError(err: any): void {
     this.submitError = err.message;
     this.submitted = false;
+  }
+
+  private onValueChanged(data?: any): void {
+    this.formHelperService.updateFormErrors(this.categoryForm,
+      this.formErrors,
+      this.validationMessages);
   }
 
 }

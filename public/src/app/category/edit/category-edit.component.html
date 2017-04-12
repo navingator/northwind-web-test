@@ -5,35 +5,32 @@
       <div class="row">
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(categoryForm.get('name').invalid && categoryForm.get('name').dirty),
-            'has-success':(categoryForm.get('name').valid)
+            'has-danger':(categoryForm.get('name').invalid && categoryForm.get('name').touched),
+            'has-success':(categoryForm.get('name').valid && categoryForm.get('name').dirty)
           }">
           <label class="form-control-label" for="name">Name</label>
-          <div class="has-tooltip">
-            <input type="text" formControlName="name" required
-              class="form-control form-control-success form-control-danger">
-            <div class="tooltip">Required</div>
-          </div>
+          <input type="text" formControlName="name"
+            class="form-control form-control-success form-control-danger">
+
+          <div class="alert alert-danger">{{ formErrors.name }}</div>
         </div>
+
         <div class="form-group col-12"
           [ngClass]="{
-            'has-danger':(categoryForm.get('description').invalid && categoryForm.get('description').dirty),
-            'has-success':(categoryForm.get('description').valid)
+            'has-danger':(categoryForm.get('description').invalid && categoryForm.get('description').touched),
+            'has-success':(categoryForm.get('description').valid && categoryForm.get('name').dirty)
           }">
           <label class="form-control-label" for="description">Description</label>
-          <div class="has-tooltip">
-            <textarea rows="4" formControlName="description" required
-              class="form-control form-control-success form-control-danger">
-            </textarea>
-            <div class="tooltip">Required</div>
-          </div>
+          <textarea rows="4" formControlName="description"
+            class="form-control form-control-success form-control-danger">
+          </textarea>
+
+          <div class="alert alert-danger">{{ formErrors.description }}</div>
         </div>
         <div class="col-12">
           <button md-raised-button type="submit" class="lg-primary text-white" [disabled]="submitted || categoryForm.invalid">{{submitBtnTitle}}</button>
         </div>
-        <div class="submit-error col-12" *ngIf="submitError">
-          {{ submitError }}
-        </div>
+        <div class="submit-error col-12" *ngIf="submitError">{{ submitError }}</div>
       </div>
     </form>
   </div>

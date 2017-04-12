@@ -13,6 +13,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/first';
 
+import { FormHelperService } from '../../core/form-helper.service';
 import { ProductChangeService } from '../product-change.service';
 import { CategorySearchService } from '../../category/category-search.service';
 import { ProductService }       from '../product.service';
@@ -56,6 +57,7 @@ export class ProductEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private formHelperService: FormHelperService,
     private productService: ProductService,
     private changeService: ProductChangeService,
     private categorySearchService: CategorySearchService,
@@ -124,28 +126,6 @@ export class ProductEditComponent implements OnInit {
     });
   }
 
-  // Validation for error checking
-
-   public onValueChanged(data?: any): void {
-    if (!this.productForm) { return; }
-    const form = this.productForm;
-    for (const field in this.formErrors) {
-      if (this.formErrors.hasOwnProperty(field)) {
-        // clear previous error message (if any)
-        this.formErrors[field] = '';
-        const control = form.get(field);
-        if (control && !control.valid) {
-          const messages = this.validationMessages[field];
-          for (const key in control.errors) {
-            if (this.formErrors.hasOwnProperty(field)) {
-              this.formErrors[field] += messages[key] + ' ';
-            }
-          }
-        }
-      }
-    }
-  }
-
   // Tools for categorySearch
 
   public categorySearch(searchTerm: string): void {
@@ -196,6 +176,12 @@ export class ProductEditComponent implements OnInit {
   private onSubmitError(err: any): void {
     this.submitError = err.message;
     this.submitted = false;
+  }
+
+  private onValueChanged(data?: any): void {
+    this.formHelperService.updateFormErrors(this.productForm,
+      this.formErrors,
+      this.validationMessages);
   }
 
   private categoryValidator = (fc: FormControl): Observable<{[key: string]: any}> => {
