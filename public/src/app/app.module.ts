@@ -1,7 +1,8 @@
 /** Angular Modules */
-import { NgModule }        from '@angular/core';
-import { MaterialModule }  from '@angular/material';
-import { BrowserModule }   from '@angular/platform-browser';
+import { NgModule }                  from '@angular/core';
+import { MaterialModule }            from '@angular/material';
+import { BrowserModule }             from '@angular/platform-browser';
+import { BrowserAnimationsModule }   from '@angular/platform-browser/animations';
 
 /** Core Module */
 import { CoreModule } from './core/core.module';
@@ -21,6 +22,7 @@ import { AppComponent } from './app.component';
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CoreModule,
     SharedModule,
     UserModule,
