@@ -5,18 +5,18 @@ let appRoot = require('app-root-path');
 
 module.exports = function (router) {
   let category = require(appRoot + '/app/controllers/api/product-category.controller');
-  let users = require(appRoot + '/app/controllers/api/users.controller');
+  let security = require(appRoot + '/app/controllers/security.controller');
 
   // Check authentication and authorization for routes
-  router.all('/categories*', users.checkLogin);
+  router.all('/categories*', security.requireLogin);
 
   router.route('/categories')
     .get(category.fullList)
-    .post(users.checkAdmin, category.create);
+    .post(security.requireAdmin, category.create);
   router.route('/categories/:categoryId')
     .get(category.get)
-    .put(users.checkAdmin, category.update)
-    .delete(users.checkAdmin, category.delete);
+    .put(security.requireAdmin, category.update)
+    .delete(security.requireAdmin, category.delete);
   router.route('/categories/:categoryId/products')
     .get(category.getProducts);
   router.route('/categories/search/')

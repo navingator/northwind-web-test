@@ -38,9 +38,9 @@ class Product {
   create() {
     return db.one(
       'INSERT INTO products(productname, categoryid, unitprice, ' +
-      'unitsinstock, discontinued) ' +
+      'unitsinstock, discontinued, createdby) ' +
       'VALUES(${name}, ${categoryId}, ${unitPrice}, ${unitsInStock}, ' +
-      '${discontinued}) returning productid', this)
+      '${discontinued}, ${createdBy}) returning productid', this)
       .then(data => this.id = data.productid);
   }
 
@@ -69,6 +69,7 @@ class Product {
       unitPrice: dbProduct.unitprice,
       unitsInStock: dbProduct.unitsinstock,
       discontinued: dbProduct.discontinued,
+      createdBy: dbProduct.createdby,
       // Taken from categories table
       categoryName: dbProduct.categoryname
     });

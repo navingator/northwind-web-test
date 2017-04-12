@@ -108,7 +108,6 @@ exports.checkLogin = function(req, res, next) {
     return ApiError.getApiError(1200)
       .then(apiErr => res.status(401).send(apiErr));
   }
-
 	next();
 };
 

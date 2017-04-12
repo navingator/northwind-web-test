@@ -16,6 +16,7 @@ exports.list = function(req, res) {
  */
 exports.create = function(req, res) {
   let product = new Product(req.body);
+  product.createdBy = req.user.id;
   product.create()
     .then(() => res.json(product))
     .catch(err => res.status(400).send(err));
@@ -77,4 +78,20 @@ exports.getById = function(req, res, next, id) {
       return null;
     })
     .catch(() => res.status(404).end());
+};
+
+// TODO document
+exports.checkIfOwner = function(req, res, next) {
+  let user = req.user;
+  let product = req.product;
+  return Product.read(product.id)
+    .then(dbProduct => {
+      if(dbProduct.createdBy === user.username) {
+        return next();
+      }
+      return ApiError.getApiError(0)  // TODO add a new api error if not the owner. Also, find out if this error is even neccisary.
+        .then(apiErr => Promise.reject(apiErr));
+    })
+    .then(() => res.status(200).end())
+    .catch(err => res.status(400).send(err));
 };

@@ -24,3 +24,6 @@ jspm_packages
 # Angular Ahead of Time Compilation Files
 /public/dist/**/*
 !public/dist/index.html
+
+# Mac specific files
+.DS_Store

@@ -18,6 +18,7 @@ module.exports = function(app, agent) {
       .send(product)
       .then(res => {
         product.id = res.body.id; // set product ID for easy deletion later
+        product.createdBy = res.body.createdBy; // sets createdBy to compare to after db calls.
         return res;
       });
   };
