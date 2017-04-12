@@ -9,11 +9,13 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 
 import { AuthService }          from '../../user/auth.service';
+import { CategoryService }       from '../../category/category.service';
 import { DialogService }        from '../../core/dialog.service';
 import { ProductChangeService } from '../product-change.service';
 import { ProductService }       from '../product.service';
 
-import { Product } from '../../product/product.class';
+import { Product } from '../product.class';
+import { Category } from '../../category/category.class';
 
 import 'hammerjs';
 
@@ -35,6 +37,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
+    private categoryService: CategoryService,
     private productService: ProductService,
     private changeService: ProductChangeService,
     private route: ActivatedRoute,
@@ -133,18 +136,20 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     return obs
       .switchMap((): Observable<Product[]> => {
         if (this.categoryId) {
+          // Update category name
+          this.categoryService.getCategory(this.categoryId)
+            .subscribe(
+              (category: Category) => this.categoryName = category.name,
+              err => console.error(err)
+            );
+          // get products by category
           return this.productService.listProductsByCat(this.categoryId);
         } else {
           return this.productService.listAllProducts();
         }
       })
       .subscribe(
-        (products: Product[]) => {
-          this.products = products;
-          if (this.categoryId) {
-            this.categoryName = products[0].categoryName;
-          }
-        },
+        (products: Product[]) => this.products = products,
         (error: Error) => console.error('Error: ' + error), // TODO add real error handling
       );
 
