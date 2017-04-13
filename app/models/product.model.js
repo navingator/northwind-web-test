@@ -120,7 +120,9 @@ class Product {
       'FROM products ' +
       'LEFT JOIN categories ' +
       'ON products.categoryid = categories.categoryid ' +
-      'WHERE categories.categoryid=${categoryId}', {categoryId: categoryId})
+      'WHERE categories.categoryid=${categoryId} ' +
+      'ORDER BY productname', {categoryId: categoryId}
+    )
       .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
 
@@ -133,7 +135,9 @@ class Product {
         'SELECT products.*, categories.categoryname ' +
         'FROM products ' +
         'LEFT JOIN categories ' +
-        'ON products.categoryid = categories.categoryid')
+        'ON products.categoryid = categories.categoryid ', +
+        'ORDER BY productname'
+      )
         .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
   }
 
@@ -148,7 +152,10 @@ class Product {
       'FROM products ' +
       'LEFT JOIN categories ' +
       'ON products.categoryid = categories.categoryid ' +
-      'WHERE productname ILIKE \'${str#}%\'', {str: str})
+      'WHERE productname ILIKE \'${str#}%\' ' +
+      'ORDER BY productname',
+      {str: str}
+    )
         .then(records => {
           return records.map(record => Product.convertFromDbProduct(record));
         });

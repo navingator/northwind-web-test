@@ -93,10 +93,13 @@ class ProductCategory {
     return db.any(
       'SELECT * ' +
       'FROM categories ' +
-      'WHERE categoryname ILIKE \'${str#}%\'',{str: str})
-        .then(records => {
-          return records.map(record => ProductCategory.convertFromDb(record));
-        });
+      'WHERE categoryname ILIKE \'${str#}%\' ' +
+      'ORDER BY categoryname',
+      {str: str}
+    )
+      .then(records => {
+        return records.map(record => ProductCategory.convertFromDb(record));
+      });
   }
 
   /**
@@ -106,10 +109,12 @@ class ProductCategory {
   static listAll() {
     return db.any(
       'SELECT * ' +
-      'FROM categories')
-        .then(fullList => {
-          return fullList.map(fullList => ProductCategory.convertFromDb(fullList));
-        });
+      'FROM categories ' +
+      'ORDER BY categoryname'
+    )
+      .then(fullList => {
+        return fullList.map(fullList => ProductCategory.convertFromDb(fullList));
+      });
   }
 
   /**
