@@ -13,12 +13,14 @@ const rimraf = require('rimraf');
 const fileMap = {
   // Bootstrap
   'node_modules/bootstrap/dist/css/bootstrap.min.css': 'bootstrap/',
+  'node_modules/bootstrap/dist/css/bootstrap.min.css.map': 'bootstrap/',
   'node_modules/bootstrap/dist/js/bootstrap.min.js': 'bootstrap/',
   'node_modules/jquery/dist/jquery.min.js': 'jquery/',
   'node_modules/tether/dist/js/tether.min.js': 'tether/',
 
   // Angular Dependencies
   'node_modules/core-js/client/shim.min.js': 'core-js/',
+  'node_modules/core-js/client/shim.min.js.map': 'core-js/',
   'node_modules/zone.js/dist/zone.min.js': 'zone.js/'
 };
 const libDir = 'public/lib';

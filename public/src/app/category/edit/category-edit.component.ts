@@ -135,7 +135,6 @@ export class CategoryEditComponent implements OnInit  {
    * @param {Category} category Category to edit
    */
   private setCategory(category: Category): void {
-    console.log('setting category');
     if (category) {
       this.title = 'Edit Category';
       this.submitBtnTitle = 'Save';
