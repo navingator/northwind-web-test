@@ -5,7 +5,7 @@ let appRoot = require('app-root-path');
 
 module.exports = function (router) {
   let category = require(appRoot + '/app/controllers/api/product-category.controller');
-  let security = require(appRoot + '/app/controllers/security.controller');
+  let security = require(appRoot + '/app/controllers/api/security.controller');
 
   // Check authentication and authorization for routes
   router.all('/categories*', security.requireLogin);

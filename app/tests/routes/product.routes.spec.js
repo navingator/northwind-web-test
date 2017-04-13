@@ -83,10 +83,14 @@ describe('Product Routes Unit Tests', () => {
 
       it('returns success status', () => expect(response.status).to.equal(200));
 
-      it('returns expected product', () => {
+      it('adds ID and createdBy user', () => {
         expect(response.body).to.have.property('id');
+        expect(response.body).to.have.property('createdBy', adminUser.id);
+      });
+
+      it('returns expected product', () => {
         for (let property in product) {
-          if (property !== 'categoryName') {
+          if (product[property]) {
             expect(response.body).to.have.property(property, product[property]);
           }
         }
@@ -96,7 +100,7 @@ describe('Product Routes Unit Tests', () => {
         return Product.read(response.body.id)
           .then(dbProduct => {
             for (let property in dbProduct) {
-              if (property !== 'categoryName') {
+              if (product[property]) {
                 expect(response.body).to.have.property(property, dbProduct[property]);
               }
             }
@@ -222,7 +226,7 @@ describe('Product Routes Unit Tests', () => {
 
       it('returns expected product', () => {
         for(let property in product) {
-          if (property !== 'categoryName') {
+          if (product[property]) {
             expect(response.body).to.have.property(property, product[property]);
           }
         }
@@ -423,12 +427,16 @@ describe('Product Routes Unit Tests', () => {
               unitsInStock: 200,
               discontinued: true
             };
-            return productApi.create(product)
-            .then(() => {
-              productUpdate.id = product.id;
-              return productApi.update(productUpdate);
-            })
-            .then(res => response = res);
+            return userApi.signout()
+              .then(() => userApi.signin(regUser))
+              .then(() => productApi.create(product))
+              .then(() => userApi.signout())
+              .then(() => userApi.signin(adminUser))
+              .then(() => {
+                productUpdate.id = product.id;
+                return productApi.update(productUpdate);
+              })
+              .then(res => response = res);
           });
 
           it('returns success status', () => expect(response.status).to.be.equal(200));
@@ -555,7 +563,7 @@ describe('Product Routes Unit Tests', () => {
 
         it('returns expected product', () => {
           for (let property in product) {
-            if (property !== 'categoryName') {
+            if (product[property]) {
               expect(response.body).to.have.property(property, product[property]);
             }
           }
@@ -612,7 +620,7 @@ describe('Product Routes Unit Tests', () => {
 
           it('returns expected product', () => {
             for (let property in product) {
-              if (property !== 'categoryName') {
+              if (product[property]) {
                 expect(response.body).to.have.property(property, product[property]);
               }
             }

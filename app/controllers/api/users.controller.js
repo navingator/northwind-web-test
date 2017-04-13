@@ -98,29 +98,3 @@ exports.forgot = function(req, res) {
 exports.me = function(req, res) {
   res.json(req.user || {});
 };
-
-/**
- * Function using passport to check if the user is currently authenticated.
- * Add this to routes that require authentication. Sends a 401 status on failure
- */
-exports.checkLogin = function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return ApiError.getApiError(1200)
-      .then(apiErr => res.status(401).send(apiErr));
-  }
-	next();
-};
-
-/**
- * Function to check if the user is authorized to modify product categories.
- * Only call this check after an authentication check.
- */
-exports.checkAdmin = function(req, res, next) {
-  let user = req.user;
-  if (user.isAdmin) {
-    return next();
-  }
-
-  return ApiError.getApiError(1250)
-    .then(apiErr => res.status(403).send(apiErr));
-};

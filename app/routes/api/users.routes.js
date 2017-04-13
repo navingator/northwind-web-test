@@ -4,7 +4,7 @@ let appRoot = require('app-root-path');
 
 module.exports = function (router) {
   let users = require(appRoot + '/app/controllers/api/users.controller');
-  let security = require(appRoot + '/app/controllers/security.controller');
+  let security = require(appRoot + '/app/controllers/api/security.controller');
 
   router.route('/users').post(users.create);
   router.route('/users/me').get(users.me);

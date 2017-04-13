@@ -4,7 +4,7 @@ let appRoot = require('app-root-path');
 
 module.exports = function (router) {
   let products = require(appRoot + '/app/controllers/api/products.controller');
-  let security = require(appRoot + '/app/controllers/security.controller');
+  let security = require(appRoot + '/app/controllers/api/security.controller');
   router.all('/products*', security.requireLogin);
 
   router.route('/products')
@@ -12,8 +12,8 @@ module.exports = function (router) {
     .post(products.create);
   router.route('/products/:productId')
     .get(products.get)
-    .put(security.checkIfOwner, security.requireProductSecurity, products.update)
-    .delete(security.checkIfOwner, security.requireProductSecurity, products.delete);
+    .put(security.requireProductSecurity, products.update)
+    .delete(security.requireProductSecurity, products.delete);
   router.route('/products/search')
     .post(products.search);
 
