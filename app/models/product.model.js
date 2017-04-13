@@ -135,7 +135,7 @@ class Product {
         'SELECT products.*, categories.categoryname ' +
         'FROM products ' +
         'LEFT JOIN categories ' +
-        'ON products.categoryid = categories.categoryid ', +
+        'ON products.categoryid = categories.categoryid ' +
         'ORDER BY productname'
       )
         .then(data => data.map(dbProduct => Product.convertFromDbProduct(dbProduct)));
