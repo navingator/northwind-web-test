@@ -1,6 +1,7 @@
 <div class="row">
   <h2 class="main-header col-12 text-center">{{ title }}</h2>
   <div class="col-12">
+    <notice severity="warning"></notice>
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="row">
         <div class="form-group col-12"

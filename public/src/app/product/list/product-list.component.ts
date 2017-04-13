@@ -1,19 +1,27 @@
+/* Angular */
 import { AfterViewInit, Component, OnDestroy,
   OnInit, ViewChild }                     from '@angular/core';
 import { MdSidenav }                      from '@angular/material';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
+/* RxJS */
 import { Observable }   from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/do';
 
+/* Components */
+import { NoticeComponent } from '../../shared/notice/notice.component';
+
+/* Services */
 import { AuthService }          from '../../user/auth.service';
-import { CategoryService }       from '../../category/category.service';
+import { CategoryService }      from '../../category/category.service';
 import { DialogService }        from '../../core/dialog.service';
+import { ErrorService }         from '../../core/error.service';
 import { ProductChangeService } from '../product-change.service';
 import { ProductService }       from '../product.service';
 
+/* Classes */
 import { Product } from '../product.class';
 import { Category } from '../../category/category.class';
 
@@ -29,15 +37,18 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
   public isAdmin: boolean;
   public currentUser = this.authService.user.id;
 
-  @ViewChild('sidenav') public sidenav: MdSidenav;
   public selectedProduct: Product;
 
   private changeSubscription: Subscription;
   private categoryId: number;
 
+  @ViewChild('sidenav') private sidenav: MdSidenav;
+  @ViewChild(NoticeComponent) private notice: NoticeComponent;
+
   constructor(
     private authService: AuthService,
     private categoryService: CategoryService,
+    private errorService: ErrorService,
     private productService: ProductService,
     private changeService: ProductChangeService,
     private route: ActivatedRoute,
@@ -111,7 +122,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.deleteProduct(product.id)
       .subscribe(
         () => this.products = this.products.filter(arrayPrd => arrayPrd !== product),
-        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
+        (error: Error) => this.errorService.handleError(error, this.notice)
       );
   }
 
@@ -140,7 +151,7 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.categoryService.getCategory(this.categoryId)
             .subscribe(
               (category: Category) => this.categoryName = category.name,
-              err => console.error(err)
+              (error: Error) => this.errorService.handleError(error, this.notice)
             );
           // get products by category
           return this.productService.listProductsByCat(this.categoryId);
@@ -150,8 +161,14 @@ export class ProductListComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .subscribe(
         (products: Product[]) => this.products = products,
-        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
+        (error: Error) => this.errorService.handleError(error, this.notice)
       );
 
+  }
+
+  private showErrorNotice(error: Error): void {
+    console.error(error);
+    this.notice.setMessage(error.message);
+    this.notice.show();
   }
 }

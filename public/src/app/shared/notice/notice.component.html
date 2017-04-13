@@ -1,0 +1,6 @@
+<div class="alert" [ngClass]="'alert-' + severity" [hidden]="hidden">
+  {{ message }}
+  <button type="button" class="close float-right" aria-label="Close" (click)="dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>

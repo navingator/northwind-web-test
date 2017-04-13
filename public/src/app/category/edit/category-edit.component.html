@@ -1,6 +1,7 @@
 <div class="row">
   <h2 class="main-headder col-12 text-center">{{ title }}</h2>
   <div class="col-12">
+    <notice severity="warning"></notice>
     <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="row">
         <div class="form-group col-12"
@@ -18,7 +19,7 @@
         <div class="form-group col-12"
           [ngClass]="{
             'has-danger':(categoryForm.get('description').invalid && categoryForm.get('description').touched),
-            'has-success':(categoryForm.get('description').valid && categoryForm.get('name').dirty)
+            'has-success':(categoryForm.get('description').valid && categoryForm.get('description').dirty)
           }">
           <label class="form-control-label" for="description">Description</label>
           <textarea rows="4" formControlName="description"

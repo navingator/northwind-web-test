@@ -6,8 +6,11 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable }   from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
+import { NoticeComponent } from '../../shared/notice/notice.component';
+
 import { AuthService } from '../../user/auth.service';
 import { CategoryChangeService } from '../category-change.service';
+import { ErrorService } from '../../core/error.service';
 import { DialogService } from '../../core/dialog.service';
 import { CategoryService }  from '../category.service';
 
@@ -23,15 +26,17 @@ export class CategoryListComponent implements OnInit, AfterViewInit, OnDestroy {
   public categories: Category[];
   public isAdmin: boolean;
 
-  @ViewChild('sidenav') public sidenav: MdSidenav;
-
   private changeSubscription: Subscription;
+
+  @ViewChild('sidenav') private sidenav: MdSidenav;
+  @ViewChild(NoticeComponent) private notice: NoticeComponent;
 
   constructor(
     private authService: AuthService,
     private categoryService: CategoryService,
     private changeService: CategoryChangeService,
     private dialog: DialogService,
+    private errorService: ErrorService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -93,7 +98,7 @@ export class CategoryListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.categoryService.deleteCategory(category.id)
       .subscribe(
         () => this.categories = this.categories.filter(arrayCat => arrayCat !== category),
-        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
+        (error: Error) => this.errorService.handleError(error, this.notice)
       );
   }
 
@@ -129,7 +134,7 @@ export class CategoryListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.categoryService.listCategories()
       .subscribe(
         categories => this.categories = categories,
-        (error: Error) => console.error('Error: ' + error), // TODO add real error handling
+        (error: Error) => this.errorService.handleError(error, this.notice)
       );
   }
 

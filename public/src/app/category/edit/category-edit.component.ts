@@ -1,15 +1,23 @@
-import { Component, OnInit }              from '@angular/core';
+/* Angular */
+import { Component, OnInit, ViewChild }   from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl,
   FormGroup, Validators}                  from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
+/* RxJS */
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
+/* Components */
+import { NoticeComponent } from '../../shared/notice/notice.component';
+
+/* Services */
 import { CategoryChangeService } from '../category-change.service';
 import { CategoryService } from '../category.service';
+import { ErrorService } from '../../core/error.service';
 import { FormHelperService } from '../../core/form-helper.service';
 
+/* Classes */
 import { Category } from '../category.class';
 
 @Component({
@@ -41,10 +49,13 @@ export class CategoryEditComponent implements OnInit  {
     }
   };
 
+  @ViewChild(NoticeComponent) private notice: NoticeComponent;
+
   constructor(
-    private fb: FormBuilder,
     private changeService: CategoryChangeService,
     private categoryService: CategoryService,
+    private errorService: ErrorService,
+    private fb: FormBuilder,
     private formHelperService: FormHelperService,
     private router: Router,
     private route: ActivatedRoute
@@ -64,20 +75,10 @@ export class CategoryEditComponent implements OnInit  {
         }
         return Observable.of<Category>(null);
       })
-      .subscribe(category => {
-        if (category) {
-          this.title = 'Edit Category';
-          this.submitBtnTitle = 'Save';
-          this.category = category;
-          this.categoryForm.reset({
-            name: category.name,
-            description: category.description
-          });
-        } else {
-          this.title = 'New Category';
-          this.submitBtnTitle = 'Create';
-        }
-      });
+      .subscribe(
+        category => this.setCategory(category),
+        error => this.errorService.handleError(error, this.notice)
+      );
 
     // subscribe to form value changes to update error object
     this.categoryForm.valueChanges
@@ -126,6 +127,27 @@ export class CategoryEditComponent implements OnInit  {
         );
     }
 
+  }
+
+  /**
+   * Sets the category for the component, along with logic for handling whether
+   * this should edit a category or create a new one
+   * @param {Category} category Category to edit
+   */
+  private setCategory(category: Category): void {
+    console.log('setting category');
+    if (category) {
+      this.title = 'Edit Category';
+      this.submitBtnTitle = 'Save';
+      this.category = category;
+      this.categoryForm.reset({
+        name: category.name,
+        description: category.description
+      });
+    } else {
+      this.title = 'New Category';
+      this.submitBtnTitle = 'Create';
+    }
   }
 
   /**

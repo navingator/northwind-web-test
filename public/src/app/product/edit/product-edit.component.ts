@@ -1,11 +1,12 @@
-import { Component, Input, OnInit }       from '@angular/core';
+/* Angular */
+import { Component, Input, OnInit, ViewChild }       from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl,
-  FormGroup, ValidatorFn, Validators }    from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+  FormGroup, ValidatorFn, Validators }               from '@angular/forms';
+import { ActivatedRoute, Params, Router }            from '@angular/router';
 
+/* RxJS */
 import { Observable }  from 'rxjs/Observable';
 import { Subject }     from 'rxjs/Subject';
-
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
@@ -13,11 +14,17 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/first';
 
+/* Components */
+import { NoticeComponent } from '../../shared/notice/notice.component';
+
+/* Services */
+import { ErrorService } from '../../core/error.service';
 import { FormHelperService } from '../../core/form-helper.service';
 import { ProductChangeService } from '../product-change.service';
 import { CategorySearchService } from '../../category/category-search.service';
 import { ProductService }       from '../product.service';
 
+/* Classes */
 import { Category } from '../../category/category.class';
 import { Product } from '../product.class';
 
@@ -52,17 +59,19 @@ export class ProductEditComponent implements OnInit {
   public categories: Observable<Category[]>;
   private lastCategory: Category;
   private searchTerms = new Subject<string>();
+  @ViewChild(NoticeComponent) private notice: NoticeComponent;
 
   // Constructor
 
   constructor(
+    private changeService: ProductChangeService,
+    private categorySearchService: CategorySearchService,
+    private errorService: ErrorService,
     private fb: FormBuilder,
     private formHelperService: FormHelperService,
     private productService: ProductService,
-    private changeService: ProductChangeService,
-    private categorySearchService: CategorySearchService,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
   // ngOnInit
@@ -75,21 +84,10 @@ export class ProductEditComponent implements OnInit {
         }
         return Observable.of<Product>(null);
       })
-      .subscribe(selectedProduct => {
-        if (selectedProduct) {
-          this.title = 'Edit Product';
-          this.submitBtnTitle = 'Save';
-          this.selectedProduct = selectedProduct;
-          this.productForm.reset({
-            name: selectedProduct.name,
-            category: selectedProduct.categoryName
-          });
-          this.categorySearch(selectedProduct.categoryName);
-        } else {
-          this.title = 'New Product';
-          this.submitBtnTitle = 'Create';
-        }
-      });
+      .subscribe(
+        selectedProduct => this.setSelectedProduct(selectedProduct),
+        error => this.errorService.handleError(error, this.notice)
+      );
 
     this.categories = this.searchTerms
       .debounceTime(100)
@@ -159,6 +157,27 @@ export class ProductEditComponent implements OnInit {
           () => this.onSubmitSuccess(),
           err => this.onSubmitError(err)
         );
+    }
+  }
+
+  /**
+   * Helper function to set the selected product for editing. If no product
+   * is passed in, then set it to show a creation component.
+   * @param {Product} selectedProduct Product retrieved from database
+   */
+  private setSelectedProduct(selectedProduct: Product): void {
+    if (selectedProduct) {
+      this.title = 'Edit Product';
+      this.submitBtnTitle = 'Save';
+      this.selectedProduct = selectedProduct;
+      this.productForm.reset({
+        name: selectedProduct.name,
+        category: selectedProduct.categoryName
+      });
+      this.categorySearch(selectedProduct.categoryName);
+    } else {
+      this.title = 'New Product';
+      this.submitBtnTitle = 'Create';
     }
   }
 

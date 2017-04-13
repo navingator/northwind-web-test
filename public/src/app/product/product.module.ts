@@ -10,7 +10,8 @@ import 'hammerjs';
 
 // Dependency Modules
 import { CategoryModule } from '../category/category.module';
-import { UserModule }    from '../user/user.module';
+import { SharedModule } from '../shared/shared.module';
+import { UserModule } from '../user/user.module';
 
 // Routing Module
 import { ProductRoutingModule } from './product-routing.module';
@@ -33,6 +34,7 @@ import { ProductChangeService } from './product-change.service';
     ReactiveFormsModule,
     UserModule,
     CategoryModule,
+    SharedModule,
 
     ProductRoutingModule // must be last
   ],
