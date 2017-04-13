@@ -380,6 +380,11 @@ describe('Product Category unit test', () => {
       it('returns not found status', () => {
         expect(response.status).to.equal(404);
       });
+
+      it('returns error', () => {
+        expect(response.body).to.have.property('code', 4101);
+        expect(response.body).to.have.property('message', 'ID not found.');
+      });
     });
   });
 

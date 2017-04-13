@@ -17,7 +17,11 @@ export class ApiHelperService {
   public handleError = (error: Response) => {
     let err: any;
     if (error instanceof Response) {
-      err = error.json() || '';
+      try {
+        err = error.json();
+      } catch (jsonErr) {
+        err = {};
+      }
     } else {
       err = error;
     }

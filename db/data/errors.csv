@@ -24,4 +24,4 @@ ERRORID,MESSAGE,DB_ERROR_CODE,DB_TABLE,DB_COL,DB_CONSTRAINT
 4000,There was a database error.,,,,
 4001,No data found from the database.,,,,
 4100,ID is invalid.,,,,
-4101,Search parameters are invalid.,,,,
+4101,ID not found.,,,,

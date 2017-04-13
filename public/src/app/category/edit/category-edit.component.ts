@@ -29,6 +29,7 @@ export class CategoryEditComponent implements OnInit  {
 
   public submitted = false;
   public submitError = '';
+  public formHidden = true;
 
   public title = '';
   public submitBtnTitle = '';
@@ -76,8 +77,14 @@ export class CategoryEditComponent implements OnInit  {
         return Observable.of<Category>(null);
       })
       .subscribe(
-        category => this.setCategory(category),
-        error => this.errorService.handleError(error, this.notice)
+        category => {
+          this.formHidden = false;
+          this.setCategory(category);
+        },
+        error => {
+          this.errorService.handleError(error, this.notice);
+          this.formHidden = true;
+        }
       );
 
     // subscribe to form value changes to update error object

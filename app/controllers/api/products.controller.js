@@ -68,7 +68,7 @@ exports.search = function(req, res) {
  */
 exports.getById = function(req, res, next, id) {
   if (!Product.isValidId(id)) {
-    ApiError.getApiError(4100)
+    return ApiError.getApiError(4100)
       .then(apiError => res.status(400).send(apiError));
   }
   Product.read(id)
@@ -77,7 +77,10 @@ exports.getById = function(req, res, next, id) {
       next();
       return null;
     })
-    .catch(() => res.status(404).end());
+    .catch(() => {
+      return ApiError.getApiError(4101)
+        .then(apiError => res.status(404).send(apiError));
+    });
 };
 
 // TODO document

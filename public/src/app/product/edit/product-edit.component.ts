@@ -37,6 +37,7 @@ export class ProductEditComponent implements OnInit {
 
   public submitted = false;
   public submitError = '';
+  public formHidden = true;
 
   public title = '';
   public submitBtnTitle = '';
@@ -79,14 +80,20 @@ export class ProductEditComponent implements OnInit {
   public ngOnInit(): void {
     this.route.params
       .switchMap((params: Params) => {
-        if (+params.productId) {
+        if (params.productId) {
           return this.productService.getProduct(+params.productId);
         }
         return Observable.of<Product>(null);
       })
       .subscribe(
-        selectedProduct => this.setSelectedProduct(selectedProduct),
-        error => this.errorService.handleError(error, this.notice)
+        selectedProduct => {
+          this.setSelectedProduct(selectedProduct);
+          this.formHidden = false;
+        },
+        error => {
+          this.errorService.handleError(error, this.notice);
+          this.formHidden = true;
+        }
       );
 
     this.categories = this.searchTerms
