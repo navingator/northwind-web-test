@@ -1,6 +1,7 @@
 'use strict';
 
 let express = require('express');
+let helmet = require('helmet');
 let appRoot = require('app-root-path');
 let bodyParser = require('body-parser');
 let methodOverride = require('method-override');
@@ -16,6 +17,9 @@ module.exports = function () {
   // Initialize the express application
   let app = express();
 
+  // Adding backend security package
+  app.use(helmet()); // https://www.npmjs.com/package/helmet
+
   // Logging and Parsing ===================================
   app.use(morgan('dev'));
   // Request body parsing middleware should be above methodOverride
@@ -27,14 +31,22 @@ module.exports = function () {
 
   // Authentication ========================================
   let pg = require('./db.config').pgp.pg; // get postgres from postgres-promise
-  app.use(session({
+  let sess = {
     name: 'northwind.connect.sid',
     secret: process.env.SESSION_SECRET,
     resave: false, //https://github.com/expressjs/session#resave typically false, unless we implement touch method
     saveUninitialized: false, // https://github.com/expressjs/session#saveuninitialized
     store: new pgStore({ pg: pg }), // connect-pg-simple store
     cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 hours
-  }));
+  };
+
+  if (process.env.NODE_ENV === 'production') {  // Forces cookies to be sent on a scrure connection in production
+    app.set('trust proxy', 1); // Express works behind a proxy, if this is not set, the site will seem like it is HTTP instead of HTTPS
+    sess.cookie.secure = true; // Only serve cookies over HTTPS
+  }
+
+  app.use(session(sess)); // Run the session
+
   app.use(passport.initialize());
   app.use(passport.session());
 
