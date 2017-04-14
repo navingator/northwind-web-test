@@ -40,11 +40,6 @@ module.exports = function () {
     cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 hours
   };
 
-  if (process.env.NODE_ENV === 'production') {  // Forces cookies to be sent on a scrure connection in production
-    app.set('trust proxy', 1); // Express works behind a proxy, if this is not set, the site will seem like it is HTTP instead of HTTPS
-    sess.cookie.secure = true; // Only serve cookies over HTTPS
-  }
-
   app.use(session(sess)); // Run the session
 
   app.use(passport.initialize());
