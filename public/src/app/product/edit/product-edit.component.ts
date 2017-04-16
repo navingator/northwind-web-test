@@ -22,6 +22,7 @@ import { ErrorService } from '../../core/error.service';
 import { FormHelperService } from '../../core/form-helper.service';
 import { ProductChangeService } from '../product-change.service';
 import { CategorySearchService } from '../../category/category-search.service';
+import { CategoryService }  from '../../category/category.service';
 import { ProductService }       from '../product.service';
 
 /* Classes */
@@ -67,6 +68,7 @@ export class ProductEditComponent implements OnInit {
   constructor(
     private changeService: ProductChangeService,
     private categorySearchService: CategorySearchService,
+    private categoryService: CategoryService,
     private errorService: ErrorService,
     private fb: FormBuilder,
     private formHelperService: FormHelperService,
@@ -103,7 +105,7 @@ export class ProductEditComponent implements OnInit {
         if (searchTerm) {
           return this.categorySearchService.search(searchTerm);
         } else {
-          return Observable.of<Category[]>([]);
+          return this.categoryService.listCategories();
         }
       })
       .catch(error => {
