@@ -154,6 +154,8 @@ md-icon.lg {
   border-right: 1px solid gray;
   background-color: white;
   cursor: pointer;
+  text-align: left;
+  font-size: 15px
 }
 
 .search-result:hover {

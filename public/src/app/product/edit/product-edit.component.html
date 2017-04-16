@@ -29,9 +29,9 @@
             #categorySearchBox (keyup)="categorySearch(categorySearchBox.value)">
           <div *ngFor="let category of categories | async"
             (click)="setValue(category)">
-            <div class="search-result col-12" *ngIf="productForm.get('category').invalid">
+            <button class="search-result col-12" *ngIf="productForm.get('category').invalid">
               <span>{{category.name}}</span>
-            </div>
+            </button>
           </div>
 
           <div *ngIf="formErrors.category" class="show-danger">
