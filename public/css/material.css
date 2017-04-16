@@ -32,6 +32,7 @@ md-sidenav{
 
 .mat-sidenav-container {
   background-color: white;
+  min-height: 80vh;
 }
 
 .product-detail {
