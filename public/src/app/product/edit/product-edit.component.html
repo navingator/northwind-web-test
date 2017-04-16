@@ -14,7 +14,7 @@
           <input type="text" formControlName="name"
             class="form-control form-control-success form-control-danger">
 
-          <div class="alert alert-danger">{{ formErrors.name }}</div>
+          <div class="show-danger">{{ formErrors.name }}</div>
         </div>
 
         <div class="form-group col-12"
@@ -28,26 +28,28 @@
             formControlName="category" autocomplete="off" asyncValidator
             #categorySearchBox (keyup)="categorySearch(categorySearchBox.value)">
           <div *ngFor="let category of categories | async"
-            (click)="setValue(category)" class="search-result col-12">
-            <span *ngIf="productForm.invalid">{{category.name}}</span>
+            (click)="setValue(category)">
+            <div class="search-result col-12" *ngIf="productForm.get('category').invalid">
+              <span>{{category.name}}</span>
+            </div>
           </div>
 
-          <div *ngIf="formErrors.category" class="alert alert-danger">
+          <div *ngIf="formErrors.category" class="show-danger">
             {{ formErrors.category }}
           </div>
           <div *ngIf="productForm.get('category').invalid && categorySearchBox.value"
-            class="alert alert-danger">
+            class="show-danger">
             {{ validationMessages.category.uniqueName }}
           </div>
         </div>
 
-        <div class="col-12">
+        <div class="col-12 submit">
           <button md-raised-button type="submit" class="lg-primary text-white"
             [disabled]="submitted || !productForm.valid">{{submitBtnTitle}}
           </button>
         </div>
         <div class="col-12">
-          <div class="alert alert-danger" *ngIf="submitError">
+          <div class="show-danger" *ngIf="submitError">
             {{ submitError }}
           </div>
         </div>

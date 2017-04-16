@@ -18,11 +18,17 @@
   border-color: #3f51b5;
 }
 
-.form-group .alert-danger {
+.form-group .show-danger {
   display: none;
 }
-.has-danger .alert-danger {
+.has-danger .show-danger {
   display: block;
+  position: absolute;
+  z-index: 1;
+  text-align: right;
+  color: #d9534f;
+  font-size: 10px;
+  width: 90%
 }
 
 .form-group .tooltip {
@@ -119,6 +125,10 @@ md-icon.lg {
 /* button styling */
 [md-raised-button] {
   width: 100%;
+}
+
+.submit {
+  padding-top: 10px;
 }
 
 .create-btn {
