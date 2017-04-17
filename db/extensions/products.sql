@@ -3,7 +3,7 @@
 CREATE SEQUENCE products_id_seq START WITH 100;
 
 -- Add necessary columns
-ALTER TABLE products ADD createdby text;
+ALTER TABLE products ADD createdby int;
 
 -- Add foreign keys
 ALTER TABLE products ADD FOREIGN KEY (createdby) REFERENCES users;

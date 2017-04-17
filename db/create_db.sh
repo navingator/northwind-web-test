@@ -15,12 +15,12 @@ createdb $DB
 psql $DB < $NORTHWIND_DIR/northwind.sql
 
 # Extend the database
+psql $DB < $EXTENSION_DIR/users.sql # must be before products, which extends a foreign key to users
 psql $DB < $EXTENSION_DIR/categories.sql
 psql $DB < $EXTENSION_DIR/products.sql
 psql $DB < $EXTENSION_DIR/drop_excess_tables.sql #must be after northwind table extensions
 
-psql $DB < $EXTENSION_DIR/users.sql
-psql $DB < $SESSION_DIR/session.sql
+psql $DB < $EXTENSION_DIR/session.sql
 
 # Add errors
 bash $DIR/scripts/errors_refresh.sh $DB
