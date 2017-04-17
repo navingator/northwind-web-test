@@ -1,6 +1,6 @@
 {
   "name": "Northwind-Demo-Application",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "tsc -p ./public/src/",
